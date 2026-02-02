@@ -43,9 +43,6 @@ checkpoints/
 logs/
 *.log
 
-# Generated reports
-training_report*.html
-
 # IDE
 .vscode/
 .idea/
