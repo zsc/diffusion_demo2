@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffusion Demo - DiT Training & Sampling</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Diffusion Demo</h1>
+            <p>DiT (Diffusion Transformer) Training & Sampling</p>
+            <div id="system-info" class="system-info"></div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="dataset">Dataset</button>
+            <button class="tab-btn" data-tab="train-vae">Train VAE/VQVAE</button>
+            <button class="tab-btn" data-tab="train-dit">Train DiT</button>
+            <button class="tab-btn" data-tab="sample">Sample</button>
+            <button class="tab-btn" data-tab="jobs">Jobs</button>
+        </nav>
+
+        <main>
+            <!-- Dataset Tab -->
+            <section id="dataset" class="tab-content active">
+                <h2>Dataset: CelebA 48x48 Sprites</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <button id="btn-ensure-dataset" class="btn btn-primary">Download & Cache Dataset</button>
+                        <span id="dataset-status"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Sample Count:</label>
+                        <input type="number" id="sample-count" value="16" min="1" max="64">
+                        <label>Seed:</label>
+                        <input type="number" id="sample-seed" value="0">
+                        <button id="btn-refresh-samples" class="btn">Refresh Samples</button>
+                    </div>
+                    <div id="dataset-samples" class="image-grid"></div>
+                </div>
+            </section>
+
+            <!-- Train VAE Tab -->
+            <section id="train-vae" class="tab-content">
+                <h2>Train VAE / VQVAE</h2>
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Model Type:</label>
+                            <select id="vae-model-type">
+                                <option value="vae">VAE</option>
+                                <option value="vqvae">VQVAE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Learning Rate:</label>
+                            <input type="number" id="vae-lr" value="0.0002" step="0.0001">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Batch Size:</label>
+                            <input type="number" id="vae-batch-size" value="128" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Epochs:</label>
+                            <input type="number" id="vae-epochs" value="5" min="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Data Limit:</label>
+                            <input type="number" id="vae-data-limit" value="2048" min="64">
+                        </div>
+                        <div class="form-group">
+                            <label>Use BFloat16:</label>
+                            <input type="checkbox" id="vae-bf16" checked>
+                        </div>
+                    </div>
+                    
+                    <!-- VAE-specific -->
+                    <div id="vae-params" class="params-section">
+                        <h4>VAE Parameters</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Latent Dim:</label>
+                                <input type="number" id="vae-latent-dim" value="256" min="64">
+                            </div>
+                            <div class="form-group">
+                                <label>KLD Beta:</label>
+                                <input type="number" id="vae-kld-beta" value="1.0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- VQVAE-specific -->
+                    <div id="vqvae-params" class="params-section hidden">
+                        <h4>VQVAE Parameters</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Embedding Dim:</label>
+                                <input type="number" id="vqvae-embedding-dim" value="64" min="16">
+                            </div>
+                            <div class="form-group">
+                                <label>Num Embeddings:</label>
+                                <input type="number" id="vqvae-num-embeddings" value="512" min="128">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Commitment Cost:</label>
+                                <input type="number" id="vqvae-commitment-cost" value="0.25" step="0.05">
+                            </div>
+                            <div class="form-group">
+                                <label>VQ Beta:</label>
+                                <input type="number" id="vqvae-vq-beta" value="1.0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="vae-use-gan">
+                            Use GAN (with Discriminator)
+                        </label>
+                    </div>
+                    
+                    <button id="btn-train-vae" class="btn btn-primary btn-large">Start Training</button>
+                </div>
+                
+                <!-- Job tracking -->
+                <div id="vae-job-tracker" class="job-tracker hidden">
+                    <h3>Training Job</h3>
+                    <div class="job-status">
+                        <span>Status: <span id="vae-job-status" class="status-badge">queued</span></span>
+                        <span id="vae-job-id"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="vae-progress" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="log-container">
+                        <pre id="vae-job-log" class="job-log"></pre>
+                    </div>
+                    <div id="vae-artifacts" class="artifacts"></div>
+                </div>
+            </section>
+
+            <!-- Train DiT Tab -->
+            <section id="train-dit" class="tab-content">
+                <h2>Train DiT</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <label>VAE Checkpoint:</label>
+                        <select id="dit-vae-checkpoint">
+                            <option value="">Select a checkpoint...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>VAE Model Type:</label>
+                            <select id="dit-vae-type">
+                                <option value="vae">VAE</option>
+                                <option value="vqvae">VQVAE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Latent Channels:</label>
+                            <input type="number" id="dit-latent-channels" value="16" min="4">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Latent Spatial Dim:</label>
+                            <input type="number" id="dit-latent-spatial" value="4" min="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Latent Flat Dim:</label>
+                            <input type="number" id="dit-latent-flat" value="256" min="64">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Learning Rate:</label>
+                            <input type="number" id="dit-lr" value="0.00001" step="0.00001">
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Size:</label>
+                            <input type="number" id="dit-batch-size" value="64" min="1">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Epochs:</label>
+                            <input type="number" id="dit-epochs" value="5" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Limit:</label>
+                            <input type="number" id="dit-data-limit" value="2048" min="64">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>DDPM Timesteps:</label>
+                            <input type="number" id="dit-timesteps" value="1000" min="50" max="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Schedule:</label>
+                            <select id="dit-schedule">
+                                <option value="linear">Linear</option>
+                                <option value="cosine">Cosine</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h4>DiT Architecture</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Patch Size:</label>
+                            <input type="number" id="dit-patch-size" value="2" min="1" max="4">
+                        </div>
+                        <div class="form-group">
+                            <label>Hidden Size:</label>
+                            <input type="number" id="dit-hidden-size" value="384" min="128">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Depth:</label>
+                            <input type="number" id="dit-depth" value="6" min="2" max="24">
+                        </div>
+                        <div class="form-group">
+                            <label>Num Heads:</label>
+                            <input type="number" id="dit-heads" value="6" min="2">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="dit-bf16" checked>
+                            Use BFloat16
+                        </label>
+                    </div>
+                    
+                    <button id="btn-train-dit" class="btn btn-primary btn-large">Start Training</button>
+                </div>
+                
+                <!-- Job tracking -->
+                <div id="dit-job-tracker" class="job-tracker hidden">
+                    <h3>Training Job</h3>
+                    <div class="job-status">
+                        <span>Status: <span id="dit-job-status" class="status-badge">queued</span></span>
+                        <span id="dit-job-id"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="dit-progress" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="log-container">
+                        <pre id="dit-job-log" class="job-log"></pre>
+                    </div>
+                    <div id="dit-artifacts" class="artifacts"></div>
+                </div>
+            </section>
+
+            <!-- Sample Tab -->
+            <section id="sample" class="tab-content">
+                <h2>Generate Samples</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <label>VAE Checkpoint:</label>
+                        <select id="sample-vae-checkpoint">
+                            <option value="">Select a checkpoint...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>DiT Checkpoint:</label>
+                        <select id="sample-dit-checkpoint">
+                            <option value="">Select a checkpoint...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Num Samples:</label>
+                            <input type="number" id="sample-num" value="16" min="1" max="64">
+                        </div>
+                        <div class="form-group">
+                            <label>DDPM Timesteps:</label>
+                            <input type="number" id="sample-timesteps" value="100" min="10" max="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="sample-bf16" checked>
+                            Use BFloat16
+                        </label>
+                    </div>
+                    
+                    <button id="btn-generate" class="btn btn-primary btn-large">Generate Images</button>
+                </div>
+                
+                <!-- Job tracking -->
+                <div id="sample-job-tracker" class="job-tracker hidden">
+                    <h3>Sampling Job</h3>
+                    <div class="job-status">
+                        <span>Status: <span id="sample-job-status" class="status-badge">queued</span></span>
+                        <span id="sample-job-id"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="sample-progress" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="log-container">
+                        <pre id="sample-job-log" class="job-log"></pre>
+                    </div>
+                    <div id="sample-result" class="result-container"></div>
+                </div>
+            </section>
+
+            <!-- Jobs Tab -->
+            <section id="jobs" class="tab-content">
+                <h2>Job History</h2>
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Filter:</label>
+                            <select id="jobs-filter">
+                                <option value="">All Types</option>
+                                <option value="vae">VAE</option>
+                                <option value="dit">DiT</option>
+                                <option value="sample">Sample</option>
+                            </select>
+                        </div>
+                        <button id="btn-refresh-jobs" class="btn">Refresh</button>
+                    </div>
+                    <div id="jobs-list" class="jobs-list"></div>
+                </div>
+                
+                <!-- Job detail view -->
+                <div id="job-detail" class="job-detail hidden">
+                    <h3>Job Detail</h3>
+                    <div id="job-detail-content" class="card"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Diffusion Demo - Built with PyTorch & Flask</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
