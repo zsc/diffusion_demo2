@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from diffusion_demo.core.data_loader import denormalize, get_dataloader
 from diffusion_demo.core.models.vae import VAE, VQVAE
 from diffusion_demo.core.training.train_vae import vae_loss, vqvae_loss
-from diffusion_demo.utils.torch_env import get_device, get_dtype, get_torch_info
+from diffusion_demo.utils.torch_env import get_device, get_dtype, get_torch_info, MixedPrecision, setup_seed
 
 
 class MetricsTracker:
@@ -132,16 +132,24 @@ def train_vae_cmdline(
     use_bfloat16: bool = False,
     latent_dim: int = 256,
     device: str = None,
+    precision: str = None,
+    seed: int = 0,
+    kld_beta: float = 1.0,
+    output_dir: str = None,
 ):
     """Train VAE with detailed metrics tracking."""
+    if min(epochs, batch_size, data_limit) <= 0:
+        raise ValueError("epochs, batch_size and data_limit must be positive")
     
     # Setup
+    setup_seed(seed)
     if device is None:
         device = get_device()
     else:
         device = torch.device(device)
     
-    dtype = get_dtype(use_bfloat16 and device.type == 'cuda')
+    amp = MixedPrecision(device, precision, use_bfloat16)
+    dtype = amp.dtype
     
     print(f"Device: {device}")
     print(f"Dtype: {dtype}")
@@ -159,11 +167,13 @@ def train_vae_cmdline(
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     
     # Data loader
-    dataloader = get_dataloader(batch_size=batch_size, data_limit=data_limit, shuffle=True)
+    dataloader = get_dataloader(batch_size=batch_size, data_limit=data_limit, shuffle=True,
+                                pin_memory=device.type == 'cuda')
     print(f"Batches per epoch: {len(dataloader)}")
     
     # Metrics tracker
-    tracker = MetricsTracker()
+    tracker = MetricsTracker(output_dir or f"runs/cmdline_{datetime.now():%Y%m%d_%H%M%S_%f}")
+    tracker.metrics['total_batches'] = epochs * len(dataloader)
     tracker.start_training()
     
     # Training loop
@@ -178,24 +188,21 @@ def train_vae_cmdline(
         for batch_idx, batch in enumerate(dataloader):
             batch_start = time.time()
             
-            batch = batch.to(device)
-            if use_bfloat16:
-                batch = batch.to(dtype)
+            batch = batch.to(device, non_blocking=True)
             
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
             
-            # Forward
-            if model_type == "vae":
-                recon, mu, logvar = model(batch)
-                loss, loss_dict = vae_loss(recon, batch, mu, logvar)
-            else:
-                recon, vq_loss_val = model(batch)
-                loss, loss_dict = vqvae_loss(recon, batch, vq_loss_val)
-            
-            # Backward
-            loss.backward()
-            optimizer.step()
-            
+            with amp.autocast():
+                if model_type == "vae":
+                    recon, mu, logvar = model(batch)
+                    loss, loss_dict = vae_loss(recon, batch, mu, logvar, kld_beta)
+                else:
+                    recon, vq_loss_val = model(batch)
+                    loss, loss_dict = vqvae_loss(recon, batch, vq_loss_val)
+            amp.step(loss, optimizer, model.parameters())
+            if device.type == 'cuda':
+                torch.cuda.synchronize(device)
+
             batch_time = time.time() - batch_start
             batch_times.append(batch_time)
             epoch_losses.append(loss.item())
@@ -258,7 +265,7 @@ def train_vae_cmdline(
                 recon, _ = model(sample_batch)
             
             recon_images = []
-            for i in range(8):
+            for i in range(len(sample_batch)):
                 # Original
                 orig = sample_batch[i]
                 orig = denormalize(orig)
@@ -561,7 +568,7 @@ def generate_html_report(metrics: dict, output_path: str) -> str:
             </div>
             <div class="stat-card">
                 <h3>Total Batches</h3>
-                <div class="value">{len(batches_data)}</div>
+                <div class="value">{metrics.get('total_batches', len(batches_data))}</div>
             </div>
             <div class="stat-card">
                 <h3>CUDA Available</h3>
@@ -806,6 +813,10 @@ def main():
     parser.add_argument('--bf16', action='store_true')
     parser.add_argument('--latent-dim', type=int, default=256)
     parser.add_argument('--device', type=str, default=None)
+    parser.add_argument('--precision', choices=['auto', 'fp32', 'fp16', 'bf16'], default=None)
+    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--kld-beta', type=float, default=1.0)
+    parser.add_argument('--output-dir', default=None)
     
     args = parser.parse_args()
     
@@ -819,6 +830,7 @@ def main():
             use_bfloat16=args.bf16,
             latent_dim=args.latent_dim,
             device=args.device,
+            precision=args.precision, seed=args.seed, kld_beta=args.kld_beta, output_dir=args.output_dir,
         )
         
         print(f"\n{'='*60}")

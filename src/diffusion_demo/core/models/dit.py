@@ -64,6 +64,8 @@ class MultiHeadAttention(nn.Module):
         super().__init__()
         self.hidden_size = hidden_size
         self.num_heads = num_heads
+        if num_heads <= 0 or hidden_size % num_heads:
+            raise ValueError("hidden_size must be divisible by num_heads")
         self.head_dim = hidden_size // num_heads
         
         self.qkv = nn.Linear(hidden_size, hidden_size * 3)
@@ -74,10 +76,7 @@ class MultiHeadAttention(nn.Module):
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]
         
-        attn = (q @ k.transpose(-2, -1)) * (self.head_dim ** -0.5)
-        attn = F.softmax(attn, dim=-1)
-        
-        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = F.scaled_dot_product_attention(q, k, v).transpose(1, 2).reshape(B, N, C)
         return self.proj(x)
 
 
@@ -125,6 +124,8 @@ class PatchEmbed(nn.Module):
     
     def __init__(self, img_size: int, patch_size: int, in_channels: int, embed_dim: int):
         super().__init__()
+        if patch_size <= 0 or img_size % patch_size:
+            raise ValueError("img_size must be divisible by patch_size")
         self.img_size = img_size
         self.patch_size = patch_size
         self.num_patches = (img_size // patch_size) ** 2

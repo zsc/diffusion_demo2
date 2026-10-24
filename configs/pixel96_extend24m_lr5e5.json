@@ -1,0 +1,28 @@
+{
+  "model": {
+    "image_size": 96,
+    "patch_size": 4,
+    "width": 384,
+    "depth": 8,
+    "heads": 6,
+    "bottleneck": 64,
+    "conv_channels": 32,
+    "conv_layers": 3,
+    "position_scale": 0.5
+  },
+  "device": "cuda",
+  "precision": "bf16",
+  "seed": 42,
+  "global_batch": 1024,
+  "lr": 5e-05,
+  "warmup_images": 64000,
+  "ema_reference_batch": 256,
+  "ema_reference_decay": 0.9996,
+  "val_count": 1000,
+  "max_images": 24576000,
+  "eval_every_images": 4096000,
+  "sample_steps": 50,
+  "log_every": 25,
+  "split_mode": "validation_first",
+  "execution_backend": "compile_pointwise"
+}

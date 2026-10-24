@@ -193,6 +193,8 @@ def create_vae_job():
         'vq_hidden_dims_dec': vq_hidden_dims_dec,
     }
     
+    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'kl_warmup_epochs', 'precision', 'num_workers') if k in data}
+    config.update(extra)
     job = job_manager.create_job('vae', config)
     
     # Start training in background
@@ -214,6 +216,7 @@ def create_vae_job():
         vq_hidden_dims_enc=vq_hidden_dims_enc,
         vq_hidden_dims_dec=vq_hidden_dims_dec,
         use_gan=use_gan,
+        **extra,
     )
     
     return jsonify({'job_id': job.id})
@@ -250,11 +253,11 @@ def create_dit_job():
     dit_hidden_size = data.get('dit_hidden_size', 384)
     dit_depth = data.get('dit_depth', 6)
     dit_num_heads = data.get('dit_num_heads', 6)
-    vae_latent_is_flat = data.get('vae_latent_is_flat', True)
+    vae_latent_is_flat = data.get('vae_latent_is_flat', False)
     vae_flat_latent_dim = data.get('vae_flat_latent_dim', 256)
     vae_latent_channels = data.get('vae_latent_channels', 16)
     vae_latent_spatial_dim = data.get('vae_latent_spatial_dim', 4)
-    vae_latent_clamp_range = data.get('vae_latent_clamp_range', [-2.0, 2.0])
+    vae_latent_clamp_range = data.get('vae_latent_clamp_range')
     vae_model_type = data.get('vae_model_type', 'vae')
     
     config = {
@@ -282,6 +285,8 @@ def create_dit_job():
         'vae_model_type': vae_model_type,
     }
     
+    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'precision', 'num_workers', 'cache_latents', 'normalize_latents', 'ema_decay', 'sampling_steps', 'sample_every') if k in data}
+    config.update(extra)
     job = job_manager.create_job('dit', config)
     
     # Start training in background
@@ -310,6 +315,7 @@ def create_dit_job():
         vae_latent_spatial_dim=vae_latent_spatial_dim,
         vae_latent_clamp_range=vae_latent_clamp_range,
         vae_model_type=vae_model_type,
+        **extra,
     )
     
     return jsonify({'job_id': job.id})
@@ -359,6 +365,8 @@ def create_sample_job():
         'vae_model_type': vae_model_type,
     }
     
+    extra = {k: data[k] for k in ('seed', 'precision', 'sampling_steps', 'ddpm_schedule') if k in data}
+    config.update(extra)
     job = job_manager.create_job('sample', config)
     
     def do_sampling():
@@ -381,6 +389,7 @@ def create_sample_job():
             vae_flat_latent_dim=vae_flat_latent_dim,
             vq_embedding_dim_for_dit=vq_embedding_dim_for_dit,
             vae_model_type=vae_model_type,
+            **extra,
         )
         
         # Save samples
@@ -421,21 +430,27 @@ def list_checkpoints():
                     'created_at': job.created_at,
                 })
     
-    # Also scan checkpoints directory
-    ckpt_dir = Path('checkpoints')
-    if ckpt_dir.exists():
-        for run_dir in ckpt_dir.iterdir():
-            if run_dir.is_dir():
-                final_model = run_dir / 'final_model.pth'
-                if final_model.exists():
-                    # Check if already in list
-                    if not any(c['path'] == str(final_model) for c in checkpoints):
-                        checkpoints.append({
-                            'path': str(final_model),
-                            'job_id': None,
-                            'job_type': 'unknown',
-                            'created_at': None,
-                            'run_name': run_dir.name,
-                        })
+    # Include experiments launched outside the web job manager, including copied
+    # desk results. Inspect directory names without loading large model weights.
+    seen = {str(Path(c['path']).resolve()) for c in checkpoints}
+    for directory in (Path('checkpoints'), Path('runs')):
+        if not directory.exists():
+            continue
+        for checkpoint in directory.rglob('*.pth'):
+            if checkpoint.name not in {'last.pth', 'best.pth', 'final_model.pth'}:
+                continue
+            if str(checkpoint.resolve()) in seen:
+                continue
+            seen.add(str(checkpoint.resolve()))
+            job_type = 'unknown'
+            for parent in checkpoint.parents:
+                if parent.name == 'dit' or parent.name.startswith('dit_'):
+                    job_type = 'dit'
+                    break
+                if parent.name in {'vae', 'vqvae'} or parent.name.startswith(('vae_', 'vqvae_')):
+                    job_type = 'vae'
+                    break
+            checkpoints.append(dict(path=str(checkpoint), job_id=None, job_type=job_type,
+                                    created_at=None, run_name=checkpoint.parent.parent.name))
     
     return jsonify({'checkpoints': checkpoints})

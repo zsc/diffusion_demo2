@@ -2,21 +2,56 @@
 
 import os
 import random
+from contextlib import nullcontext
 from typing import Tuple
 
 import numpy as np
 import torch
 
 
-def get_device(preference: str = "auto") -> torch.device:
+def get_device(preference: str = None) -> torch.device:
     """Get torch device based on preference.
     
     Args:
         preference: "auto", "cuda", "cpu", or specific device string
     """
+    preference = preference or os.environ.get("DEVICE", "auto")
     if preference == "auto":
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return torch.device(preference)
+
+
+class MixedPrecision:
+    """Autocast forward passes; scale FP16 gradients on pre-BF16 GPUs."""
+
+    def __init__(self, device, precision=None, use_bfloat16=False):
+        self.device = torch.device(device)
+        precision = precision or ("bf16" if use_bfloat16 else "fp32")
+        if precision not in {"auto", "fp32", "fp16", "bf16"}:
+            raise ValueError("precision must be auto, fp32, fp16 or bf16")
+        if self.device.type != "cuda":
+            precision = "fp32"
+        elif precision == "auto":
+            precision = "bf16" if torch.cuda.get_device_capability(self.device)[0] >= 8 else "fp16"
+        elif precision == "bf16" and torch.cuda.get_device_capability(self.device)[0] < 8:
+            precision = "fp32"  # Preserve legacy --bf16 fallback semantics.
+        self.precision = precision
+        self.dtype = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}[precision]
+        self.scaler = torch.amp.GradScaler("cuda", enabled=precision == "fp16")
+
+    def autocast(self):
+        if self.precision == "fp32":
+            return nullcontext()
+        return torch.autocast(self.device.type, dtype=self.dtype)
+
+    def step(self, loss, optimizer, parameters, max_grad_norm=1.0):
+        previous_scale = self.scaler.get_scale()
+        self.scaler.scale(loss).backward()
+        self.scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(parameters, max_grad_norm)
+        self.scaler.step(optimizer)
+        self.scaler.update()
+        return self.scaler.get_scale() >= previous_scale
 
 
 def is_bf16_supported() -> bool:

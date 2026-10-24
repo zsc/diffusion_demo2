@@ -121,6 +121,7 @@ class VAE(nn.Module):
         self.decoder = VAEDecoder(latent_dim, list(reversed(hidden_dims)))
     
     def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
+        mu, logvar = mu.float(), logvar.float()
         std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(std)
         return mu + eps * std
@@ -176,11 +177,14 @@ class VectorQuantizer(nn.Module):
         flat_z = z.permute(0, 2, 3, 1).contiguous().view(-1, self.embedding_dim)
         
         # Calculate distances
-        distances = (
-            torch.sum(flat_z ** 2, dim=1, keepdim=True)
-            + torch.sum(self.embeddings.weight ** 2, dim=1)
-            - 2 * torch.matmul(flat_z, self.embeddings.weight.t())
-        )
+        with torch.autocast(device_type=z.device.type, enabled=False):
+            flat_z_fp32 = flat_z.float()
+            embeddings_fp32 = self.embeddings.weight.float()
+            distances = (
+                torch.sum(flat_z_fp32 ** 2, dim=1, keepdim=True)
+                + torch.sum(embeddings_fp32 ** 2, dim=1)
+                - 2 * torch.matmul(flat_z_fp32, embeddings_fp32.t())
+            )
         
         # Get closest embeddings
         encoding_indices = torch.argmin(distances, dim=1)
@@ -188,8 +192,8 @@ class VectorQuantizer(nn.Module):
         quantized = quantized_flat.view(B, H, W, C).permute(0, 3, 1, 2).contiguous()
         
         # VQ loss
-        e_latent_loss = F.mse_loss(quantized.detach(), z)
-        q_latent_loss = F.mse_loss(quantized, z.detach())
+        e_latent_loss = F.mse_loss(quantized.detach().float(), z.float())
+        q_latent_loss = F.mse_loss(quantized.float(), z.detach().float())
         vq_loss = q_latent_loss + self.commitment_cost * e_latent_loss
         
         # Straight-through estimator

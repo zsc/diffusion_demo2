@@ -1,0 +1,33 @@
+{
+  "common": {
+    "seed": 42,
+    "data_limit": 2048,
+    "batch_size": 16,
+    "precision": "auto",
+    "device": "cuda",
+    "validation_fraction": 0.125
+  },
+  "vae": {
+    "epochs": 8,
+    "latent_dim": 16,
+    "lr": 0.0002,
+    "kld_beta": 0.1,
+    "kl_warmup_epochs": 3
+  },
+  "dit": {
+    "epochs": 150,
+    "batch_size": 64,
+    "lr": 0.0001,
+    "dit_hidden_size": 128,
+    "dit_depth": 4,
+    "dit_num_heads": 4,
+    "dit_patch_size": 1,
+    "ddpm_timesteps": 1000,
+    "sampling_steps": 50,
+    "sample_every": 30,
+    "cache_latents": true,
+    "normalize_latents": true,
+    "ema_decay": 0.999,
+    "precision": "fp32"
+  }
+}

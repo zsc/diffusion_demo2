@@ -1,0 +1,5 @@
+{
+  "common": {"seed": 42, "data_limit": 128, "batch_size": 8, "precision": "auto", "device": "cuda", "validation_fraction": 0.125},
+  "vae": {"epochs": 1, "latent_dim": 16},
+  "dit": {"epochs": 1, "dit_hidden_size": 64, "dit_depth": 2, "dit_num_heads": 4, "dit_patch_size": 1, "ddpm_timesteps": 1000, "sampling_steps": 10, "num_preview_samples": 8}
+}

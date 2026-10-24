@@ -1,0 +1,25 @@
+{
+  "model": {
+    "image_size": 48,
+    "patch_size": 4,
+    "width": 384,
+    "depth": 8,
+    "heads": 6,
+    "bottleneck": 64,
+    "conv_channels": 32,
+    "conv_layers": 3
+  },
+  "device": "cuda",
+  "precision": "fp16",
+  "seed": 42,
+  "batch_size": 64,
+  "lr": 0.0002,
+  "warmup_steps": 500,
+  "steps": 20000,
+  "ema_decay": 0.9996,
+  "val_count": 1000,
+  "sample_steps": 50,
+  "sample_every": 1000,
+  "checkpoint_every": 1000,
+  "log_every": 50
+}

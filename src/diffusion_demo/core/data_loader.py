@@ -13,12 +13,11 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from tqdm import tqdm
 
-IMAGE_URL = "http://zsc.github.io/widgets/celeba/48x48.png"
+IMAGE_URL = "https://zsc.github.io/widgets/celeba/48x48.png"
 NUM_IMAGES = 30000
-SPRITES_PER_ROW = 100
 IMAGE_SIZE = 48
 CACHE_DIR = Path("cache")
-CACHE_FILE = CACHE_DIR / "celeba_48x48_sprites.npy"
+CACHE_FILE = CACHE_DIR / "celeba_48x48_sprites_v2.npy"
 
 
 def download_sprite_sheet(url: str = IMAGE_URL) -> Image.Image:
@@ -35,29 +34,14 @@ def parse_sprite_sheet(sheet: Image.Image) -> np.ndarray:
     Returns:
         Array of shape (NUM_IMAGES, 48, 48, 3) with values in [0, 255]
     """
-    sheet_array = np.array(sheet)  # (H, W, 3) or (H, W, 4)
-    if sheet_array.shape[2] == 4:
-        sheet_array = sheet_array[:, :, :3]  # Remove alpha channel
-    
+    sheet_array = np.asarray(sheet.convert("RGB"))
     h, w = sheet_array.shape[:2]
-    rows = h // IMAGE_SIZE
-    cols = SPRITES_PER_ROW
-    
-    images = []
-    for row in range(rows):
-        for col in range(cols):
-            if len(images) >= NUM_IMAGES:
-                break
-            y1 = row * IMAGE_SIZE
-            y2 = y1 + IMAGE_SIZE
-            x1 = col * IMAGE_SIZE
-            x2 = x1 + IMAGE_SIZE
-            img = sheet_array[y1:y2, x1:x2, :]
-            images.append(img)
-        if len(images) >= NUM_IMAGES:
-            break
-    
-    return np.stack(images[:NUM_IMAGES], axis=0)  # (N, 48, 48, 3)
+    if h % IMAGE_SIZE or w % IMAGE_SIZE:
+        raise ValueError("Sprite dimensions must be multiples of IMAGE_SIZE")
+    rows, cols = h // IMAGE_SIZE, w // IMAGE_SIZE
+    # Infer columns from the file: the CelebA source is 200 columns, not 100.
+    images = sheet_array.reshape(rows, IMAGE_SIZE, cols, IMAGE_SIZE, 3)
+    return images.transpose(0, 2, 1, 3, 4).reshape(-1, IMAGE_SIZE, IMAGE_SIZE, 3)[:NUM_IMAGES].copy()
 
 
 def ensure_cache() -> Path:
@@ -90,7 +74,7 @@ def load_cached_images() -> np.ndarray:
         Array of shape (NUM_IMAGES, 48, 48, 3) with values in [0, 255]
     """
     ensure_cache()
-    return np.load(CACHE_FILE)
+    return np.load(CACHE_FILE, mmap_mode="r")
 
 
 class CelebASpritesDataset(Dataset):
@@ -105,7 +89,9 @@ class CelebASpritesDataset(Dataset):
         self.images = load_cached_images()
         if data_limit is not None:
             self.images = self.images[:min(data_limit, len(self.images))]
-        self.transform = transform or self._default_transform()
+        if len(self.images) == 0:
+            raise ValueError("data_limit must select at least one image")
+        self.transform = transform
     
     def _default_transform(self):
         """Default transform: normalize to [-1, 1]."""
@@ -119,6 +105,8 @@ class CelebASpritesDataset(Dataset):
     
     def __getitem__(self, idx: int) -> torch.Tensor:
         img = self.images[idx]
+        if self.transform is None:
+            return torch.from_numpy(np.array(img, copy=True)).permute(2, 0, 1).float().div_(127.5).sub_(1)
         img_pil = Image.fromarray(img)
         return self.transform(img_pil)
     
@@ -132,7 +120,8 @@ def get_dataloader(
     data_limit: Optional[int] = None,
     shuffle: bool = True,
     num_workers: int = 0,
-    pin_memory: bool = False
+    pin_memory: bool = False,
+    generator=None,
 ) -> DataLoader:
     """Create DataLoader for CelebA sprites.
     
@@ -152,7 +141,9 @@ def get_dataloader(
         batch_size=batch_size,
         shuffle=shuffle,
         num_workers=num_workers,
-        pin_memory=pin_memory
+        pin_memory=pin_memory,
+        persistent_workers=num_workers > 0,
+        generator=generator,
     )
 
 

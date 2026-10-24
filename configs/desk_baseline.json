@@ -1,0 +1,4 @@
+{
+  "common": {"seed": 42, "data_limit": 2048, "batch_size": 16, "precision": "auto", "device": "cuda", "validation_fraction": 0.125},
+  "vae": {"epochs": 8, "latent_dim": 16, "lr": 0.0002, "kld_beta": 1.0, "kl_warmup_epochs": 0}
+}
