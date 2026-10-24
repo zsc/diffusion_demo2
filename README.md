@@ -1,17 +1,25 @@
-# Diffusion Demo - DiT 扩散模型训练与采样
+# Diffusion Demo - Pixel JiT 与 DiT 人脸生成
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python 3.8+">
-  <img src="https://img.shields.io/badge/PyTorch-2.3+-orange.svg" alt="PyTorch 2.0+">
+  <img class="cover-image" src="assets/images/pixel96-cover.png" width="720" alt="Pixel JiT 96×96 人脸生成样例">
+</p>
+<p align="center">
+  <sub>Pixel JiT · 当前 96×96 主模型 · 20.480M EMA · Heun50 · seed 2027 · 连续生成前 16 张（未筛选）</sub>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Pixel%20JiT-96%C3%9796-8e44ad.svg" alt="Pixel JiT 96×96">
+  <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python 3.9+">
+  <img src="https://img.shields.io/badge/PyTorch-2.3+-orange.svg" alt="PyTorch 2.3+">
   <img src="https://img.shields.io/badge/CUDA-可选-green.svg" alt="CUDA Optional">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
 </p>
 
-一个完整的基于 **DiT (Diffusion Transformer)** 的图像生成演示系统，支持 Web 界面交互和命令行训练。本项目实现了 VAE/VQVAE 变分自编码器和基于 Transformer 的扩散模型，用于 48×48 人脸图像的生成。
+一个面向人脸图像生成的可复现实验项目。当前主线使用 **Pixel JiT** 直接在 48×48 / 96×96 RGB 像素上训练和采样，不经过 VAE/VQVAE；仓库同时保留 VAE/VQVAE + 潜空间 DiT 的完整训练、Web 交互与评估流程。
 
 ## Pixel JiT 与 SOFY 大 batch 实验
 
-新增 `pixel_experiment.py` / `pixel_ddp_experiment.py`，直接在 48×48 RGB 上训练，不依赖 VAE 或预训练生成权重。结构参考本地 `cstft_jit`、`cstft_jit_arc2face` 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。
+新增 `pixel_experiment.py` / `pixel_ddp_experiment.py`，直接在 RGB 像素上训练，不依赖 VAE、VQVAE 或预训练生成权重。主线从 48×48 起步，再继承全部学习参数扩展到 96×96。结构参考本地 `cstft_jit`、`cstft_jit_arc2face` 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。
 
 ### 本轮选用的方案
 

@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="./">
-    <title>Diffusion Demo - DiT 扩散模型训练与采样</title>
-    <meta name="description" content="DiT 扩散模型训练、96px 人脸生成实验、评估与采样结果。">
+    <title>Diffusion Demo - Pixel JiT 与 DiT 人脸生成</title>
+    <meta name="description" content="Pixel JiT 96×96 人脸生成实验，以及 VAE/VQVAE、潜空间 DiT 的训练、评估与采样流程。">
     <meta name="theme-color" content="#2c3e50">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Diffusion Demo - Pixel JiT 与 DiT 人脸生成">
+    <meta property="og:description" content="Pixel JiT 96×96 人脸生成实验，以及完整训练、评估与采样流程。">
+    <meta property="og:image" content="https://zsc.github.io/diffusion_demo2/assets/images/pixel96-cover.png">
+    <meta property="og:image:alt" content="Pixel JiT 96×96 人脸生成样例">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/highlight.css">
@@ -102,17 +108,24 @@
 
         <main class="content">
             <article>
-                <h1 id="diffusion-demo-dit">Diffusion Demo - DiT 扩散模型训练与采样</h1>
+                <h1 id="diffusion-demo-dit">Diffusion Demo - Pixel JiT 与 DiT 人脸生成</h1>
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python 3.8+">
-  <img src="https://img.shields.io/badge/PyTorch-2.3+-orange.svg" alt="PyTorch 2.0+">
+  <img class="cover-image" src="assets/images/pixel96-cover.png" width="720" alt="Pixel JiT 96×96 人脸生成样例" loading="eager" decoding="async">
+</p>
+<p class="cover-caption" align="center">
+  <sub>Pixel JiT · 当前 96×96 主模型 · 20.480M EMA · Heun50 · seed 2027 · 连续生成前 16 张（未筛选）</sub>
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Pixel%20JiT-96%C3%9796-8e44ad.svg" alt="Pixel JiT 96×96">
+  <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python 3.9+">
+  <img src="https://img.shields.io/badge/PyTorch-2.3+-orange.svg" alt="PyTorch 2.3+">
   <img src="https://img.shields.io/badge/CUDA-可选-green.svg" alt="CUDA Optional">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
 </p>
 
-<p>一个完整的基于 <strong>DiT (Diffusion Transformer)</strong> 的图像生成演示系统，支持 Web 界面交互和命令行训练。本项目实现了 VAE/VQVAE 变分自编码器和基于 Transformer 的扩散模型，用于 48×48 人脸图像的生成。</p>
+<p>一个面向人脸图像生成的可复现实验项目。当前主线使用 <strong>Pixel JiT</strong> 直接在 48×48 / 96×96 RGB 像素上训练和采样，不经过 VAE/VQVAE；仓库同时保留 VAE/VQVAE + 潜空间 DiT 的完整训练、Web 交互与评估流程。</p>
 <h2 id="pixel-jit-sofy-batch">Pixel JiT 与 SOFY 大 batch 实验</h2>
-<p>新增 <code>pixel_experiment.py</code> / <code>pixel_ddp_experiment.py</code>，直接在 48×48 RGB 上训练，不依赖 VAE 或预训练生成权重。结构参考本地 <code>cstft_jit</code>、<code>cstft_jit_arc2face</code> 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。</p>
+<p>新增 <code>pixel_experiment.py</code> / <code>pixel_ddp_experiment.py</code>，直接在 RGB 像素上训练，不依赖 VAE、VQVAE 或预训练生成权重。主线从 48×48 起步，再继承全部学习参数扩展到 96×96。结构参考本地 <code>cstft_jit</code>、<code>cstft_jit_arc2face</code> 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。</p>
 <h3 id="_1">本轮选用的方案</h3>
 <p>已完成两轮、8 组主实验及采样消融，结果见 <a href="reports/pixel_experiments_2026-10-24.html">实验报告</a>。选用 <code>configs/pixel_ddp_b1024_lr4e4.json</code>：global batch=1024、lr=4e-4、8,000 步 / 819.2 万张次；主模型在 1×16 GPU 上训练循环耗时 <strong>6.36 分钟</strong>。同结构的弱模型使用 lr=2e-4、2,000 步 / 204.8 万张次，额外约 <strong>1.75 分钟</strong>。这些时间包含训练循环内采样和保存，不含启动、传输、独立评估。</p>
 <p>采样使用 EMA、50 步 Heun、autoguidance=2，只在 <code>t∈[0.1,0.8]</code> 启用弱模型。调参种子上的 FID 从未引导的 <strong>57.19 降至 43.98</strong>；锁定方案后，独立种子 7777 复核为 <strong>57.52 → 44.27</strong>（KID <strong>0.04832 → 0.03211</strong>）。全程强引导有些配置 FID 更低，但完整网格出现条纹，因此不采用。58.7M 大模型需要约两倍训练时间，引导后的质量也没有超过选中的小模型。</p>
