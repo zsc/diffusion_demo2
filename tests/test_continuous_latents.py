@@ -33,3 +33,48 @@ def test_continuous_prior_resume_preserves_rng_and_weights(tmp_path):
         for name in full[key]:torch.testing.assert_close(full[key][name],split[key][name],rtol=0,atol=0)
     assert split['step']==4 and split['projection'] is None
     assert torch.equal(split['rng'][0]['cpu'],full['rng'][0]['cpu'])
+
+
+def test_data_expansion_preserves_ids_pixels_and_disjoint_holdout(tmp_path):
+    import pytest
+    from diffusion_demo.core.models.continuous_latents import validate_data_expansion,file_sha256
+    import hashlib
+    rng=np.random.default_rng(2);old=rng.integers(0,256,(5,4,4,3),dtype=np.uint8)
+    new=np.concatenate([old,rng.integers(0,256,(2,4,4,3),dtype=np.uint8)])
+    a,b=tmp_path/'old.npy',tmp_path/'new.npy';np.save(a,old);np.save(b,new)
+    ma=dict(split_mode='validation_first',images=dict(validation=['v0','v1'],train=['t0','t1','t2']))
+    mb=dict(split_mode='validation_first',images=dict(validation=['v0','v1'],train=['t0','t1','t2','t3','t4']))
+    a.with_suffix('.json').write_text(json.dumps(ma));b.with_suffix('.json').write_text(json.dumps(mb))
+    assert validate_data_expansion(a,b,val_count=2)['training_count']==5
+    assert file_sha256(b)==hashlib.sha256(b.read_bytes()).hexdigest()
+    for index in [0,3]:
+        bad=new.copy();bad[index,0,0,0]^=1;np.save(b,bad)
+        with pytest.raises(ValueError,match='pixels'):validate_data_expansion(a,b,val_count=2)
+    np.save(b,new);mb['images']['train'][-1]='v0';b.with_suffix('.json').write_text(json.dumps(mb))
+    with pytest.raises(ValueError,match='overlap'):validate_data_expansion(a,b,val_count=2)
+
+
+def test_expanded_resume_keeps_latent_coordinates_and_requires_opt_in(tmp_path):
+    import pytest
+    torch.manual_seed(8)
+    model_cfg=dict(latent_dim=2,hidden_dims=[4,8],image_size=48,latent_spatial_size=4)
+    vae=VAE(**model_cfg);ae=tmp_path/'vae.pth'
+    torch.save(dict(model_type='vae',model_config=model_cfg,model_state_dict=vae.state_dict(),metrics={}),ae)
+    old=np.zeros((1004,2,2,4,4),np.float16);old[:,1]=-2
+    new=np.concatenate([old,np.full((4,2,2,4,4),2,np.float16)])
+    cfg=dict(autoencoder=str(ae),data='old',batch_size=4,lr=1e-3,width=24,depth=1,heads=3,patch_size=2,seed=1,posterior_mode='sample',save_every_images=8)
+    def run(folder,images,data,cache,resume=None,allow=False):
+        cp=tmp_path/'config.json';cp.write_text(json.dumps(dict(cfg,images=images,data=data)))
+        argv=['train','--cpu','--config',str(cp),'--output',str(folder)]
+        if resume:argv+=['--resume',str(resume)]
+        if allow:argv+=['--allow-data-expansion']
+        with patch.object(sys,'argv',argv),patch('latent_ddp_experiment.cache_posterior',return_value=cache),patch('latent_ddp_experiment.draw',return_value=torch.zeros(1,3,48,48)),patch('latent_ddp_experiment.validate_data_expansion',return_value={'training_count':8}):main()
+    run(tmp_path/'old',8,'old',old)
+    parent=tmp_path/'old/last.pt'
+    with pytest.raises(ValueError,match='allow-data-expansion'):run(tmp_path/'rejected',16,'new',new,parent)
+    run(tmp_path/'expanded',16,'new',new,parent,True)
+    a=torch.load(parent,weights_only=True);b=torch.load(tmp_path/'expanded/last.pt',weights_only=True)
+    assert b['step']==4 and b['config']['data']=='new'
+    assert torch.equal(a['center'],b['center']) and torch.equal(a['scale'],b['scale'])
+    assert all(v['step']==4 for v in b['optimizer']['state'].values())
+    assert json.loads((tmp_path/'expanded/data_expansion.json').read_text())['exact_training_trajectory'] is False

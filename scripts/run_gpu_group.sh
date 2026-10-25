@@ -18,6 +18,10 @@ if [[ "${ALLOW_RESUME_TIME_CHANGE:-0}" == 1 ]]; then
   [[ $# -ge 5 ]] || { echo 'Time distribution change requires a resume checkpoint' >&2; exit 1; }
   resume_args+=(--allow-resume-time-change)
 fi
+if [[ "${ALLOW_RESUME_BATCH_CHANGE:-0}" == 1 ]]; then
+  [[ $# -ge 5 ]] || { echo 'Batch change requires a resume checkpoint' >&2; exit 1; }
+  resume_args+=(--allow-resume-batch-change)
+fi
 if [[ -n "${INIT_CHECKPOINT:-}" ]]; then
   [[ ${#resume_args[@]} == 0 ]] || { echo 'Choose resume or initialization, not both' >&2; exit 1; }
   resume_args=(--init-from "$INIT_CHECKPOINT")

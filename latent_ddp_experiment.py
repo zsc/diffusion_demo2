@@ -20,7 +20,7 @@ from PIL import Image
 
 from diffusion_demo.core.models.dit import DiT
 from diffusion_demo.core.models.vae import VAE
-from diffusion_demo.core.models.continuous_latents import cache_posterior, posterior_normalization, sample_posterior
+from diffusion_demo.core.models.continuous_latents import cache_posterior, posterior_normalization, sample_posterior, validate_data_expansion
 from diffusion_demo.core.models.pixel_jit import flow_loss, heun_sample
 from diffusion_demo.core.training.train_dit import load_vae
 from diffusion_demo.utils.torch_env import MixedPrecision
@@ -139,6 +139,7 @@ def main():
     ap.add_argument('--mode',choices=['train','eval'],default='train')
     ap.add_argument('--config',required=True);ap.add_argument('--output',required=True)
     ap.add_argument('--checkpoint');ap.add_argument('--resume');ap.add_argument('--guide')
+    ap.add_argument('--allow-data-expansion',action='store_true',help='Resume on a verified training-only cache extension; retain optimizer, EMA and latent coordinates')
     ap.add_argument('--init-checkpoint', help='Spatial warm start from EMA; preserve latent coordinates, reset optimizer and 96px image counter')
     ap.add_argument('--autoencoder', help='Evaluation decoder override; encoder and quantizer must match the trained prior')
     ap.add_argument('--guidance',type=float,default=1);ap.add_argument('--requantize',action='store_true')
@@ -146,6 +147,7 @@ def main():
     ap.add_argument('--weights-dir');ap.add_argument('--cpu',action='store_true')
     args=ap.parse_args();cfg=json.loads(Path(args.config).read_text())
     if args.init_checkpoint and (args.resume or args.mode!='train'):raise ValueError('Warm start is exclusive with resume/eval')
+    if args.allow_data_expansion and (not args.resume or args.mode!='train'):raise ValueError('Data expansion requires training resume')
     rank=int(os.environ.get('RANK',0));local=int(os.environ.get('LOCAL_RANK',0));world=int(os.environ.get('WORLD_SIZE',1))
     torch.set_num_threads(2)
     device=torch.device('cpu' if args.cpu else f'cuda:{local}')
@@ -221,11 +223,14 @@ def main():
             if cfg.get('pca_components') or args.init_checkpoint:raise ValueError('Continuous VAE starts in its own channel coordinates without PCA')
             cached=cache_posterior(vae,cfg['data'],output,device,amp,rank,world)
             posterior_mode=cfg.get('posterior_mode','sample')
-            center,scale=posterior_normalization(cached,posterior_mode)
+            if args.resume:
+                resumed=torch.load(args.resume,map_location='cpu',weights_only=True)
+                center,scale=resumed['center'],resumed['scale']
+            else:center,scale=posterior_normalization(cached,posterior_mode)
             center,scale=center.to(device),scale.to(device)
             train=torch.from_numpy(np.array(cached[1000:],copy=True)).to(device)
             channels=vae.latent_dim
-            if rank==0:write_json(output/'normalization.json',dict(mode=posterior_mode,fitted_indices=f'1000:{len(cached)}',center=center.cpu().flatten().tolist(),scale=scale.cpu().flatten().tolist()))
+            if rank==0:write_json(output/'normalization.json',dict(mode=posterior_mode,fitted_indices=None if args.resume else f'1000:{len(cached)}',inherited_from=args.resume,center=center.cpu().flatten().tolist(),scale=scale.cpu().flatten().tolist()))
         else:
             cached=cache_codes(vae,cfg['data'],output,device,amp,rank,world)
             train=torch.from_numpy(cached[1000:].astype(np.int64)).to(device)
@@ -253,8 +258,11 @@ def main():
             # A resolution warm start can retain a PCA basis fitted at 48px.
             # Resume must keep those checkpoint coordinates, not refit on 96px.
             payload=torch.load(args.resume,map_location='cpu',weights_only=True)
-            if payload['config']['data']!=cfg['data'] or payload['config'].get('batch_size',512)!=cfg.get('batch_size',512):
-                raise ValueError('Exact resume requires the same data and global batch')
+            if payload['config'].get('batch_size',512)!=cfg.get('batch_size',512):raise ValueError('Resume requires the same global batch')
+            if payload['config']['data']!=cfg['data']:
+                if not args.allow_data_expansion:raise ValueError('Changed data requires explicit --allow-data-expansion')
+                expansion=validate_data_expansion(payload['config']['data'],cfg['data'])
+                if rank==0:write_json(output/'data_expansion.json',dict(expansion,checkpoint=args.resume,latent_coordinates_preserved=True,optimizer_preserved=True,ema_preserved=True,exact_training_trajectory=False))
             if continuous and payload['config'].get('posterior_mode','sample')!=posterior_mode:raise ValueError('Resume posterior mode mismatch')
             channels=payload['model_config']['in_channels']
             if cfg.get('pca_components') not in [None,channels]:raise ValueError('Resume channel mismatch')

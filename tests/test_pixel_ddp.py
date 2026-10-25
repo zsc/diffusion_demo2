@@ -11,10 +11,29 @@ import unittest
 import numpy as np
 import torch
 from pixel_ddp_experiment import (validate_resume_config, training_time_parameters,
-                                  training_time_sampling, sample_training_times)
+                                  training_time_sampling, sample_training_times, training_lr)
 
 
 class PixelDDPTests(unittest.TestCase):
+    def test_batch_and_lr_schedule_changes_are_explicit(self):
+        previous = dict(global_batch=1024, lr=5e-5, warmup_images=100)
+        with self.assertRaisesRegex(ValueError, "global_batch"):
+            validate_resume_config(previous, {**previous, "global_batch": 2048})
+        validate_resume_config(previous, {**previous, "global_batch": 2048}, allow_batch_change=True)
+        for value in [0, -1, 2.5]:
+            with self.assertRaises(ValueError):
+                validate_resume_config(previous, {**previous, "global_batch": value}, allow_batch_change=True)
+        cfg = {**previous, "lr_schedule": "cosine", "lr_decay_start_images": 100,
+               "lr_decay_end_images": 200, "lr_min_ratio": .2}
+        with self.assertRaisesRegex(ValueError, "LR schedule"):
+            validate_resume_config(previous, cfg)
+        validate_resume_config(previous, cfg, allow_lr_change=True)
+        self.assertAlmostEqual(training_lr(cfg, 100), 5e-5)
+        self.assertAlmostEqual(training_lr(cfg, 150), 3e-5)
+        self.assertAlmostEqual(training_lr(cfg, 200), 1e-5)
+        self.assertAlmostEqual(training_lr(cfg, 300), 1e-5)
+        self.assertAlmostEqual(training_lr(previous, 50), 2.5e-5)
+
     def test_stratified_time_sampling_preserves_cdf_coverage_and_rng(self):
         torch.manual_seed(19)
         state = torch.get_rng_state()
@@ -64,8 +83,9 @@ class PixelDDPTests(unittest.TestCase):
                        device="cpu", precision="fp32", global_batch=4, lr=1e-4, warmup_images=8,
                        ema_reference_batch=4, ema_reference_decay=.99, val_count=2, max_images=16,
                        eval_every_images=8, sample_steps=2, log_every=2, seed=42, cpu_threads=1)
+            cfg["extra_ema_decays"] = [.95, .999]
             np.save(root / "data.npy", np.random.default_rng(7).integers(0, 256, (10, 48, 48, 3), dtype=np.uint8))
-            def run(name, images, resume=False, allow_lr_change=False):
+            def run(name, images, resume=False, allow_lr_change=False, allow_batch_change=False):
                 cfg["max_images"] = images
                 (root / "config.json").write_text(json.dumps(cfg))
                 with socket.socket() as s:
@@ -79,6 +99,8 @@ class PixelDDPTests(unittest.TestCase):
                     cmd.extend(["--resume", str(root / name / "last.pt")])
                 if allow_lr_change:
                     cmd.append("--allow-resume-lr-change")
+                if allow_batch_change:
+                    cmd.append("--allow-resume-batch-change")
                 p = subprocess.run(cmd, env={**os.environ, "PYTHONPATH": "src"}, capture_output=True, text=True, timeout=90)
                 self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
             run("full", 16)
@@ -90,6 +112,9 @@ class PixelDDPTests(unittest.TestCase):
                 for key in a[group]:
                     torch.testing.assert_close(a[group][key], b[group][key], rtol=0, atol=0)
             self.assertEqual(b["images_seen"], 16)
+            for decay in a["extra_emas"]:
+                for key in a["extra_emas"][decay]:
+                    torch.testing.assert_close(a["extra_emas"][decay][key], b["extra_emas"][decay][key], rtol=0, atol=0)
             self.assertEqual(len(b["rng"]), 2)
             self.assertFalse(torch.equal(b["rng"][0]["cpu"], b["rng"][1]["cpu"]))
             cfg["lr"] = 5e-5
@@ -119,6 +144,14 @@ class PixelDDPTests(unittest.TestCase):
                     torch.testing.assert_close(a[group][key], b[group][key], rtol=0, atol=0)
             for rank in range(2):
                 torch.testing.assert_close(a["rng"][rank]["cpu"], b["rng"][rank]["cpu"], rtol=0, atol=0)
+            cfg["global_batch"] = 8
+            run("strat_split", 24, True, allow_batch_change=True)
+            changed = torch.load(root / "strat_split" / "last.pt", weights_only=False)
+            self.assertEqual(changed["step"], 5)
+            self.assertTrue(changed["continuation"]["explicit_batch_change"])
+            decay = min(cfg["ema_reference_decay"], 7 / 16) ** 2
+            for key in changed["ema"]:
+                torch.testing.assert_close(changed["ema"][key], b["ema"][key] * decay + changed["model"][key] * (1-decay))
 
 
 if __name__ == "__main__":

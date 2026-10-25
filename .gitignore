@@ -64,3 +64,13 @@ Thumbs.db
 
 # Generated PDF reports
 *.pdf
+
+# Local environment helpers
+/scripts/cluster_bridge.py
+/scripts/remote_bridge.py
+/scripts/object_transfer.py
+/scripts/finish_best_of_n_jobs.py
+/scripts/inspect_pixel96_*.py
+
+# Local notes containing environment-specific paths
+/实验进展_*.md

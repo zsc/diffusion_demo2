@@ -49,13 +49,58 @@ def sample_training_times(batch, device, location, scale, mode="iid"):
     return (normal * scale + location).sigmoid()
 
 
-def validate_resume_config(previous, cfg, allow_lr_change=False, allow_time_change=False):
+def lr_schedule_parameters(cfg):
+    schedule = cfg.get("lr_schedule", "constant")
+    if schedule == "constant":
+        return (schedule,)
+    if schedule != "cosine":
+        raise ValueError("Invalid LR schedule")
+    start, end = cfg["lr_decay_start_images"], cfg["lr_decay_end_images"]
+    minimum = float(cfg.get("lr_min_ratio", .2))
+    if not (math.isfinite(start) and math.isfinite(end) and 0 <= start < end and
+            math.isfinite(minimum) and 0 <= minimum <= 1):
+        raise ValueError("Invalid LR schedule bounds")
+    return schedule, start, end, minimum
+
+
+def training_lr(cfg, next_images):
+    schedule = lr_schedule_parameters(cfg)
+    factor = 1.
+    if schedule[0] == "cosine":
+        _, start, end, minimum = schedule
+        progress = min(1., max(0., (next_images - start) / (end - start)))
+        factor = minimum + (1 - minimum) * .5 * (1 + math.cos(math.pi * progress))
+    return cfg["lr"] * min(1., next_images / cfg.get("warmup_images", 128000)) * factor
+
+
+def make_extra_emas(ema, cfg, restored=None):
+    decays = cfg.get("extra_ema_decays", [])
+    if len(set(decays)) != len(decays) or any(not math.isfinite(d) or not 0 < d < 1 for d in decays):
+        raise ValueError("Invalid extra EMA decays")
+    states = (restored or {}).get("extra_emas", {})
+    if states and set(states) != {str(d) for d in decays}:
+        raise ValueError("Resume changed existing extra EMAs")
+    result = {}
+    for decay in decays:
+        shadow = copy.deepcopy(ema).eval().requires_grad_(False)
+        if str(decay) in states:
+            shadow.load_state_dict(states[str(decay)])
+        result[str(decay)] = shadow
+    return result
+
+
+def validate_resume_config(previous, cfg, allow_lr_change=False, allow_time_change=False,
+                           allow_batch_change=False):
     for key in ["model", "global_batch", "seed", "lr", "warmup_images", "ema_reference_batch",
                 "ema_reference_decay", "split_mode", "val_count", "precision"]:
         if previous.get(key) != cfg.get(key):
             if key == "lr" and allow_lr_change and math.isfinite(cfg["lr"]) and cfg["lr"] > 0:
                 continue
+            if key == "global_batch" and allow_batch_change and isinstance(cfg[key], int) and cfg[key] > 0:
+                continue
             raise ValueError(f"Resume changed {key}")
+    if lr_schedule_parameters(previous) != lr_schedule_parameters(cfg) and not allow_lr_change:
+        raise ValueError("Resume changed LR schedule")
     time_changed = (training_time_parameters(previous) != training_time_parameters(cfg) or
                     training_time_sampling(previous) != training_time_sampling(cfg))
     if time_changed and not allow_time_change:
@@ -74,14 +119,19 @@ def main():
                     help="Explicitly change LR while retaining optimizer, EMA, counters and RNG")
     ap.add_argument("--allow-resume-time-change", action="store_true",
                     help="Explicitly change training time distribution; validation distribution stays fixed")
+    ap.add_argument("--allow-resume-batch-change", action="store_true",
+                    help="Explicit experiment: change batch while retaining optimizer and image-based EMA")
     args = ap.parse_args()
     if args.allow_resume_lr_change and not args.resume:
         ap.error("--allow-resume-lr-change requires --resume")
     if args.allow_resume_time_change and not args.resume:
         ap.error("--allow-resume-time-change requires --resume")
+    if args.allow_resume_batch_change and not args.resume:
+        ap.error("--allow-resume-batch-change requires --resume")
     cfg = json.loads(Path(args.config).read_text())
     time_mean, time_std = training_time_parameters(cfg)
     time_sampling = training_time_sampling(cfg)
+    lr_schedule_parameters(cfg)
     rank, local_rank, world = [int(os.environ.get(k, d)) for k, d in
                                [("RANK", 0), ("LOCAL_RANK", 0), ("WORLD_SIZE", 1)]]
     compiler_cache = None
@@ -125,7 +175,8 @@ def main():
     continuation = None
     if args.resume:
         restored = torch.load(args.resume, map_location="cpu", weights_only=False)
-        validate_resume_config(restored["config"], cfg, args.allow_resume_lr_change, args.allow_resume_time_change)
+        validate_resume_config(restored["config"], cfg, args.allow_resume_lr_change,
+                               args.allow_resume_time_change, args.allow_resume_batch_change)
         if restored["world_size"] != world:
             raise ValueError("Exact resume requires the same world size")
         model.load_state_dict(restored["model"])
@@ -141,10 +192,15 @@ def main():
                             time_distribution=(time_mean, time_std), explicit_time_change=args.allow_resume_time_change,
                             previous_time_sampling=training_time_sampling(restored["config"]),
                             time_sampling=time_sampling,
+                            previous_global_batch=restored["config"]["global_batch"],
+                            global_batch=cfg["global_batch"], explicit_batch_change=args.allow_resume_batch_change,
+                            previous_lr_schedule=lr_schedule_parameters(restored["config"]),
+                            lr_schedule=lr_schedule_parameters(cfg),
                             previous_continuation=restored.get("continuation"))
         if rank == 0:
             write_json(output / "continuation.json", continuation)
     execution_backend = cfg.get("execution_backend", "eager")
+    extra_emas = make_extra_emas(ema, cfg, restored) if rank == 0 else {}
     from pixel_accelerate import prepare_training_model
     training_model = prepare_training_model(model, execution_backend)
     if rank == 0 and initialization:
@@ -167,6 +223,7 @@ def main():
                    ddp_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
         env["compiler_cache"] = str(compiler_cache) if compiler_cache else None
         env["execution_backend"] = execution_backend
+        env["extra_ema_decays"] = list(extra_emas)
         env["ddp_graph_partitioning"] = execution_backend != "compile_full"
         env["previous_execution_backend"] = restored["config"].get("execution_backend", "eager") if restored else None
         if execution_backend != "eager":
@@ -197,7 +254,7 @@ def main():
         clean = torch.where(torch.rand(batch, 1, 1, 1, device=device) < .5, clean.flip(-1), clean)
         t = sample_training_times(batch, device, time_mean, time_std, time_sampling)
         noise = torch.randn_like(clean)
-        lr = cfg["lr"] * min(1, (images_seen + cfg["global_batch"]) / cfg.get("warmup_images", 128000))
+        lr = training_lr(cfg, images_seen + cfg["global_batch"])
         for group in optimizer.param_groups:
             group["lr"] = lr
         optimizer.zero_grad(set_to_none=True)
@@ -216,6 +273,9 @@ def main():
         decay **= cfg["global_batch"] / cfg.get("ema_reference_batch", 256)
         if updated:
             update_ema(ema, model, decay)
+            for reference_decay, shadow in extra_emas.items():
+                shadow_decay = min(float(reference_decay), (1 + ref_updates) / (10 + ref_updates))
+                update_ema(shadow, model, shadow_decay ** (cfg["global_batch"] / cfg.get("ema_reference_batch", 256)))
         skipped += not updated
         since_eval += cfg["global_batch"]
         interval_losses.append(loss.detach())
@@ -278,10 +338,15 @@ def main():
                              scaler=rt.scaler.state_dict(), config=cfg, data_sha256=data_hash,
                              step=step, images_seen=images_seen, world_size=world, rng=all_rng,
                              initialization=initialization, continuation=continuation)
+                state["extra_emas"] = {key: shadow.state_dict() for key, shadow in extra_emas.items()}
                 torch.save(state, output / "last.pt.tmp")
                 (output / "last.pt.tmp").replace(output / "last.pt")
                 torch.save(dict(ema=ema.state_dict(), config=cfg, images_seen=images_seen,
                                 initialization=initialization), output / f"ema_{images_seen:09d}.pt")
+                for key, shadow in extra_emas.items():
+                    torch.save(dict(ema=shadow.state_dict(), config=cfg, images_seen=images_seen,
+                                    ema_reference_decay=float(key), initialization=initialization),
+                               output / f"ema_decay{key}_{images_seen:09d}.pt")
             barrier()
             since_eval = 0
             interval_losses, interval_norms, interval_steps, skipped = [], [], 0, 0
