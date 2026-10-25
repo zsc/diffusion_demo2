@@ -1,0 +1,375 @@
+{
+  "b2048_lr5e5": {
+    "task": {
+      "task_id": 59198,
+      "name": "vq96-variant-b2048_lr5e5",
+      "state": "SUCCEEDED",
+      "error_message": null,
+      "placement": {
+        "task_id": 59198,
+        "nodes": [
+          {
+            "node_id": "cluster-job",
+            "gpus": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "cpus": 0
+          }
+        ],
+        "master": {
+          "node_id": "cluster-job",
+          "addr": "172.16.39.28",
+          "port": 29500
+        }
+      }
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq96_transfer_20261025/decoder/best.pth",
+      "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+      "images": 4194304,
+      "save_every_images": 2097152,
+      "snapshot_images": [
+        524288
+      ],
+      "batch_size": 2048,
+      "lr": 5e-05,
+      "warmup_images": 65536,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 1,
+      "pca_components": 8,
+      "seed": 0
+    },
+    "samples": [
+      "b2048_lr5e5/train/samples_524288.png",
+      "b2048_lr5e5/train/samples_4194304.png",
+      "b2048_lr5e5/train/samples_2097152.png"
+    ],
+    "train/progress.json": {
+      "step": 2048,
+      "images_seen": 4194304,
+      "loss": 0.7500302791595459,
+      "seconds": 346.64917437500026,
+      "images_per_second": 12099.564351068462
+    },
+    "train/result.json": {
+      "images_seen": 4194304,
+      "world_size": 16,
+      "parameters": 21758216,
+      "seconds": 350.32963948500037
+    },
+    "train/transfer.json": {
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/followup/train/ema_33554432.pt",
+      "source_sha256": "03a8012097d53276515bfa61ebafd4c1fdbd69124faa5b0f8784281c3e8d733c",
+      "source_model_config": {
+        "img_size": 12,
+        "in_channels": 8,
+        "patch_size": 1,
+        "hidden_size": 384,
+        "depth": 8,
+        "num_heads": 6
+      },
+      "target_latent_grid": 24,
+      "inherited_latent_coordinates": true,
+      "optimizer_reset": true,
+      "new_resolution_image_counter": 0
+    },
+    "eval": {
+      "raw_seed3333": {
+        "clean_fid": 105.91807417409251,
+        "kid_mean": 0.07571808670691285,
+        "kid_subset_std": 0.005692515894898197,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "guided_seed3333": {
+        "clean_fid": 89.53455309686237,
+        "kid_mean": 0.058597487077809325,
+        "kid_subset_std": 0.0049353411319752296,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      }
+    }
+  },
+  "b2048_lr2e4": {
+    "task": {
+      "task_id": 59199,
+      "name": "vq96-variant-b2048_lr2e4",
+      "state": "SUCCEEDED",
+      "error_message": null,
+      "placement": {
+        "task_id": 59199,
+        "nodes": [
+          {
+            "node_id": "cluster-job",
+            "gpus": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "cpus": 0
+          }
+        ],
+        "master": {
+          "node_id": "cluster-job",
+          "addr": "172.16.58.124",
+          "port": 29502
+        }
+      }
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq96_transfer_20261025/decoder/best.pth",
+      "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+      "images": 4194304,
+      "save_every_images": 2097152,
+      "snapshot_images": [
+        524288
+      ],
+      "batch_size": 2048,
+      "lr": 0.0002,
+      "warmup_images": 65536,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 1,
+      "pca_components": 8,
+      "seed": 0
+    },
+    "samples": [
+      "b2048_lr2e4/train/samples_524288.png",
+      "b2048_lr2e4/train/samples_4194304.png",
+      "b2048_lr2e4/train/samples_2097152.png"
+    ],
+    "train/progress.json": {
+      "step": 2048,
+      "images_seen": 4194304,
+      "loss": 0.7411330342292786,
+      "seconds": 345.5677246000005,
+      "images_per_second": 12137.429782978532
+    },
+    "train/result.json": {
+      "images_seen": 4194304,
+      "world_size": 16,
+      "parameters": 21758216,
+      "seconds": 349.2844946940004
+    },
+    "train/transfer.json": {
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/followup/train/ema_33554432.pt",
+      "source_sha256": "03a8012097d53276515bfa61ebafd4c1fdbd69124faa5b0f8784281c3e8d733c",
+      "source_model_config": {
+        "img_size": 12,
+        "in_channels": 8,
+        "patch_size": 1,
+        "hidden_size": 384,
+        "depth": 8,
+        "num_heads": 6
+      },
+      "target_latent_grid": 24,
+      "inherited_latent_coordinates": true,
+      "optimizer_reset": true,
+      "new_resolution_image_counter": 0
+    },
+    "eval": {
+      "raw_seed3333": {
+        "clean_fid": 97.15233403353429,
+        "kid_mean": 0.06713149688289144,
+        "kid_subset_std": 0.005126199614079028,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "guided_seed3333": {
+        "clean_fid": 85.16751152365535,
+        "kid_mean": 0.05479836178188133,
+        "kid_subset_std": 0.0045178108382068725,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      }
+    }
+  },
+  "b4096_lr2e4": {
+    "task": {
+      "task_id": 59200,
+      "name": "vq96-variant-b4096_lr2e4",
+      "state": "SUCCEEDED",
+      "error_message": null,
+      "placement": {
+        "task_id": 59200,
+        "nodes": [
+          {
+            "node_id": "cluster-job",
+            "gpus": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "cpus": 0
+          }
+        ],
+        "master": {
+          "node_id": "cluster-job",
+          "addr": "172.16.64.226",
+          "port": 29503
+        }
+      }
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq96_transfer_20261025/decoder/best.pth",
+      "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+      "images": 4194304,
+      "save_every_images": 2097152,
+      "snapshot_images": [
+        524288
+      ],
+      "batch_size": 4096,
+      "lr": 0.0002,
+      "warmup_images": 65536,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 1,
+      "pca_components": 8,
+      "seed": 0
+    },
+    "samples": [
+      "b4096_lr2e4/train/samples_524288.png",
+      "b4096_lr2e4/train/samples_4194304.png",
+      "b4096_lr2e4/train/samples_2097152.png"
+    ],
+    "smoke/result.json": {
+      "images_seen": 8192,
+      "world_size": 16,
+      "parameters": 21758216,
+      "seconds": 5.046347509999578
+    },
+    "train/progress.json": {
+      "step": 1024,
+      "images_seen": 4194304,
+      "loss": 0.7430038452148438,
+      "seconds": 345.89276657400023,
+      "images_per_second": 12126.02400267003
+    },
+    "train/result.json": {
+      "images_seen": 4194304,
+      "world_size": 16,
+      "parameters": 21758216,
+      "seconds": 349.74411373100065
+    },
+    "train/transfer.json": {
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/followup/train/ema_33554432.pt",
+      "source_sha256": "03a8012097d53276515bfa61ebafd4c1fdbd69124faa5b0f8784281c3e8d733c",
+      "source_model_config": {
+        "img_size": 12,
+        "in_channels": 8,
+        "patch_size": 1,
+        "hidden_size": 384,
+        "depth": 8,
+        "num_heads": 6
+      },
+      "target_latent_grid": 24,
+      "inherited_latent_coordinates": true,
+      "optimizer_reset": true,
+      "new_resolution_image_counter": 0
+    },
+    "eval": {
+      "raw_seed3333": {
+        "clean_fid": 102.61831406399315,
+        "kid_mean": 0.07169774102351645,
+        "kid_subset_std": 0.005221007280409606,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "guided_seed3333": {
+        "clean_fid": 88.04731493746627,
+        "kid_mean": 0.0565618839962121,
+        "kid_subset_std": 0.004754495074783914,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      }
+    }
+  },
+  "baseline4m": {
+    "raw_seed3333": {
+      "clean_fid": 101.52790979927107,
+      "kid_mean": 0.07155417495265154,
+      "kid_subset_std": 0.005280339893082329,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "guided_seed3333": {
+      "clean_fid": 87.74870256580436,
+      "kid_mean": 0.05698645507812503,
+      "kid_subset_std": 0.004473006068027646,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    }
+  }
+}

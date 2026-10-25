@@ -1,0 +1,1855 @@
+{
+  "decoders": [
+    {
+      "name": "gan",
+      "initial": {
+        "psnr": 25.80067935405605,
+        "mse": 0.0026298565790057182,
+        "lpips": 0.0722518190741539,
+        "codes_used": 512,
+        "perplexity": 420.500732421875
+      },
+      "history": [
+        {
+          "psnr": 25.506612092760857,
+          "mse": 0.0028140952344983816,
+          "lpips": 0.0504523403942585,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 512,
+          "images": 262144,
+          "seconds": 13.253995627000222
+        },
+        {
+          "psnr": 24.814678311449466,
+          "mse": 0.0033001385163515806,
+          "lpips": 0.05112702399492264,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1024,
+          "images": 524288,
+          "seconds": 24.459711452000192
+        },
+        {
+          "psnr": 24.661138587366306,
+          "mse": 0.0034188979770988226,
+          "lpips": 0.053391940891742706,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1536,
+          "images": 786432,
+          "seconds": 35.16445236900017
+        },
+        {
+          "psnr": 24.54683296502441,
+          "mse": 0.0035100774839520454,
+          "lpips": 0.05359911546111107,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 2048,
+          "images": 1048576,
+          "seconds": 45.932020859000204
+        }
+      ],
+      "world_size": 16,
+      "seconds": 45.95392068000001,
+      "frozen_latent_mapping_verified": true,
+      "best": {
+        "psnr": 25.506612092760857,
+        "mse": 0.0028140952344983816,
+        "lpips": 0.0504523403942585,
+        "codes_used": 512,
+        "perplexity": 420.500732421875,
+        "step": 512,
+        "images": 262144,
+        "seconds": 13.253995627000222
+      },
+      "config": {
+        "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+        "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+        "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+        "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+        "steps": 2048,
+        "evaluate_every": 512,
+        "batch_size": 512,
+        "lr": 0.0001,
+        "ema_halflife_images": 8192,
+        "seed": 0,
+        "perceptual_weight": 0.1,
+        "gan_weight": 0.005,
+        "gan_start": 256
+      }
+    },
+    {
+      "name": "ganlow",
+      "initial": {
+        "psnr": 25.80067935405605,
+        "mse": 0.0026298565790057182,
+        "lpips": 0.0722518190741539,
+        "codes_used": 512,
+        "perplexity": 420.500732421875
+      },
+      "history": [
+        {
+          "psnr": 25.62340872536984,
+          "mse": 0.0027394231874495745,
+          "lpips": 0.04373597726225853,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 512,
+          "images": 262144,
+          "seconds": 11.149691649000488
+        },
+        {
+          "psnr": 25.552372513700035,
+          "mse": 0.0027845995500683784,
+          "lpips": 0.047082655131816864,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1024,
+          "images": 524288,
+          "seconds": 22.823876584000573
+        },
+        {
+          "psnr": 25.4701551445214,
+          "mse": 0.0028378176502883434,
+          "lpips": 0.05048642307519913,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1536,
+          "images": 786432,
+          "seconds": 33.98004091100029
+        },
+        {
+          "psnr": 25.379692526680135,
+          "mse": 0.002897548722103238,
+          "lpips": 0.04901273548603058,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 2048,
+          "images": 1048576,
+          "seconds": 44.77274051400036
+        }
+      ],
+      "world_size": 16,
+      "seconds": 44.7952088840002,
+      "frozen_latent_mapping_verified": true,
+      "best": {
+        "psnr": 25.62340872536984,
+        "mse": 0.0027394231874495745,
+        "lpips": 0.04373597726225853,
+        "codes_used": 512,
+        "perplexity": 420.500732421875,
+        "step": 512,
+        "images": 262144,
+        "seconds": 11.149691649000488
+      },
+      "config": {
+        "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+        "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+        "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+        "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+        "steps": 2048,
+        "evaluate_every": 512,
+        "batch_size": 512,
+        "lr": 0.0001,
+        "ema_halflife_images": 8192,
+        "seed": 0,
+        "perceptual_weight": 0.1,
+        "gan_weight": 0.001,
+        "gan_start": 512,
+        "discriminator_lr": 5e-05
+      }
+    },
+    {
+      "name": "lpips",
+      "initial": {
+        "psnr": 25.80067935405605,
+        "mse": 0.0026298565790057182,
+        "lpips": 0.0722518190741539,
+        "codes_used": 512,
+        "perplexity": 420.500732421875
+      },
+      "history": [
+        {
+          "psnr": 25.62340872536984,
+          "mse": 0.0027394231874495745,
+          "lpips": 0.04373597726225853,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 512,
+          "images": 262144,
+          "seconds": 11.214799288999984
+        },
+        {
+          "psnr": 25.63579403947607,
+          "mse": 0.002731621963903308,
+          "lpips": 0.04297574609518051,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1024,
+          "images": 524288,
+          "seconds": 19.717202194000038
+        },
+        {
+          "psnr": 25.660410534912593,
+          "mse": 0.0027161824982613325,
+          "lpips": 0.04251043498516083,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1536,
+          "images": 786432,
+          "seconds": 28.41149163099999
+        },
+        {
+          "psnr": 25.668775819120345,
+          "mse": 0.002710955683141947,
+          "lpips": 0.04206572473049164,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 2048,
+          "images": 1048576,
+          "seconds": 36.71072969900024
+        }
+      ],
+      "world_size": 16,
+      "seconds": 36.75162486900035,
+      "frozen_latent_mapping_verified": true,
+      "best": {
+        "psnr": 25.668775819120345,
+        "mse": 0.002710955683141947,
+        "lpips": 0.04206572473049164,
+        "codes_used": 512,
+        "perplexity": 420.500732421875,
+        "step": 2048,
+        "images": 1048576,
+        "seconds": 36.71072969900024
+      },
+      "config": {
+        "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+        "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+        "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+        "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+        "steps": 2048,
+        "evaluate_every": 512,
+        "batch_size": 512,
+        "lr": 0.0001,
+        "ema_halflife_images": 8192,
+        "seed": 0,
+        "perceptual_weight": 0.1,
+        "gan_weight": 0,
+        "gan_start": 256
+      }
+    },
+    {
+      "name": "lpips03",
+      "initial": {
+        "psnr": 25.80067935405605,
+        "mse": 0.0026298565790057182,
+        "lpips": 0.0722518190741539,
+        "codes_used": 512,
+        "perplexity": 420.500732421875
+      },
+      "history": [
+        {
+          "psnr": 25.495817785225906,
+          "mse": 0.0028210983145982027,
+          "lpips": 0.041898779571056366,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 512,
+          "images": 262144,
+          "seconds": 11.643693985000027
+        },
+        {
+          "psnr": 25.493398687706804,
+          "mse": 0.00282267015427351,
+          "lpips": 0.041216764599084854,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1024,
+          "images": 524288,
+          "seconds": 20.234685106999677
+        },
+        {
+          "psnr": 25.505980807199755,
+          "mse": 0.0028145043179392815,
+          "lpips": 0.040846098214387894,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1536,
+          "images": 786432,
+          "seconds": 28.438616689999435
+        },
+        {
+          "psnr": 25.500810379425637,
+          "mse": 0.002817857079207897,
+          "lpips": 0.04053265601396561,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 2048,
+          "images": 1048576,
+          "seconds": 36.90492967999944
+        }
+      ],
+      "world_size": 16,
+      "seconds": 36.944060627,
+      "frozen_latent_mapping_verified": true,
+      "best": {
+        "psnr": 25.500810379425637,
+        "mse": 0.002817857079207897,
+        "lpips": 0.04053265601396561,
+        "codes_used": 512,
+        "perplexity": 420.500732421875,
+        "step": 2048,
+        "images": 1048576,
+        "seconds": 36.90492967999944
+      },
+      "config": {
+        "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+        "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+        "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+        "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+        "steps": 2048,
+        "evaluate_every": 512,
+        "batch_size": 512,
+        "lr": 0.0001,
+        "ema_halflife_images": 8192,
+        "seed": 0,
+        "perceptual_weight": 0.3,
+        "gan_weight": 0,
+        "gan_start": 512,
+        "discriminator_lr": 0.0001
+      }
+    },
+    {
+      "name": "mse",
+      "initial": {
+        "psnr": 25.80067935405605,
+        "mse": 0.0026298565790057182,
+        "lpips": 0.0722518190741539,
+        "codes_used": 512,
+        "perplexity": 420.500732421875
+      },
+      "history": [
+        {
+          "psnr": 25.786516091194272,
+          "mse": 0.0026384470984339714,
+          "lpips": 0.07199505716562271,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 512,
+          "images": 262144,
+          "seconds": 5.555318881999938
+        },
+        {
+          "psnr": 25.812698798196593,
+          "mse": 0.0026225883048027754,
+          "lpips": 0.0723007321357727,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1024,
+          "images": 524288,
+          "seconds": 8.449481006000042
+        },
+        {
+          "psnr": 25.8422685174305,
+          "mse": 0.002604792593047023,
+          "lpips": 0.07213398069143295,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 1536,
+          "images": 786432,
+          "seconds": 11.423085958000229
+        },
+        {
+          "psnr": 25.86164657439567,
+          "mse": 0.0025931959971785545,
+          "lpips": 0.07178255170583725,
+          "codes_used": 512,
+          "perplexity": 420.500732421875,
+          "step": 2048,
+          "images": 1048576,
+          "seconds": 14.435215879000225
+        }
+      ],
+      "world_size": 16,
+      "seconds": 14.486261195000225,
+      "frozen_latent_mapping_verified": true,
+      "best": {
+        "psnr": 25.86164657439567,
+        "mse": 0.0025931959971785545,
+        "lpips": 0.07178255170583725,
+        "codes_used": 512,
+        "perplexity": 420.500732421875,
+        "step": 2048,
+        "images": 1048576,
+        "seconds": 14.435215879000225
+      },
+      "config": {
+        "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+        "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+        "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+        "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+        "steps": 2048,
+        "evaluate_every": 512,
+        "batch_size": 512,
+        "lr": 0.0001,
+        "ema_halflife_images": 8192,
+        "seed": 0,
+        "perceptual_weight": 0,
+        "gan_weight": 0,
+        "gan_start": 256
+      }
+    }
+  ],
+  "evaluations": [
+    {
+      "name": "base32m",
+      "clean_fid": 57.234179392410056,
+      "kid_mean": 0.04120054845328282,
+      "kid_subset_std": 0.003373496185166368,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/parallel4/base32m/ema_33554432.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "gan",
+      "clean_fid": 88.29784000861312,
+      "kid_mean": 0.08166482865767048,
+      "kid_subset_std": 0.004760882217277941,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "bf4fd50c0c0cc979530bf874cc1ee91392ee28f56438eec6617bef5a7026f77b",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "gan_last",
+      "clean_fid": 82.56194244298322,
+      "kid_mean": 0.06873577254971595,
+      "kid_subset_std": 0.005343049284246406,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "1ca4b31ef7e36781e8ade222226a49eec9f8eb1e47cc9680aafacf3c6f096f70",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "ganlow",
+      "clean_fid": 74.52621852099455,
+      "kid_mean": 0.06067655271464647,
+      "kid_subset_std": 0.004773768015650311,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "925df11d8b3522b91c83517610d5edac40d0a82d29d770d7c4b271d0921220ef",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "ganlow_last",
+      "clean_fid": 73.26713498857362,
+      "kid_mean": 0.05937657609296086,
+      "kid_subset_std": 0.0043656092193706504,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "0f1e008f4e94bfa249f243a970d3bf935ae08c7e3bdecb76386921f3de69e90f",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "joint16m",
+      "clean_fid": 63.441173463033266,
+      "kid_mean": 0.051272573843907834,
+      "kid_subset_std": 0.0034916001955419547,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/parallel4/joint16m/ema_16777216.pt",
+      "autoencoder_sha256": "8a6e42505ff8869c5b9ae15a8c42988fe7485518a5bd408c6005ebe0bbc2ac98",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/joint/latent/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "joint4m",
+      "clean_fid": 70.92431196732639,
+      "kid_mean": 0.05481764036852907,
+      "kid_subset_std": 0.004138531539549739,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/joint/latent/ema_4194304.pt",
+      "autoencoder_sha256": "8a6e42505ff8869c5b9ae15a8c42988fe7485518a5bd408c6005ebe0bbc2ac98",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/joint/latent/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_lpips",
+      "clean_fid": 69.04395715589379,
+      "kid_mean": 0.05602522196575127,
+      "kid_subset_std": 0.004269162397576632,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "4da202aef30133ac0baa3af65261356eb9369408d1bbe5e4fa72a404c0fc97ea",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_mse",
+      "clean_fid": 59.97126109615411,
+      "kid_mean": 0.042863792475536656,
+      "kid_subset_std": 0.003627154458257425,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_mse_g15",
+      "clean_fid": 63.221797326711794,
+      "kid_mean": 0.046613037385574485,
+      "kid_subset_std": 0.0037840282216006094,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 1.5,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_mse_g25",
+      "clean_fid": 62.21603439849039,
+      "kid_mean": 0.04444253434737999,
+      "kid_subset_std": 0.004171827329968023,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.5,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_mse_g30",
+      "clean_fid": 69.03227511315211,
+      "kid_mean": 0.05060145645912248,
+      "kid_subset_std": 0.005286516618394674,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 3.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "long16m_mse_seed7777",
+      "clean_fid": 57.93710285854979,
+      "kid_mean": 0.041240741378630104,
+      "kid_subset_std": 0.0035155859567733757,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 7777,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "lpips",
+      "clean_fid": 71.73265882623471,
+      "kid_mean": 0.05717629900568183,
+      "kid_subset_std": 0.004576174086054218,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "4da202aef30133ac0baa3af65261356eb9369408d1bbe5e4fa72a404c0fc97ea",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "lpips03",
+      "clean_fid": 78.44466062139878,
+      "kid_mean": 0.06684589389993688,
+      "kid_subset_std": 0.0050478569947612776,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "afa9ceab5a2829e12ed33da9e7c1cf9c6559a42dd0a437605d26a1a860895e5e",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "mse",
+      "clean_fid": 63.37791829746567,
+      "kid_mean": 0.04471457976246846,
+      "kid_subset_std": 0.003928841427544411,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/ema_8388608.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "patch1_4m_lpips",
+      "clean_fid": 85.8612022776689,
+      "kid_mean": 0.07097082926925505,
+      "kid_subset_std": 0.005197485641533304,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent_patch1/ema_4194304.pt",
+      "autoencoder_sha256": "4da202aef30133ac0baa3af65261356eb9369408d1bbe5e4fa72a404c0fc97ea",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/latent_patch1/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "patch1_4m_mse",
+      "clean_fid": 76.06163436847561,
+      "kid_mean": 0.05685599248342803,
+      "kid_subset_std": 0.00423349098497247,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent_patch1/ema_4194304.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/latent_patch1/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "pca8_16m",
+      "clean_fid": 59.764658363937286,
+      "kid_mean": 0.044039753945707055,
+      "kid_subset_std": 0.0029688104799775418,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/parallel4/pca8_16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "pca8_4m_lpips",
+      "clean_fid": 78.28541545699937,
+      "kid_mean": 0.06685743751972852,
+      "kid_subset_std": 0.004139184770851536,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_4194304.pt",
+      "autoencoder_sha256": "4da202aef30133ac0baa3af65261356eb9369408d1bbe5e4fa72a404c0fc97ea",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "pca8_4m_mse",
+      "clean_fid": 67.92370367646896,
+      "kid_mean": 0.05043881175031561,
+      "kid_subset_std": 0.0034536578505427024,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_4194304.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "pca8_4m_raw",
+      "clean_fid": 81.58823434006837,
+      "kid_mean": 0.0653544923453283,
+      "kid_subset_std": 0.0038298817324455034,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_4194304.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": null,
+      "guidance": 1,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    },
+    {
+      "name": "pca8_b2048_16m",
+      "clean_fid": 56.75004342579783,
+      "kid_mean": 0.03978742834595955,
+      "kid_subset_std": 0.0027088766778312276,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/parallel4/pca8_b2048_16m/ema_16777216.pt",
+      "autoencoder_sha256": "5244c3cc47cafc08cd07eb9ca55fbf12af7fa5454b91c670aba7173b9866314d",
+      "seed": 3333,
+      "requantize": false,
+      "guide": "/path/to/runs/vq_perceptual_20261025/parallel4/pca8_b2048_16m/ema_524288.pt",
+      "guidance": 2.0,
+      "count": 1024,
+      "steps": 50,
+      "world_size": 16
+    }
+  ],
+  "recipe": {
+    "selection": {
+      "name": "long16m_mse",
+      "checkpoint": "/path/to/runs/vq_perceptual_20261025/latent16m/ema_16777216.pt",
+      "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+      "autoencoder": "/path/to/runs/vq_perceptual_20261025/decoder/mse/best.pth",
+      "guidance": 2,
+      "selection_seed": 3333,
+      "confirmation_seed": 7777,
+      "note": "Best completed fixed-seed candidate; four additional 1x16 experiments are queued separately"
+    },
+    "protocol": {
+      "selection_seed": 3333,
+      "confirmation_seed": 7777,
+      "fake_count": 1024,
+      "real_count": 1000,
+      "steps": 50,
+      "guidance_interval": [
+        0.1,
+        0.8
+      ],
+      "requantize": false
+    },
+    "pixel_reference": {
+      "clean_fid": 44.26706503956123,
+      "kid_mean": 0.032113598248106084
+    },
+    "previous_latent_reference": {
+      "clean_fid": 64.9862668,
+      "kid_mean": 0.04844021
+    },
+    "evaluations": {
+      "long16m_mse": {
+        "clean_fid": 59.97126109615411,
+        "kid_mean": 0.042863792475536656,
+        "kid_subset_std": 0.003627154458257425,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "joint4m": {
+        "clean_fid": 70.92431196732639,
+        "kid_mean": 0.05481764036852907,
+        "kid_subset_std": 0.004138531539549739,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "lpips": {
+        "clean_fid": 71.73265882623471,
+        "kid_mean": 0.05717629900568183,
+        "kid_subset_std": 0.004576174086054218,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_seed7777": {
+        "clean_fid": 57.93710285854979,
+        "kid_mean": 0.041240741378630104,
+        "kid_subset_std": 0.0035155859567733757,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g30": {
+        "clean_fid": 69.03227511315211,
+        "kid_mean": 0.05060145645912248,
+        "kid_subset_std": 0.005286516618394674,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_lpips": {
+        "clean_fid": 78.28541545699937,
+        "kid_mean": 0.06685743751972852,
+        "kid_subset_std": 0.004139184770851536,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g25": {
+        "clean_fid": 62.21603439849039,
+        "kid_mean": 0.04444253434737999,
+        "kid_subset_std": 0.004171827329968023,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "mse": {
+        "clean_fid": 63.37791829746567,
+        "kid_mean": 0.04471457976246846,
+        "kid_subset_std": 0.003928841427544411,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_mse": {
+        "clean_fid": 67.92370367646896,
+        "kid_mean": 0.05043881175031561,
+        "kid_subset_std": 0.0034536578505427024,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "lpips03": {
+        "clean_fid": 78.44466062139878,
+        "kid_mean": 0.06684589389993688,
+        "kid_subset_std": 0.0050478569947612776,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "gan": {
+        "clean_fid": 88.29784000861312,
+        "kid_mean": 0.08166482865767048,
+        "kid_subset_std": 0.004760882217277941,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "gan_last": {
+        "clean_fid": 82.56194244298322,
+        "kid_mean": 0.06873577254971595,
+        "kid_subset_std": 0.005343049284246406,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_raw": {
+        "clean_fid": 81.58823434006837,
+        "kid_mean": 0.0653544923453283,
+        "kid_subset_std": 0.0038298817324455034,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "patch1_4m_mse": {
+        "clean_fid": 76.06163436847561,
+        "kid_mean": 0.05685599248342803,
+        "kid_subset_std": 0.00423349098497247,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_lpips": {
+        "clean_fid": 69.04395715589379,
+        "kid_mean": 0.05602522196575127,
+        "kid_subset_std": 0.004269162397576632,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g15": {
+        "clean_fid": 63.221797326711794,
+        "kid_mean": 0.046613037385574485,
+        "kid_subset_std": 0.0037840282216006094,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "ganlow": {
+        "clean_fid": 74.52621852099455,
+        "kid_mean": 0.06067655271464647,
+        "kid_subset_std": 0.004773768015650311,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "ganlow_last": {
+        "clean_fid": 73.26713498857362,
+        "kid_mean": 0.05937657609296086,
+        "kid_subset_std": 0.0043656092193706504,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "patch1_4m_lpips": {
+        "clean_fid": 85.8612022776689,
+        "kid_mean": 0.07097082926925505,
+        "kid_subset_std": 0.005197485641533304,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      }
+    },
+    "files": {
+      "autoencoder.pth": {
+        "bytes": 2671914,
+        "sha256": "6b9273e3bb5712340612fdbfcfecea70abce8bec93fba8f59874e26e1efe43c7"
+      },
+      "guide_ema.pt": {
+        "bytes": 87002037,
+        "sha256": "0041e96e0262a85d9a6cf2d82090060df6bf413b3b159298d42f932337045807"
+      },
+      "model_ema.pt": {
+        "bytes": 87002233,
+        "sha256": "13c81d9c4ace00e70bf0a7cd9280e80d8b62beaa49be1417fbc000852177679f"
+      }
+    }
+  },
+  "parallel": {
+    "tasks": [
+      {
+        "task_id": 59174,
+        "name": "vq-parallel-pca8_16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59174,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.64.226",
+            "port": 29503
+          }
+        },
+        "progress.json": {
+          "step": 32768,
+          "images_seen": 16777216,
+          "loss": 0.9642535448074341,
+          "seconds": 562.3982598109999,
+          "images_per_second": 22373.668061340533
+        },
+        "result.json": {
+          "images_seen": 16777216,
+          "world_size": 16,
+          "parameters": 21592328,
+          "seconds": 563.834499841
+        }
+      },
+      {
+        "task_id": 59175,
+        "name": "vq-parallel-joint16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59175,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.58.124",
+            "port": 29502
+          }
+        },
+        "progress.json": {
+          "step": 32768,
+          "images_seen": 16777216,
+          "loss": 0.2708671987056732,
+          "seconds": 574.473710038,
+          "images_per_second": 21903.373057780715
+        },
+        "result.json": {
+          "images_seen": 16777216,
+          "world_size": 16,
+          "parameters": 21741568,
+          "seconds": 575.522466955
+        }
+      },
+      {
+        "task_id": 59176,
+        "name": "vq-parallel-base32m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59176,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.39.28",
+            "port": 29500
+          }
+        },
+        "progress.json": {
+          "step": 65536,
+          "images_seen": 33554432,
+          "loss": 0.25457122921943665,
+          "seconds": 789.6198809819998,
+          "images_per_second": 21247.205584000498
+        },
+        "result.json": {
+          "images_seen": 33554432,
+          "world_size": 16,
+          "parameters": 21741568,
+          "seconds": 791.004253265
+        }
+      },
+      {
+        "task_id": 59177,
+        "name": "vq-parallel-pca8_b2048_16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59177,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.71.245",
+            "port": 29501
+          }
+        },
+        "progress.json": {
+          "step": 8192,
+          "images_seen": 16777216,
+          "loss": 0.979688823223114,
+          "seconds": 401.97318361700013,
+          "images_per_second": 41737.15225421807
+        },
+        "result.json": {
+          "images_seen": 16777216,
+          "world_size": 16,
+          "parameters": 21592328,
+          "seconds": 403.38485039400007
+        }
+      },
+      {
+        "task_id": 59178,
+        "name": "vq-confirm-pca8_b2048_16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59178,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.71.245",
+            "port": 29501
+          }
+        },
+        "feature_scores.json": {
+          "clean_fid": 56.75004342579783,
+          "kid_mean": 0.03978742834595955,
+          "kid_subset_std": 0.0027088766778312276,
+          "kid_subsets": 100,
+          "kid_subset_size": 100,
+          "real_count": 1000,
+          "fake_count": 1024,
+          "fid_solver": "float64 symmetric PSD eigendecomposition"
+        }
+      },
+      {
+        "task_id": 59183,
+        "name": "vq-confirm-pca8_16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59183,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.58.124",
+            "port": 29502
+          }
+        },
+        "feature_scores.json": {
+          "clean_fid": 59.764658363937286,
+          "kid_mean": 0.044039753945707055,
+          "kid_subset_std": 0.0029688104799775418,
+          "kid_subsets": 100,
+          "kid_subset_size": 100,
+          "real_count": 1000,
+          "fake_count": 1024,
+          "fid_solver": "float64 symmetric PSD eigendecomposition"
+        }
+      },
+      {
+        "task_id": 59184,
+        "name": "vq-confirm-joint16m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59184,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.71.245",
+            "port": 29501
+          }
+        },
+        "feature_scores.json": {
+          "clean_fid": 63.441173463033266,
+          "kid_mean": 0.051272573843907834,
+          "kid_subset_std": 0.0034916001955419547,
+          "kid_subsets": 100,
+          "kid_subset_size": 100,
+          "real_count": 1000,
+          "fake_count": 1024,
+          "fid_solver": "float64 symmetric PSD eigendecomposition"
+        }
+      },
+      {
+        "task_id": 59189,
+        "name": "vq-confirm-base32m",
+        "state": "SUCCEEDED",
+        "error_message": null,
+        "placement": {
+          "task_id": 59189,
+          "nodes": [
+            {
+              "node_id": "cluster-job",
+              "gpus": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "cpus": 0
+            }
+          ],
+          "master": {
+            "node_id": "cluster-job",
+            "addr": "172.16.58.124",
+            "port": 29502
+          }
+        },
+        "feature_scores.json": {
+          "clean_fid": 57.234179392410056,
+          "kid_mean": 0.04120054845328282,
+          "kid_subset_std": 0.003373496185166368,
+          "kid_subsets": 100,
+          "kid_subset_size": 100,
+          "real_count": 1000,
+          "fake_count": 1024,
+          "fid_solver": "float64 symmetric PSD eigendecomposition"
+        }
+      }
+    ],
+    "experiments": [
+      {
+        "name": "pca8_16m",
+        "config": {
+          "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+          "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+          "images": 16777216,
+          "save_every_images": 4194304,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "ema_halflife_images": 131072,
+          "width": 384,
+          "depth": 8,
+          "heads": 6,
+          "patch_size": 1,
+          "seed": 0,
+          "pca_components": 8
+        },
+        "resume": "/path/to/runs/vq_perceptual_20261025/latent_pca8/last.pt",
+        "guide": "/path/to/runs/vq_perceptual_20261025/latent_pca8/ema_524288.pt",
+        "job": "cluster-job"
+      },
+      {
+        "name": "joint16m",
+        "config": {
+          "autoencoder": "/path/to/runs/vq_perceptual_20261025/joint/ae/checkpoints/best.pth",
+          "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+          "images": 16777216,
+          "save_every_images": 4194304,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "ema_halflife_images": 131072,
+          "width": 384,
+          "depth": 8,
+          "heads": 6,
+          "patch_size": 2,
+          "seed": 0
+        },
+        "resume": "/path/to/runs/vq_perceptual_20261025/joint/latent/last.pt",
+        "guide": "/path/to/runs/vq_perceptual_20261025/joint/latent/ema_524288.pt",
+        "job": "cluster-job"
+      },
+      {
+        "name": "base32m",
+        "config": {
+          "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+          "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+          "images": 33554432,
+          "save_every_images": 4194304,
+          "batch_size": 512,
+          "lr": 5e-05,
+          "ema_halflife_images": 131072,
+          "width": 384,
+          "depth": 8,
+          "heads": 6,
+          "patch_size": 2,
+          "seed": 0
+        },
+        "resume": "/path/to/runs/vq_perceptual_20261025/latent16m/last.pt",
+        "guide": "/path/to/runs/vq_latent_20261025/latent/best/ema_524288.pt",
+        "job": "cluster-job"
+      },
+      {
+        "name": "pca8_b2048_16m",
+        "config": {
+          "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+          "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+          "images": 16777216,
+          "save_every_images": 524288,
+          "batch_size": 2048,
+          "lr": 0.0004,
+          "ema_halflife_images": 131072,
+          "width": 384,
+          "depth": 8,
+          "heads": 6,
+          "patch_size": 1,
+          "seed": 0,
+          "pca_components": 8
+        },
+        "resume": null,
+        "guide": "/path/to/runs/vq_perceptual_20261025/parallel4/pca8_b2048_16m/ema_524288.pt",
+        "job": "cluster-job"
+      }
+    ],
+    "evaluations": {
+      "long16m_mse": {
+        "clean_fid": 59.97126109615411,
+        "kid_mean": 0.042863792475536656,
+        "kid_subset_std": 0.003627154458257425,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "joint4m": {
+        "clean_fid": 70.92431196732639,
+        "kid_mean": 0.05481764036852907,
+        "kid_subset_std": 0.004138531539549739,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "lpips": {
+        "clean_fid": 71.73265882623471,
+        "kid_mean": 0.05717629900568183,
+        "kid_subset_std": 0.004576174086054218,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_seed7777": {
+        "clean_fid": 57.93710285854979,
+        "kid_mean": 0.041240741378630104,
+        "kid_subset_std": 0.0035155859567733757,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "joint16m": {
+        "clean_fid": 63.441173463033266,
+        "kid_mean": 0.051272573843907834,
+        "kid_subset_std": 0.0034916001955419547,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g30": {
+        "clean_fid": 69.03227511315211,
+        "kid_mean": 0.05060145645912248,
+        "kid_subset_std": 0.005286516618394674,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_b2048_16m": {
+        "clean_fid": 56.75004342579783,
+        "kid_mean": 0.03978742834595955,
+        "kid_subset_std": 0.0027088766778312276,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_lpips": {
+        "clean_fid": 78.28541545699937,
+        "kid_mean": 0.06685743751972852,
+        "kid_subset_std": 0.004139184770851536,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g25": {
+        "clean_fid": 62.21603439849039,
+        "kid_mean": 0.04444253434737999,
+        "kid_subset_std": 0.004171827329968023,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "mse": {
+        "clean_fid": 63.37791829746567,
+        "kid_mean": 0.04471457976246846,
+        "kid_subset_std": 0.003928841427544411,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_mse": {
+        "clean_fid": 67.92370367646896,
+        "kid_mean": 0.05043881175031561,
+        "kid_subset_std": 0.0034536578505427024,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_16m": {
+        "clean_fid": 59.764658363937286,
+        "kid_mean": 0.044039753945707055,
+        "kid_subset_std": 0.0029688104799775418,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "lpips03": {
+        "clean_fid": 78.44466062139878,
+        "kid_mean": 0.06684589389993688,
+        "kid_subset_std": 0.0050478569947612776,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "gan": {
+        "clean_fid": 88.29784000861312,
+        "kid_mean": 0.08166482865767048,
+        "kid_subset_std": 0.004760882217277941,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "base32m": {
+        "clean_fid": 57.234179392410056,
+        "kid_mean": 0.04120054845328282,
+        "kid_subset_std": 0.003373496185166368,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "gan_last": {
+        "clean_fid": 82.56194244298322,
+        "kid_mean": 0.06873577254971595,
+        "kid_subset_std": 0.005343049284246406,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "pca8_4m_raw": {
+        "clean_fid": 81.58823434006837,
+        "kid_mean": 0.0653544923453283,
+        "kid_subset_std": 0.0038298817324455034,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "patch1_4m_mse": {
+        "clean_fid": 76.06163436847561,
+        "kid_mean": 0.05685599248342803,
+        "kid_subset_std": 0.00423349098497247,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_lpips": {
+        "clean_fid": 69.04395715589379,
+        "kid_mean": 0.05602522196575127,
+        "kid_subset_std": 0.004269162397576632,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "long16m_mse_g15": {
+        "clean_fid": 63.221797326711794,
+        "kid_mean": 0.046613037385574485,
+        "kid_subset_std": 0.0037840282216006094,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "ganlow": {
+        "clean_fid": 74.52621852099455,
+        "kid_mean": 0.06067655271464647,
+        "kid_subset_std": 0.004773768015650311,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "ganlow_last": {
+        "clean_fid": 73.26713498857362,
+        "kid_mean": 0.05937657609296086,
+        "kid_subset_std": 0.0043656092193706504,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      },
+      "patch1_4m_lpips": {
+        "clean_fid": 85.8612022776689,
+        "kid_mean": 0.07097082926925505,
+        "kid_subset_std": 0.005197485641533304,
+        "kid_subsets": 100,
+        "kid_subset_size": 100,
+        "real_count": 1000,
+        "fake_count": 1024,
+        "fid_solver": "float64 symmetric PSD eigendecomposition"
+      }
+    }
+  },
+  "joint_vq": {
+    "epoch": 30,
+    "loss": 0.022724550059397837,
+    "recon_loss": 0.011168318180092942,
+    "vq_loss": 0.007686579142630633,
+    "perceptual_loss": 0.0387005124773298,
+    "kld_beta": 1.0,
+    "train_seconds": 1.1017863750457764,
+    "images_per_second": 26023.193469613158,
+    "images_seen": 860160,
+    "optimizer_updates": 56,
+    "skipped_updates": 0,
+    "world_size": 16,
+    "global_batch_size": 512,
+    "train_codes_used": 512,
+    "train_codebook_perplexity": 428.4606018066406,
+    "val_recon_mse": 0.002695617684611568,
+    "val_psnr_db": 25.69341703100148,
+    "val_lpips": 0.03833973720669746,
+    "val_codes_used": 512,
+    "val_codebook_perplexity": 424.5780944824219,
+    "selected_weights": "ema",
+    "raw_val_recon_mse": 0.002728315856721666,
+    "raw_val_psnr_db": 25.641053528972925,
+    "raw_val_lpips": 0.03850511872768402,
+    "raw_val_codes_used": 512,
+    "raw_val_codebook_perplexity": 424.7708740234375,
+    "ema_val_recon_mse": 0.002695617684611568,
+    "ema_val_psnr_db": 25.69341703100148,
+    "ema_val_lpips": 0.03833973720669746,
+    "ema_val_codes_used": 512,
+    "ema_val_codebook_perplexity": 424.5780944824219
+  }
+}

@@ -250,6 +250,7 @@ def train_dit_model(
     num_workers=0, precision=None, device=None, output_dir=None,
     cache_latents=True, normalize_latents=True, ema_decay=0.999,
     sampling_steps=50, sample_every=1, num_preview_samples=16,
+    data_path=None, split_mode='random', val_count=None,
 ):
     if use_gan:
         raise ValueError('DiT adversarial training is unsupported; use the noise-prediction objective')
@@ -266,14 +267,16 @@ def train_dit_model(
     amp = MixedPrecision(device, precision, use_bfloat16)
     vae = load_vae(vae_model_path, device=device)
     channels = vae.latent_dim if isinstance(vae, VAE) else vae.embedding_dim
-    model_config = dict(latent_channels=channels, latent_spatial_dim=4, patch_size=dit_patch_size,
+    spatial = vae.get_latent_shape()[2]
+    model_config = dict(latent_channels=channels, latent_spatial_dim=spatial, patch_size=dit_patch_size,
                         hidden_size=dit_hidden_size, depth=dit_depth, num_heads=dit_num_heads)
     model = create_dit_for_latent(**model_config).to(device)
     ema = copy.deepcopy(model).eval().requires_grad_(False)
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01)
     ddpm = DDPM(ddpm_timesteps, ddpm_schedule, device)
     train_loader, val_loader = make_loaders(batch_size, data_limit, seed, validation_fraction,
-                                          num_workers, device.type == 'cuda')
+                                          num_workers, device.type == 'cuda', data_path, vae.image_size,
+                                          split_mode, val_count)
     split = split_manifest(train_loader, val_loader)
     center, scale = torch.zeros(1, channels, 1, 1), torch.ones(1, channels, 1, 1)
     cache_start = time.perf_counter()
@@ -349,7 +352,7 @@ def train_dit_model(
                 devices = [device.index or 0] if device.type == 'cuda' else []
                 with torch.random.fork_rng(devices=devices), torch.no_grad(), amp.autocast():
                     torch.manual_seed(seed + 20_000)
-                    samples = sample_dit(ema, vae, ddpm, num_preview_samples, channels, 4,
+                    samples = sample_dit(ema, vae, ddpm, num_preview_samples, channels, spatial,
                                          sampling_steps=sampling_steps, latent_mean=center, latent_std=scale)
                 image_path = root / f'samples_{epoch+1:03d}.png'
                 tensor_to_pil(samples.float()).save(image_path)

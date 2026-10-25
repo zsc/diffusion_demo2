@@ -1,0 +1,37 @@
+{
+  "model_type": "vqvae",
+  "epochs": 32,
+  "batch_size": 512,
+  "data_limit": 30000,
+  "validation_fraction": 0.0,
+  "split_mode": "validation_first",
+  "val_count": 1000,
+  "seed": 0,
+  "lr": 0.0001,
+  "precision": "bf16",
+  "embedding_dim": 64,
+  "num_embeddings": 512,
+  "vq_hidden_dims_enc": [
+    128,
+    64
+  ],
+  "vq_hidden_dims_dec": [
+    64,
+    128
+  ],
+  "commitment_cost": 0.25,
+  "vq_beta": 1.0,
+  "image_size": 48,
+  "distance_chunk_size": 4096,
+  "num_workers": 0,
+  "latent_spatial_size": 12,
+  "vq_recon_reduction": "mean",
+  "init_checkpoint": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+  "model_ema_halflife_images": 8192,
+  "codebook_decay": 0.99,
+  "codebook_data_init": false,
+  "dead_code_threshold": 0.1,
+  "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+  "perceptual_loss_weight": 0.1,
+  "selection_metric": "lpips"
+}

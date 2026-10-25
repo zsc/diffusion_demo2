@@ -1,4 +1,4 @@
-"""Bounded single-PPU benchmarks and separate ASight/PyTorch captures."""
+"""Bounded single-GPU benchmarks and separate external/PyTorch captures."""
 import argparse
 import importlib.metadata
 import json
@@ -42,14 +42,13 @@ def main():
         for opt in order:
             label = f"bench_{repeat}_{opt}"
             run(label, workload(label, opt))
-    asys = "/usr/local/PPU_SDK/asight/bin/asys"
-    for opt in ["default", "fused"]:
-        label = "asys_" + opt
-        prefix = str(out / label)
-        run(label, [asys, "profile", "--trace", "hggc,hgtx,acblas", "--sample", "none",
-                    "--capture-range", "hggcProfilerApi", "--capture-range-end", "stop",
-                    "--max-report-size", "128", "--output", prefix] + workload(label + "_workload", opt, "asys"))
-        run(label + "_export", [asys, "export", "--output", prefix + ".sqlite", prefix + ".asysrep"])
+    profiler = os.environ.get("PROFILER_BIN")
+    if profiler:
+        for opt in ["default", "fused"]:
+            label = "profiler_" + opt
+            prefix = str(out / label)
+            run(label, [profiler, "profile", "--output", prefix] + workload(label + "_workload", opt, "external"))
+            run(label + "_export", [profiler, "export", "--output", prefix + ".sqlite", prefix + ".report"])
     run("torch_default", workload("torch_default", "default", "torch"))
     (out / "completed.json").write_text(json.dumps(dict(success=True, commands=len(results))))
 

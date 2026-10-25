@@ -1,4 +1,4 @@
-"""Bounded 16-PPU sampling screen, independent seed confirmation, native96 samples."""
+"""Bounded 16-GPU sampling screen, independent seed confirmation, native96 samples."""
 import argparse
 import json
 import os
@@ -27,7 +27,7 @@ def main():
     evaluate(1.0,7777,'raw_seed7777')
     if best>1:evaluate(best,7777,'selected_seed7777')
     target=r/'pixel96_best';target.mkdir(exist_ok=True)
-    sample=target/'sample_ppu_seed2027'
+    sample=target/'sample_gpu_seed2027'
     cmd=[sys.executable,'sample_pixel.py','--checkpoint',str(ckpt),'--output',str(sample),'--seed','2027','--count','64','--steps','50','--batch','16']
     if best>1:cmd+=['--guide-checkpoint',str(guide),'--guidance',str(best),'--guidance-start','0.1','--guidance-end','0.8']
     subprocess.run(cmd,env=env,check=True,timeout=180)

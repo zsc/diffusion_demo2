@@ -160,7 +160,7 @@ class PixelJiT(nn.Module):
 def build_pixel_model(config, device):
     """Construct CPU buffers serially before restoring normal execution threads.
 
-    The PPU PyTorch build can SIGSEGV in parallel CPU cos/sin while constructing
+    The GPU PyTorch build can SIGSEGV in parallel CPU cos/sin while constructing
     the 96px positional grid. This affects initialization, not GPU attention.
     Keep exactly the same tensor math and learned weights, with a serial init.
     """

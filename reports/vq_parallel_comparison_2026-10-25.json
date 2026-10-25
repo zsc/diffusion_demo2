@@ -1,0 +1,152 @@
+[
+  {
+    "name": "pca8_b2048_16m",
+    "label": "PCA8 / batch 2048 / 16M",
+    "metrics": {
+      "clean_fid": 56.75004342579783,
+      "kid_mean": 0.03978742834595955,
+      "kid_subset_std": 0.0027088766778312276,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+      "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+      "images": 16777216,
+      "save_every_images": 524288,
+      "batch_size": 2048,
+      "lr": 0.0004,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 1,
+      "seed": 0,
+      "pca_components": 8
+    },
+    "result": {
+      "images_seen": 16777216,
+      "world_size": 16,
+      "parameters": 21592328,
+      "seconds": 403.38485039400007
+    },
+    "images_per_second": 41737.15225421807,
+    "sample_backend": "GPU / BF16",
+    "grid": "/path/to/diffusion_demo2/runs/vq_perceptual_20261025/eval/pca8_b2048_16m/samples64.png"
+  },
+  {
+    "name": "pca8_16m",
+    "label": "PCA8 / batch 512 / 16M",
+    "metrics": {
+      "clean_fid": 59.764658363937286,
+      "kid_mean": 0.044039753945707055,
+      "kid_subset_std": 0.0029688104799775418,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+      "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+      "images": 16777216,
+      "save_every_images": 4194304,
+      "batch_size": 512,
+      "lr": 0.0001,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 1,
+      "seed": 0,
+      "pca_components": 8
+    },
+    "result": {
+      "images_seen": 16777216,
+      "world_size": 16,
+      "parameters": 21592328,
+      "seconds": 563.834499841
+    },
+    "images_per_second": 22373.668061340533,
+    "sample_backend": "GPU / BF16",
+    "grid": "/path/to/diffusion_demo2/runs/vq_perceptual_20261025/eval/pca8_16m/samples64.png"
+  },
+  {
+    "name": "base32m",
+    "label": "64D baseline / batch 512 / 32M",
+    "metrics": {
+      "clean_fid": 57.234179392410056,
+      "kid_mean": 0.04120054845328282,
+      "kid_subset_std": 0.003373496185166368,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq_latent_20261025/runs/revive/checkpoints/best.pth",
+      "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+      "images": 33554432,
+      "save_every_images": 4194304,
+      "batch_size": 512,
+      "lr": 5e-05,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 2,
+      "seed": 0
+    },
+    "result": {
+      "images_seen": 33554432,
+      "world_size": 16,
+      "parameters": 21741568,
+      "seconds": 791.004253265
+    },
+    "images_per_second": 21247.205584000498,
+    "sample_backend": "GPU / BF16",
+    "grid": "/path/to/diffusion_demo2/runs/vq_perceptual_20261025/eval/base32m/samples64.png"
+  },
+  {
+    "name": "joint16m",
+    "label": "Joint LPIPS VQ / batch 512 / 16M",
+    "metrics": {
+      "clean_fid": 63.441173463033266,
+      "kid_mean": 0.051272573843907834,
+      "kid_subset_std": 0.0034916001955419547,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "config": {
+      "autoencoder": "/path/to/runs/vq_perceptual_20261025/joint/ae/checkpoints/best.pth",
+      "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+      "images": 16777216,
+      "save_every_images": 4194304,
+      "batch_size": 512,
+      "lr": 0.0001,
+      "ema_halflife_images": 131072,
+      "width": 384,
+      "depth": 8,
+      "heads": 6,
+      "patch_size": 2,
+      "seed": 0
+    },
+    "result": {
+      "images_seen": 16777216,
+      "world_size": 16,
+      "parameters": 21741568,
+      "seconds": 575.522466955
+    },
+    "images_per_second": 21903.373057780715,
+    "sample_backend": "GPU / BF16",
+    "grid": "/path/to/diffusion_demo2/runs/vq_perceptual_20261025/eval/joint16m/samples64.png"
+  }
+]

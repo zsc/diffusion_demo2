@@ -17,7 +17,7 @@
 
 一个面向人脸图像生成的可复现实验项目。当前主线使用 **Pixel JiT** 直接在 48×48 / 96×96 RGB 像素上训练和采样，不经过 VAE/VQVAE；仓库同时保留 VAE/VQVAE + 潜空间 DiT 的完整训练、Web 交互与评估流程。
 
-## Pixel JiT 与 SOFY 大 batch 实验
+## Pixel JiT 大 batch 实验
 
 新增 `pixel_experiment.py` / `pixel_ddp_experiment.py`，直接在 RGB 像素上训练，不依赖 VAE、VQVAE 或预训练生成权重。主线从 48×48 起步，再继承全部学习参数扩展到 96×96。结构参考本地 `cstft_jit`、`cstft_jit_arc2face` 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。
 
@@ -27,7 +27,7 @@
 
 采样使用 EMA、50 步 Heun、autoguidance=2，只在 `t∈[0.1,0.8]` 启用弱模型。调参种子上的 FID 从未引导的 **57.19 降至 43.98**；锁定方案后，独立种子 7777 复核为 **57.52 → 44.27**（KID **0.04832 → 0.03211**）。全程强引导有些配置 FID 更低，但完整网格出现条纹，因此不采用。58.7M 大模型需要约两倍训练时间，引导后的质量也没有超过选中的小模型。
 
-本地已保存主模型、弱模型及可续训完整 checkpoint：`runs/pixel_best/{model_ema.pt,guide_ema.pt,last.pt}`；配置、SHA256、评估与运行记录见 `runs/pixel_best/recipe.json`。RTX 2080 SUPER 实际生成的 64 张样本位于 `runs/pixel_best/sample_desk_seed2027/`，其中 `preview16.png` 展示连续生成的前 16 张，未筛选。原生分辨率是 **48×48**，仍有部分畸形或过平滑样本。
+本地已保存主模型、弱模型及可续训完整 checkpoint：`runs/pixel_best/{model_ema.pt,guide_ema.pt,last.pt}`；配置、SHA256、评估与运行记录见 `runs/pixel_best/recipe.json`。RTX 2080 SUPER 实际生成的 64 张样本位于 `runs/pixel_best/sample_seed2027/`，其中 `preview16.png` 展示连续生成的前 16 张，未筛选。原生分辨率是 **48×48**，仍有部分畸形或过平滑样本。
 
 ```bash
 # 使用本次已训练好的模型；2080 SUPER 用 FP16，其他加速卡可用 BF16。
@@ -61,7 +61,7 @@ PYTHONPATH=src python sample_pixel.py \
 
 数据使用修复后的 30,000 张缓存，固定划分 29,000 张训练 / 1,000 张验证。`sample_pixel.py` 保存原生 48×48 PNG、原始数组和随机种子；展示图仅放大，不做修复或超分。2080 SUPER 使用 `--precision fp16`。完整 checkpoint 支持续跑，EMA-only checkpoint 用于独立采样。
 
-SOFY 每个任务申请 `--nodes 1 --gpus-per-node 16 --cpus-per-node 64`，执行：
+GPU 集群每个任务申请 `--nodes 1 --gpus-per-node 16 --cpus-per-node 64`，执行：
 
 ```bash
 bash scripts/run_*_group.sh configs/pixel_ddp_b4096_lr8e4.json \
@@ -80,7 +80,7 @@ bash scripts/run_*_group.sh configs/pixel_ddp_b4096_lr8e4.json \
 | 16 张、50 步 Heun、未引导采样 | 1.012s | 1.469s | **1.45×** |
 | 16 张、50 步 Heun、最终区间引导 | 1.641s | 2.628s | **1.60×** |
 
-均先预热，再取 3 次中位数；训练每次 40 步。早先 5.37× 的训练倍率受到 desk 上另一计算任务占用的影响，现以上表替换。2080 SUPER 仍有游戏/桌面进程，且两端 PyTorch/驱动不同，因此仍是本次实际运行环境的比较。加速卡可用更大 batch；先前单卡 batch=256、BF16 达到 1,764.4 images/s，但不能与上表 FP16 batch=32 当作严格同条件比较。
+均先预热，再取 3 次中位数；训练每次 40 步。早先 5.37× 的训练倍率受到本机另一计算任务占用的影响，现以上表替换。2080 SUPER 仍有游戏/桌面进程，且两端 PyTorch/驱动不同，因此仍是本次实际运行环境的比较。加速卡可用更大 batch；先前单卡 batch=256、BF16 达到 1,764.4 images/s，但不能与上表 FP16 batch=32 当作严格同条件比较。
 
 ## 从 48×48 继承权重训练 96×96
 
@@ -124,19 +124,19 @@ patch=4 时 token 数变为 4 倍、注意力矩阵元素数变为 16 倍，整�
 
 ### 96px 加速卡性能分析
 
-参考 air4 的本地加速卡性能项目，已对真实 batch=64、576 tokens、width=384 的完整单卡更新采集 ASight Systems 与独立 PyTorch trace；未更换厂商库。三轮交错、无 profiler 计时：默认 AdamW **152.202 ms/step**，fused AdamW **151.741 ms/step**，耗时只下降 **0.30%**。未把这个小收益外推为 DDP 加速。
+参考本机加速卡性能分析，已对真实 batch=64、576 tokens、width=384 的完整单卡更新采集系统级性能数据与独立 PyTorch trace；未更换厂商库。三轮交错、无 profiler 计时：默认 AdamW **152.202 ms/step**，fused AdamW **151.741 ms/step**，耗时只下降 **0.30%**。未把这个小收益外推为 DDP 加速。
 
-ASight 基线捕获 2321 个 kernel。按原始名字分组：逐元素/归约/布局 69.513 ms（46.7%），复制/转换 23.026 ms（15.5%），GEMM 30.059 ms（20.2%），attention 20.530 ms（13.8%）；总 kernel 时间 148.881 ms。RMSNorm 被分解到前两类，不能看独立 norm kernel 的占比。时间线覆盖率不等于硬件利用率。
+系统级 profiler 基线捕获 2321 个 kernel。按原始名字分组：逐元素/归约/布局 69.513 ms（46.7%），复制/转换 23.026 ms（15.5%），GEMM 30.059 ms（20.2%），attention 20.530 ms（13.8%）；总 kernel 时间 148.881 ms。RMSNorm 被分解到前两类，不能看独立 norm kernel 的占比。时间线覆盖率不等于硬件利用率。
 
-入口 `scripts/profile_pixel_suite.py`；原始 `.asysrep`、SQLite、压缩 PyTorch trace 与计时见 `runs/profile96_v1/`。融合复测为 `scripts/profile_pixel_confirm_suite.py`、`runs/profile96_fusion_v2/`；报告为 `reports/pixel96_profile_2026-10-24.html`。
+入口 `scripts/profile_pixel_suite.py`；原始 `.profilerrep`、SQLite、压缩 PyTorch trace 与计时见 `runs/profile96_v1/`。融合复测为 `scripts/profile_pixel_confirm_suite.py`、`runs/profile96_fusion_v2/`；报告为 `reports/pixel96_profile_2026-10-24.html`。
 
-**融合实测完成**：保留厂商 GEMM / Flash Attention，用当前加速卡环境中的 Torch Inductor + Triton 融合 RMSNorm、RoPE、SwiGLU 激活、调制与残差。三个独立进程配对：**152.170 → 88.476 ms/step，吞吐 1.72×**。ASight kernel 数 2321 → 1199。开启 `emulate_precision_casts=True`，参数、梯度和优化器状态保持 FP32。
+**融合实测完成**：保留厂商 GEMM / Flash Attention，用当前加速卡环境中的 Torch Inductor + Triton 融合 RMSNorm、RoPE、SwiGLU 激活、调制与残差。三个独立进程配对：**152.170 → 88.476 ms/step，吞吐 1.72×**。profiler kernel 数 2321 → 1199。开启 `emulate_precision_casts=True`，参数、梯度和优化器状态保持 FP32。
 
 在同一个 4.096M checkpoint 上恢复模型/优化器/RNG，每组 16 GPU 再训练 1000 步：稳态中位数 **6656 → 11326 张/秒（1.70×）**；包含首次编译、保存和预览的循环时间 **163.28 → 130.71 秒**。FID **70.572 → 70.530**，没有跳过更新。短程质量标准已通过，尚无长程多 seed 等价证明。
 
 初始严格数值门槛的失败记录保留：确定性模式下，融合版本仍有约 1% 的梯度差异、5 步后约 0.024% 的参数差异。独立 FP64 autograd 对照中，6 类算子的前后向均通过预先登记的 BF16 容差（输出相对 L2 <0.6%、梯度 <2%，实际最大约0.37%）。因此该路径需显式启用：`configs/pixel96_scaled_lr2e4_fused.json` 中的 `execution_backend=compile_pointwise`；默认仍为 eager。切换执行后端保留 checkpoint 权重、优化器与 RNG，但运算舍入可能改变。
 
-16 rank 共用 CPFS 编译缓存曾报 `Stale file handle`，已将缓存放到节点本地 `/tmp/pixel_jit_compile/<run-hash>/rankN/`。首次编译成本计入上面的 DDP 循环时间，稳态吞吐另列。
+16 rank 共用共享文件系统的编译缓存曾报 `Stale file handle`，已将缓存放到节点本地 `/tmp/pixel_jit_compile/<run-hash>/rankN/`。首次编译成本计入上面的 DDP 循环时间，稳态吞吐另列。
 
 ### 8.192M 阶段的 96px 模型和采样
 
@@ -184,7 +184,7 @@ PYTHONPATH=src python sample_pixel.py \
 
 
 
-## 实验优化与 desk GPU 运行
+## 实验优化与本机 GPU 运行
 
 推荐从可复现的命令行实验入口开始，Web 端也使用同一套 `src/diffusion_demo/core` 训练代码。
 
@@ -192,22 +192,22 @@ PYTHONPATH=src python sample_pixel.py \
 
 ```bash
 pip install -e .
-python experiment.py --config configs/desk_smoke.json --output runs/my_smoke
-python experiment.py --config configs/desk_baseline.json --output runs/my_baseline
-python experiment.py --config configs/desk_recommended.json --output runs/my_experiment
+python experiment.py --config configs/local_smoke.json --output runs/my_smoke
+python experiment.py --config configs/local_baseline.json --output runs/my_baseline
+python experiment.py --config configs/local_recommended.json --output runs/my_experiment
 ```
 
-`desk_smoke.json` 跑通 VAE → DiT → 采样；`desk_baseline.json` 与推荐配置的 VAE 使用相同数据、划分和种子，只比较 KL 权重/预热方案。推荐配置适用于实测的 RTX 2080 SUPER 8GB：VAE batch=16、自动选择 FP16，DiT hidden=128/depth=4/patch=1、batch=64、FP32。小模型上混合精度不一定更快，请运行下面的 benchmark 验证。
+`local_smoke.json` 跑通 VAE → DiT → 采样；`local_baseline.json` 与推荐配置的 VAE 使用相同数据、划分和种子，只比较 KL 权重/预热方案。推荐配置适用于实测的 RTX 2080 SUPER 8GB：VAE batch=16、自动选择 FP16，DiT hidden=128/depth=4/patch=1、batch=64、FP32。小模型上混合精度不一定更快，请运行下面的 benchmark 验证。
 
 本机直接 SSH 不通而 tmux 能连时：
 
 ```bash
 tmux new-session -d -s diffusion-experiment \
-  'cd /Users/zsc/Downloads/diffusion_demo2 && scripts/run_desk.sh configs/desk_recommended.json'
+  'cd /path/to/diffusion_demo2 && scripts/run_remote_gpu.sh configs/local_recommended.json'
 tmux attach -t diffusion-experiment
 ```
 
-脚本将代码同步到 `desk:/home/zsc/Downloads/diffusion_demo2_codex`，使用已有 `py312` 环境，完成后把本次结果复制回本地 `runs/`。地址和解释器路径可在 `scripts/run_desk.sh` 修改；不会安装或升级远端共享环境。每次运行新建输出目录，实验入口拒绝覆盖已有目录。
+脚本通过 `REMOTE_HOST`、`REMOTE_DIR` 和 `REMOTE_PYTHON` 环境变量配置远端主机、代码目录与解释器，完成后把本次结果复制回本地 `runs/`。不会安装或升级远端共享环境；每次运行新建输出目录，实验入口拒绝覆盖已有目录。
 
 每个实验保存 `environment.json`（含源文件 SHA256）、`config.json` 和 `result.json`；VAE/DiT 各自保存：
 
@@ -240,15 +240,48 @@ DiT 默认缓存 **posterior 的均值/方差**，每个 batch 重新采样；�
 
 实现参考：[PyTorch AMP](https://docs.pytorch.org/docs/stable/amp.html)、[SDPA](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)、[DDIM](https://arxiv.org/abs/2010.02502)。
 
+## VAE / VQ-VAE 审计与 JiT 经验迁移
+
+审计报告：[16 GPU 正式对照、权重继承与重建网格](reports/vae_gpu_2026-10-25.html)；[CPU 短程诊断](reports/vae_audit_2026-10-24.html)。修复作用于 `src/diffusion_demo`（Web API、`experiment.py`、`cmdline_train.py`）；根目录 `app.py` / `models` / `training` 是另一套历史实现，未替换其架构。
+
+VQ 默认重建损失改成像素均值，与 codebook/commitment 的均值尺度匹配；`vq_recon_reduction="sum"` 保留旧对照。VAE 的逐图求和 ELBO 不变。真实 48px 人脸小预算对照（896 train / 128 val、同 seed、各 448 次更新）中，旧 grid=4/sum、grid=4/mean、grid=12/sum、grid=12/mean 的最佳验证 PSNR 分别为 **14.04 / 15.20 / 14.52 / 17.96 dB**。这是单 seed、按验证集选择轮次的重建诊断，不代表最终生成质量；原始 split、metrics 和权重位于 `runs/vae_audit_20261024/`。
+
+16 卡复核已完成：四组相同 29,000 train / 1,000 val、global batch=512、lr=2e-4、BF16、32 轮（各 917,504 张看图量）。第 32 轮 PSNR 为 **14.35 / 17.17 / 14.03 / 21.52 dB**，最佳设置相对旧设置的验证 MSE 降低 **80.8%**，各组无跳过更新。仍是单 seed 重建对照，不能替代生成 FID。最佳权重通过对象存储取回并校验，保存在 `runs/vae_gpu_20261025/best_model.pth`；本机 FP32 重算同一验证集为 **21.53 dB**。
+
+原生 96px 对照也已完成：`configs/vq96_{scratch,transfer}_gpu.json` 均使用 24×24 latent、global batch=512、32 轮新增训练（各 950,272 张看图量），第 32 轮 PSNR 为 **从零 23.06 / 继承 48px 权重 25.11 dB**。继承组多用了 48px 预训练，不是相同总预算；旧 sprites 无原图 ID，无法排除新验证图参与旧预训练。最佳 96px 权重位于 `runs/vae_gpu_20261025/best96_model.pth`，已通过 SHA256 和本机严格加载检查；两组均无跳过更新。
+
+主要修复：移除从未参与 forward 的 VAE 参数并兼容旧权重；配置输出分辨率和 latent 网格；VQ 距离查询分块且不建梯度图；记录码本使用率/困惑度；GAN 使用稳定的 logits loss；CLI 使用核心训练器和留出集，停止展示无学习先验的 VQ Gaussian 解码结果。原生 96px 需要真实 uint8 `N,96,96,3` 数据；不会自动放大旧 sprites。
+
+默认两层 hidden 下，VAE 自然网格为 48px→6、96px→12，VQ 为 48px→12、96px→24。只改变网格和输出尺寸时，卷积权重可严格继承；`init_checkpoint` **只初始化模型权重**，新优化器/训练状态从头开始，不是精确续训。源权重的通道数、hidden_dims、codebook size 必须与目标一致。旧 raw state-dict 没有空间尺寸元数据，独立加载仍按历史 48px/4×4；新 checkpoint 保存完整空间配置。
+
+```bash
+# 小预算、单进程的 2×2 对照
+python scripts/ablate_autoencoder.py --output runs/my_vae_audit
+
+# 48→96 权重初始化；若已有 96px cache 首 1000 张为验证集，保持这个边界。
+python cmdline_train.py --model vqvae --epochs 32 --data-limit 31000 \
+  --data-path /path/to/celeba96.npy --image-size 96 --latent-spatial-size 24 \
+  --split-mode validation_first --val-count 1000 \
+  --init-checkpoint /path/to/vq48/checkpoints/best.pth --output-dir runs/my_vq96
+
+# 只在集群已分配的 1×16 GPU 任务内执行；batch_size 是全局 batch。
+bash scripts/run_vae_gpu_group.sh configs/vq48_g12_mean_gpu.json \
+  /path/to/output /path/to/celeba_48x48_sprites_v2.npy
+```
+
+`configs/vq48_g{4,12}_{sum,mean}_gpu.json` 是已在 GPU 运行的四组配置：相同 global batch=512、seed、数据划分、32 轮；29,000 张训练图丢弃不完整全局 batch，每组实际看图量为 917,504 张。DDP 已通过本地双进程测试、16 卡的 VQ48 / VAE96 smoke 和四组正式对照。DDP 每 rank 使用本地 BatchNorm、保存 rank-0 running buffers；分布式 GAN 尚未实现。`images_seen`、`optimizer_updates`、`skipped_updates` 与验证指标写入日志，避免只比较 epoch 或总 loss。
+
+后续优先比较码本初始化/失活码重置、KL 预热与弱 KL、按看图量定义的 EMA。大 batch 要同时对齐预算并调整学习率；BatchNorm、EMA 和码本更新需单独验证。最终仍需训练 latent prior，比较完整网格及 FID/KID；JiT 的融合加速倍率不能直接套用到卷积自编码器。
+
 ## 📋 目录
 
 - [特性](#特性)
 - [模型架构](#模型架构)
-  - [VAE (变分自编码器)](#vae-变分自编码器)
-  - [VQVAE (向量量化变分自编码器)](#vqvae-向量量化变分自编码器)
-  - [DiT (扩散 Transformer)](#dit-扩散-transformer)
-  - [DDPM (去噪扩散概率模型)](#ddpm-去噪扩散概率模型)
-- [数学原理](#数学原理)
+  - [VAE (变分自编码器)](#vae)
+  - [VQVAE (向量量化变分自编码器)](#vqvae)
+  - [DiT (扩散 Transformer)](#dit-transformer)
+  - [DDPM (去噪扩散概率模型)](#ddpm)
+- [数学符号速查](#数学符号速查)
 - [安装](#安装)
 - [使用方法](#使用方法)
 - [项目结构](#项目结构)
@@ -309,7 +342,7 @@ $$
 **重建损失** (MSE):
 
 $$
-\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \|x_i - \hat{x}_i\|^2
+\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \lVert x_i - \hat{x}_i \rVert^2
 $$
 
 **KL 散度** (正则化项):
@@ -362,13 +395,13 @@ $$
 **VQ 损失**:
 
 $$
-\mathcal{L}_{\text{VQ}} = \|z_e - \text{sg}[z_q]\|^2
+\mathcal{L}_{\text{VQ}} = \lVert z_e - \text{sg}[z_q] \rVert^2
 $$
 
 **承诺损失**:
 
 $$
-\mathcal{L}_{\text{commit}} = \beta \cdot \|\text{sg}[z_e] - z_q\|^2
+\mathcal{L}_{\text{commit}} = \beta \cdot \lVert \text{sg}[z_e] - z_q \rVert^2
 $$
 
 其中：
@@ -455,7 +488,7 @@ $$
 简化后的训练目标是预测添加到 $x_0$ 的噪声：
 
 $$
-\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, t, \epsilon \sim \mathcal{N}(0,I)} \left[ \|\epsilon - \epsilon_\theta(x_t, t)\|^2 \right]
+\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, t, \epsilon \sim \mathcal{N}(0,I)} \left[ \lVert \epsilon - \epsilon_\theta(x_t, t) \rVert^2 \right]
 $$
 
 #### 采样算法
@@ -674,3 +707,249 @@ MIT License
 <p align="center">
   用 ❤️ 和 PyTorch 构建
 </p>
+
+### VQ 码本 EMA 与 latent DiT（2026-10-25）
+
+`train_vae_model` 现在支持 `codebook_decay`、`codebook_data_init`、
+`dead_code_threshold` 和 `model_ema_halflife_images`。默认值保留梯度更新码本；
+开启码本 EMA 后，计数与向量和在所有训练 rank 上求和，只在成功的 optimizer
+step 后更新。死码阈值按均匀使用量的比例定义，评估和采样不修改码本。
+模型权重 EMA 平滑 encoder/decoder，复制码本和 BN buffers；每轮分别验证 raw/EMA，
+按固定验证集重建 MSE 选择 `best.pth`。从旧码本 checkpoint 切换到 EMA
+是显式初始化，`init_checkpoint` 不恢复 optimizer。
+
+`latent_ddp_experiment.py` 冻结选定 VQ-VAE，缓存离散码，使用训练集统计量归一化，
+训练 clean-latent prediction / velocity loss 的 DiT。支持同一 world size 下
+`--resume .../last.pt`，恢复 optimizer、模型 EMA 和各 rank RNG。
+完整状态保存在 `last.pt`，采样权重为 `ema_<images>.pt`，旁边的
+`autoencoder.pth` 必须一起保留。每组实验在集群预留 1 节点 × 16 GPU 后运行：
+
+```bash
+bash scripts/run_latent_gpu_group.sh \
+  --config configs/latent_vq48_old.json --output /path/to/new-run
+# 首次运行前设置 autoencoder/data；续训时保持它们一致，只延长 images 预算：
+bash scripts/run_latent_gpu_group.sh \
+  --config /path/to/config.json --output /path/to/run --resume /path/to/run/last.pt
+```
+
+生成评估使用 `--mode eval --checkpoint .../ema_<images>.pt --weights-dir ...`；
+`--requantize` 比较末端重新量化，`--guide` / `--guidance` 比较弱模型引导。
+生成的 `real_features.npy` / `fake_features.npy` 可由
+`scripts/score_pixel_features.py` 计算同口径 FID/KID。
+实际结果及连续样本见 `reports/vq_latent_2026-10-25.html`；
+运行 `python scripts/report_vq_latent.py` 可从已下载的实验记录重建报告。
+
+无需 Inception 即可独立采样：
+
+```bash
+PYTHONPATH=src:. python sample_latent.py --checkpoint /path/to/ema_8388608.pt \
+  --output /path/to/samples --seed 2027 --count 64 --steps 50
+```
+
+该命令同时保存原生 48px 单图、连续网格和包含模型 SHA256 的元数据。
+
+### VQ 感知损失与 GAN 对照
+
+安装 `.[perceptual]` 后，用官方 ImageNet SqueezeNet 与 LPIPS v0.1 权重建立离线资产：
+
+```bash
+python scripts/prepare_perceptual_weights.py --output /path/to/lpips_squeeze_v01.pth
+```
+
+`vq_perceptual_experiment.py` 专门测试 **冻结 encoder / quantizer、微调 decoder**：
+使用已有的离散码缓存，并严格核验数据与 latent 映射；支持 MSE、LPIPS、延迟启用的
+hinge PatchGAN、decoder EMA。判别器使用 GroupNorm，生成器阶段不更新判别器参数。
+每组在集群分配一个完整的 16 GPU 组后运行：
+
+```bash
+bash scripts/run_vq_perceptual_gpu.sh \
+  --config configs/vq48_decoder_lpips.json --output /path/to/new-decoder-run
+```
+
+配置中的 `autoencoder`、`data`、`codes`、`perceptual_weights` 需要指向实际资产。
+`steps × batch_size` 是追加训练图像数。MSE 按验证 MSE、感知组按验证 LPIPS 保存
+`best.pth`；是否改善生成仍须用固定采样协议的 FID/KID 与图像核验。
+
+完整 VQ-VAE 联合训练也支持 `perceptual_weights`、`perceptual_loss_weight` 和
+`selection_metric`，见 `configs/vq48_joint_lpips.json`。联合训练改变了 latent 映射，
+需要重新缓存、训练对应的 DiT。该路径仍使用全局同步码本 EMA 和独立模型 EMA。
+
+生成评估/采样可显式传 `--autoencoder /path/to/decoder/best.pth`，仅允许 encoder
+与量化器全部张量和原 prior 一致的 decoder 替换。续训额外核验 latent 归一化
+center/scale；更换 latent 映射会报错，避免将不兼容的 prior 与 VQ-VAE 拼在一起。
+报告生成器为 `scripts/report_vq_perceptual.py`，产物在
+`runs/vq_perceptual_20261025/` 与 `reports/vq_perceptual_2026-10-25.html`。
+
+`latent_ddp_experiment.py` 另支持可选的 `pca_components`：仅用训练集离散码的
+频率估计 FP64 加权协方差，投影后按主成分标准差归一化；采样时恢复到原始
+64 维再解码。模型保存完整 basis、offset 和 scale，续训核验投影一致。
+该操作保留原 VQ-VAE，实际保留方差写入 `projection.json`；是否改善生成质量
+仍须实验判断。`configs/latent_vq48_pca8_patch1.json` 为 8 维、patch 1 对照。
+
+### 视觉模型 best-of-N
+
+Pixel JiT 的随机性来自起始高斯噪声；当前 Heun 积分中不额外加噪。固定模型、seed
+及采样设置可基本复现，换 seed 生成不同候选。当前是无条件模型，候选不保证是同一个人。
+
+下面生成 64×8 张候选，用兼容视觉 API 的模型逐张评分，每组取一张。
+API 凭据只在本机从 `.env` 的 `LLM_API_KEY` 读取，不打印、不上传至集群：
+
+```bash
+PYTHONPATH=src:. .venv/bin/python sample_pixel_best_of_n.py \
+  --checkpoint runs/pixel96_further/model_ema.pt \
+  --guide-checkpoint runs/pixel96_further/guide_ema.pt --guidance 3 \
+  --count 64 --best-of-n 8 --seed 2027 --steps 50 \
+  --output runs/faces96_bestof8
+```
+
+2080 SUPER 加 `--precision fp16`。采样已完成时可单独运行评分器；也可用于
+`sample_latent.py` 输出的原生 PNG。失败后用相同参数续跑，会按图片和评分提示词的
+哈希复用已完成响应；输出目录拒绝混入另一组候选或评分规则。
+
+```bash
+.venv/bin/python scripts/rank_face_candidates.py \
+  --input runs/faces96_bestof8/candidates/images \
+  --output runs/faces96_bestof8/ranking \
+  --group-size 8 --ns 1,2,4,8 --concurrency 4
+```
+
+评分侧重五官结构、自然程度、细节与伪影，不评价颜值、身份或人口属性。
+所有候选、原始响应、token 用量、分项分数、SHA256 和入选 ID 均保存；同分取较早候选。
+`selection.json` 记录每组 N=1/2/4/8 的结果。**同一评分器筛选后的均分上涨并非独立
+质量证明，筛选后的分布和多样性也可能变化，不能沿用未筛选 FID。**
+
+2026-10-25 已完成 64 张原生 96px 候选的真实视觉模型评分试跑，8 组 N=1/2/4/8
+平均分为 48.25 / 50.75 / 51.50 / 53.75。示例与完整记录在
+`runs/pixel96_bestofn_20261025/pilot64/`；报告入口 `scripts/report_best_of_n.py`。
+
+`scripts/sample_pixel_pool.py` 在已分配的单节点上用 torchrun 分摊候选，每张采用
+`base_seed + candidate_id`，保存准确种子和 PNG 哈希。四组集群对照分别为
+50步/g3、50步/g2、100步/g3、50步/g3但引导区间改为[0.2,0.8]；每组512候选、
+完整16 GPU，噪声种子对齐。后处理只等待已提交任务，通过对象存储取回 PNG，再评分并更新
+`reports/pixel96_bestofn_2026-10-25.html`；不提交新任务、不修改其他实验，也不传输密钥。
+
+
+### 96px EMA 再优化：batch × learning rate（2026-10-25）
+
+新 4×16 GPU 集群上启动四组训练（59170–59173），每组独占一个 16 GPU 节点：global batch 1024/2048 × learning rate 5e-5/1e-4。全部从已选定的 20.480M EMA 初始化，重新建立 AdamW；这不是从同一步优化器状态恢复。每组新增 8.192M 张次，每 1.024M 保存验证指标、样图与 EMA，继续使用已验证的 compile_pointwise。四组采用相同图像预算、warmup 和按图像数缩放的 EMA，便于比较大 batch 与学习率的影响。配置为 `configs/pixel96_refine_*.json`，运行记录在 `runs/pixel96_refine_20261025/`。结果尚未完成，当前最佳权重仍保留原版本。
+
+上一轮四组 best-of-N 候选采样（56217–56220）已在旧 1×16 集群完成，保留其产物并由本机视觉模型评分流水线继续处理；未在新集群重复提交。
+
+新增的 4×16 集群实验仍按每组 `num_nodes=1,gpus_per_node=16` 提交，
+配置为 `configs/latent_{pca8_16m,joint16m,base32m,pca8_b2048_16m}.json`。
+续训保持 global batch 512，以保存的 optimizer、EMA、per-rank RNG 接续；
+batch 2048 方案从零训练，避免把 checkpoint 的 step 错当成不同 batch 下的已训练图像数。
+资源队列与完成后评估由 `runs/vq_perceptual_20261025/parallel_monitor.py` 记录。
+
+`latent_eval_suite.py --manifest FILE` 应用普通 Python 在已预留的 16 GPU 任务中运行，
+先清除集群继承的 `WORLD_SIZE/RANK/LOCAL_RANK`。每个条目启动独立 torchrun，
+使用 `--standalone` 自动分配 rendezvous 端口；不在同一个 GPU worker 中反复重建通信组。
+
+已完成轮次的独立采样确认（seed7777，1024 fake / 1000 real）：
+MSE decoder + latent DiT 16,777,216 images + interval guidance2 的 FID 为 **57.937**，
+此前 latent 为 64.986，pixel JiT 为 44.267；因此已有改善，但尚未超过 pixel JiT。
+权重在 `runs/vq_perceptual_20261025/release/`，本机重新生成的 64 张原生图像在
+`runs/vq_perceptual_20261025/sample_cpu_seed2027/images/`。
+
+```bash
+PYTHONPATH=src:. python sample_latent.py \
+  --checkpoint runs/vq_perceptual_20261025/release/model_ema.pt \
+  --guide runs/vq_perceptual_20261025/release/guide_ema.pt --guidance 2 \
+  --device cpu --precision fp32 --seed 2027 --count 64 --output samples/vq16m
+```
+
+
+### 96px 再优化的首轮结果与噪声分布实验
+
+四组均已完成新增 8.192M 训练；`b2048_lr1e4` 最初在训练后的 Inception 评估中出现 GPU driver invalid argument，训练完整保存，独立评估重跑已完成。统一 seed3333、Heun50、guide 区间 [0.1,0.8] 的未筛选 FID：
+
+| 模型 | guidance2 | guidance3 |
+| --- | ---: | ---: |
+| 原20.480M EMA | 57.719 | 57.133 |
+| b1024 lr5e-5 | 56.879 | 56.132 |
+| b1024 lr1e-4 | 57.267 | 56.306 |
+| b2048 lr5e-5 | 57.474 | 56.840 |
+| b2048 lr1e-4 | 57.617 | 57.044 |
+
+这是 1024 fake /1000 real、同一验证集的小样本选择结果；未引导 FID 没有改善，原最佳权重继续保留。固定种子样图、全量候选和评分见 `reports/pixel96_refinement_review_20261025.html`。原模型采样变体的视觉模型 best-of-8 均分为 g2/Heun50 56.84、g3/Heun50 53.88、g3/Heun100 53.81、g3/较短引导区间54.41；筛选后评分上涨不能当作独立质量证明。
+
+以 b1024/lr5e-5 的完整 8.192M checkpoint 为共同起点，任务59185–59188继续到16.384M：原学习率对照、lr2e-5、logit-time均值-0.4（偏低噪声）、-1.2（偏高噪声）。标准差均0.8，验证时间分布保持原来的(-0.8,0.8)。分布变更必须显式设置 `ALLOW_RESUME_TIME_CHANGE=1` / `--allow-resume-time-change`，续训记录包含旧/新分布。改变训练分布后的 train loss 不可直接与对照比较。新配置在 `configs/pixel96_noise_*.json`，四组继续各占16 GPU。
+
+
+本轮四组新模型各512张候选的视觉模型评分已全部完成、无错误。g2/Heun50 的 best-of-8 均分：b1024lr5e-5 **57.06**，b1024lr1e-4 **57.63**，b2048lr5e-5 **58.25**，b2048lr1e-4 **56.69**；旧模型 **56.84**。各模型全512候选均分仍约49.3–49.5，不能据此宣称整体质量大幅提升。除 FID 最佳分支外，best-of-N 最佳的 b2048lr5e-5 也已提交完整状态续训任务 **59190**，配置 `configs/pixel96_noise_continue_b2048_lr5e5.json`，等待空闲16 GPU节点。原始96px图、配对对比、全部评分与训练继承信息见 `reports/pixel96_refinement_review_20261025.html`；简要样图是 `reports/pixel96_best_pick_comparison_20261025.png`。
+
+四组并行实验的专门对比页由 `python scripts/report_vq_parallel.py` 生成：
+`reports/vq_parallel_comparison_2026-10-25.html`，同时导出连续前 16 张的对比 PNG。
+评估统一使用 GPU/BF16、seed3333、Heun50、guidance2；CPU 补充采样有明确标注，
+因随机数后端不同，不把 CPU 和 GPU 的同编号图像当作逐张对应。
+
+PCA8/batch2048 候选的本机采样复现：
+
+```bash
+PYTHONPATH=src:. python sample_latent.py \
+  --checkpoint runs/vq_perceptual_20261025/comparison_models/pca8_b2048_16m/model_ema.pt \
+  --autoencoder runs/vq_perceptual_20261025/release/autoencoder.pth \
+  --guide runs/vq_perceptual_20261025/comparison_models/pca8_b2048_16m/guide_ema.pt \
+  --guidance 2 --seed 3333 --device cpu --precision fp32 --count 64 \
+  --output samples/pca8_b2048
+```
+
+已准备的单组续训记录在 `runs/vq_perceptual_20261025/followup_selection.json` 和
+`followup_status.json`（评估齐全、提交成功后生成）。选择四组同口径 FID 最优者，
+保持 batch，从完整 checkpoint 恢复 optimizer/EMA/RNG，学习率减半，追加
+16,777,216 张训练图像。此阶段不加 GAN；结束后自动评估 seed3333、seed7777。
+
+
+**当前实验方向（2026-10-25）：已暂停 best-of-N 和视觉模型评分。** 已完成图片、分数和报告保留；仅因 best-of-N 排名追加的续训任务59190已取消。资源继续用于未筛选采样/FID、学习率续训与噪声时间分布变体，不再主动启动候选筛选或评分。状态见 `runs/best_of_n_paused_20261025.json`。
+
+96×96 latent DiT 迁移入口为 `configs/latent_vq96_pca8_transfer.json`：
+从已验证的 PCA8/batch2048 48px EMA 权重开始，VQVAE 原生网格 12→24、输出 48→96；
+编码器和码本权重保持逐张量相同，先按 `configs/vq96_decoder_transfer.json` 微调 MSE 解码器。
+DiT 的 patch1 网格从 144 tokens 扩至 576 tokens，仅对 learned position embedding 做
+bicubic 插值；保留预训练的 PCA basis、offset、center 和 scale，不用新码频率重新拟合轴。
+`--init-checkpoint` 使用 EMA 权重 warm start，重置 optimizer 和 96px 图像计数；
+`--resume` 仍用于同一模型、同一坐标系、同一 world size 的完整状态续训，两者互斥。
+新增 `snapshot_images` 可保存早期弱引导检查点，同时维持较稀疏的后续保存频率。
+
+原生 96px 使用已有 31,000 张缓存，前 1,000 张验证、其余 30,000 张训练。
+新分区原图 ID 不相交；旧 48px sprites 无原图 ID，无法排除验证图参与旧预训练。
+48px 和 96px 的 FID 不直接比较。96px 首轮新增训练预算 8,388,608 张，global batch2048、
+lr1e-4、1×16 GPU，不启用 GAN。训练前验证 16 GPU 的实际 forward/backward；完成后
+分别评估无引导与早期 96px 检查点引导，并保留 seed7777 的独立采样结果。
+任务及样本记录：`runs/vq96_transfer_20261025/`。
+
+96px 并行变体（每组仍为 1×16 GPU）：
+`configs/latent_vq96_b2048_lr5e5.json`、`latent_vq96_b2048_lr2e4.json`、
+`latent_vq96_b4096_lr2e4.json`。三组均从同一份 48px/32M EMA 开始，
+各新增 4,194,304 张；与主线在同图像预算下比较 raw / guided FID，
+大 batch 先完成 16 GPU 两步实测。除了 batch 和学习率，模型、码本、
+PCA 坐标、数据、EMA 半衰期及采样设置保持一致。结果与启动记录在
+`runs/vq96_variants_20261025/`，连续样本和指标见
+`reports/vq96_variants_2026-10-25.html`。当前不加 GAN。
+
+普通 VAE 的 PCA 诊断（2026-10-25）见 `reports/vae_pca_2026-10-25.html`。
+`vae_pca_probe.py` 冻结早期 16 通道/4×4 网格、1792 张训练图/8 轮的 KL=0.1 与 KL=1 模型，
+只在原训练 ID 上拟合通道 PCA；用原验证集和另外 1000 张未参与训练的图片评估。
+同时比较 mu 与采样 latent，后者的拟合协方差使用 Cov(mu)+E[diag(exp(logvar))]，
+各截断共享相同每图后验噪声。集群任务 59205（1×16 GPU）成功，指标、图片及投影已取回并校验哈希。
+KL=0.1 模型的均值路径 16→12 通道损失约 0.03 dB，16→8 的 LPIPS 退化更明显。
+这是既有 latent 冗余诊断，不是 PCA 增加模型表达能力的证据；这些早期 VAE 的重建本身仍很模糊。
+若从头训练连续 VAE，应优先比较直接训练窄 latent 的重建与生成效果；尚未据此启动普通 VAE latent DiT。
+
+直接训练普通 VAE 窄通道对照：`configs/vae96_narrow_c8.json`、`c12`、`c16`。
+同为原生96px、12×12 latent网格、hidden_dims=[64,128]、beta=0.01、8轮KL预热、
+batch512、lr2e-4、EMA半衰期8192张，128轮（3,801,088次看图），各1×16 GPU。
+本实验不使用PCA，所有组从零训练；先实际两步smoke。`vae_reconstruction_eval.py`
+对最佳/最后权重分别评估后验均值与固定噪声样本的重建PSNR/LPIPS。
+集群任务59211/59212/59213；记录与自动回收文件在`runs/vae_narrow96_20261025/`，
+可视报告为`reports/vae_narrow96_2026-10-25.html`。这是重建对照，尚未据此启动普通VAE latent DiT。
+
+16通道普通VAE接latent DiT：`configs/latent_vae96_c16.json`，集群任务 59219。
+冻结`vae_narrow96_20261025/c16`最佳VAE，原生96px、12×12×16 latent，不用PCA；
+`continuous_latents.py`缓存后验mu/logvar，每步重新抽样。通道归一化只用训练部分，
+方差为Var(mu)+E[exp(logvar)]。`latent_ddp_experiment.py`保留VQ路径并支持连续VAE；
+完整续训保持posterior_mode、数据、batch及每rank RNG，禁止对连续VAE重新量化。
+DiT从零训练，width384/depth8/heads6/patch1、batch2048、lr4e-4，目标16M张，
+先做16 GPU 两步实测，在8M/16M评估raw/guided及最终独立采样种子。
+10项相关测试通过，包含连续后验采样下的精确续训。记录和自动回收结果在
+`runs/vae_latent96_20261025/`，报告为`reports/vae_latent96_2026-10-25.html`。

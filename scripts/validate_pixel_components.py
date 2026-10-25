@@ -1,4 +1,4 @@
-"""Independent FP64 autograd references for PPU fusion outputs and gradients.
+"""Independent FP64 autograd references for GPU fusion outputs and gradients.
 
 Tolerances account for BF16 rounding (0.6% output, 2% gradient relative L2).
 This gate does not erase the stricter full-model gate failures or establish

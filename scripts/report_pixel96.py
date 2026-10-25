@@ -9,7 +9,7 @@ from report_pixel_experiments import collect, embed, read_json
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="runs/ppu96")
+    ap.add_argument("--root", default="runs/gpu96")
     ap.add_argument("--output", default="reports/pixel96_transfer_2026-10-24.html")
     ap.add_argument("--best", default="runs/pixel96_best")
     args = ap.parse_args()
@@ -61,7 +61,7 @@ def main():
 <p>保持 patch=4、width=384、depth=8、heads=6，21.89M 参数全部从已训练的 48px 主模型 EMA 严格加载。输入投影、Transformer、输出投影、卷积细化头均不随机重置；AdamW、学习率 warmup 和 EMA 年龄重新开始。精确续跑仍使用 --resume，跨分辨率初始化使用 --init-from。</p>
 <p>网格从 12×12 变为 24×24，token 从 144 增到 576。绝对 sin/cos 位置编码和 RoPE 是非持久化解析 buffer，重新生成而非从 checkpoint 加载。position_scale=1 使用新网格原生坐标；0.5 使用原来一半的坐标步长。全局注意力矩阵元素数变为 16 倍，整体训练耗时并非必然 16 倍。</p>
 <p>数据从原始 178×218 CelebA JPEG 中心裁切 178×178，再用 Lanczos 缩至 96×96，没有放大旧 48px 图片。固定抽取官方训练分区 30,000 张、验证分区 1,000 张。旧 sprites 缺少原图 ID，无法确认它们与新验证图的重叠；此处是 96px 微调留出集评估，并非保证未用于 48px 预训练的独立测试。</p>
-<p>每组一台 16 PPU。首轮相同的新增 96px 看图预算，比较位置坐标、微调学习率及随机初始化；继承组额外使用已完成的 819.2 万张次 48px 预训练，因此不是同总训练算力比较。FID/KID 是 1,024 张生成图对 1,000 张 96px 验证图的小样本比较，不与旧 48px FID 横向比较；时间包含训练循环内保存和预览，续跑只计本阶段。</p>
+<p>每组一台 16 GPU。首轮相同的新增 96px 看图预算，比较位置坐标、微调学习率及随机初始化；继承组额外使用已完成的 819.2 万张次 48px 预训练，因此不是同总训练算力比较。FID/KID 是 1,024 张生成图对 1,000 张 96px 验证图的小样本比较，不与旧 48px FID 横向比较；时间包含训练循环内保存和预览，续跑只计本阶段。</p>
 <div class="scroll"><table><tr>''' + "".join('<th>' + s + '</th>' for s in ["实验", "初始化", "位置缩放", "lr", "累计看图 M", "阶段分钟", "验证 MSE", "FID ↓", "KID ↓"]) + '</tr>' + ''.join(rows) + '</table></div>' + sampling_html + source_html + '<div class="gallery">' + ''.join(gallery) + '</div></html>'
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(document)

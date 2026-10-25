@@ -1,0 +1,24 @@
+{
+  "model_type": "vae",
+  "epochs": 128,
+  "batch_size": 512,
+  "data_limit": 31000,
+  "split_mode": "validation_first",
+  "val_count": 1000,
+  "validation_fraction": 0,
+  "seed": 0,
+  "lr": 0.0002,
+  "precision": "bf16",
+  "hidden_dims": [
+    64,
+    128
+  ],
+  "image_size": 96,
+  "latent_spatial_size": 12,
+  "kld_beta": 0.01,
+  "kl_warmup_epochs": 8,
+  "model_ema_halflife_images": 8192,
+  "num_workers": 0,
+  "use_gan": false,
+  "latent_dim": 16
+}

@@ -7,20 +7,15 @@ import sys
 import time
 import traceback
 from datetime import datetime
-from io import BytesIO
 from pathlib import Path
 
 import torch
-import numpy as np
-from PIL import Image
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from diffusion_demo.core.data_loader import denormalize, get_dataloader
-from diffusion_demo.core.models.vae import VAE, VQVAE
-from diffusion_demo.core.training.train_vae import vae_loss, vqvae_loss
-from diffusion_demo.utils.torch_env import get_device, get_dtype, get_torch_info, MixedPrecision, setup_seed
+from diffusion_demo.core.training.train_vae import train_vae_model
+from diffusion_demo.utils.torch_env import get_torch_info
 
 
 class MetricsTracker:
@@ -124,205 +119,38 @@ class MetricsTracker:
 
 
 def train_vae_cmdline(
-    model_type: str = "vae",
-    epochs: int = 10,
-    batch_size: int = 128,
-    data_limit: int = 2048,
-    lr: float = 0.0002,
-    use_bfloat16: bool = False,
-    latent_dim: int = 256,
-    device: str = None,
-    precision: str = None,
-    seed: int = 0,
-    kld_beta: float = 1.0,
-    output_dir: str = None,
+    model_type: str = "vae", epochs: int = 10, batch_size: int = 128,
+    data_limit: int = 2048, lr: float = 0.0002, use_bfloat16: bool = False,
+    latent_dim: int = 256, device: str = None, precision: str = None,
+    seed: int = 0, kld_beta: float = 1.0, output_dir: str = None,
+    **training_options,
 ):
-    """Train VAE with detailed metrics tracking."""
-    if min(epochs, batch_size, data_limit) <= 0:
-        raise ValueError("epochs, batch_size and data_limit must be positive")
-    
-    # Setup
-    setup_seed(seed)
-    if device is None:
-        device = get_device()
-    else:
-        device = torch.device(device)
-    
-    amp = MixedPrecision(device, precision, use_bfloat16)
-    dtype = amp.dtype
-    
-    print(f"Device: {device}")
-    print(f"Dtype: {dtype}")
-    print(f"Model: {model_type}")
-    print(f"Epochs: {epochs}, Batch Size: {batch_size}, Data Limit: {data_limit}")
-    
-    # Create model
-    if model_type == "vae":
-        model = VAE(latent_dim=latent_dim).to(device)
-        print(f"Model params: {sum(p.numel() for p in model.parameters()):,}")
-    else:
-        model = VQVAE(embedding_dim=64, num_embeddings=512).to(device)
-        print(f"Model params: {sum(p.numel() for p in model.parameters()):,}")
-    
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    
-    # Data loader
-    dataloader = get_dataloader(batch_size=batch_size, data_limit=data_limit, shuffle=True,
-                                pin_memory=device.type == 'cuda')
-    print(f"Batches per epoch: {len(dataloader)}")
-    
-    # Metrics tracker
-    tracker = MetricsTracker(output_dir or f"runs/cmdline_{datetime.now():%Y%m%d_%H%M%S_%f}")
-    tracker.metrics['total_batches'] = epochs * len(dataloader)
-    tracker.start_training()
-    
-    # Training loop
-    model.train()
-    
-    for epoch in range(epochs):
-        tracker.start_epoch(epoch)
-        
-        epoch_losses = []
-        batch_times = []
-        
-        for batch_idx, batch in enumerate(dataloader):
-            batch_start = time.time()
-            
-            batch = batch.to(device, non_blocking=True)
-            
-            optimizer.zero_grad(set_to_none=True)
-            
-            with amp.autocast():
-                if model_type == "vae":
-                    recon, mu, logvar = model(batch)
-                    loss, loss_dict = vae_loss(recon, batch, mu, logvar, kld_beta)
-                else:
-                    recon, vq_loss_val = model(batch)
-                    loss, loss_dict = vqvae_loss(recon, batch, vq_loss_val)
-            amp.step(loss, optimizer, model.parameters())
-            if device.type == 'cuda':
-                torch.cuda.synchronize(device)
-
-            batch_time = time.time() - batch_start
-            batch_times.append(batch_time)
-            epoch_losses.append(loss.item())
-            
-            # Log every 10 batches
-            if batch_idx % 10 == 0:
-                log_data = {
-                    'batch_idx': batch_idx,
-                    'loss': loss.item(),
-                    'batch_time_ms': batch_time * 1000,
-                }
-                # Remove 'loss' from loss_dict to avoid duplicate
-                loss_dict_copy = {k: v for k, v in loss_dict.items() if k != 'loss'}
-                log_data.update(loss_dict_copy)
-                tracker.log_batch(**log_data)
-                
-                # Print progress
-                progress = (batch_idx + 1) / len(dataloader) * 100
-                print(f"  Batch {batch_idx}/{len(dataloader)} ({progress:.1f}%) | "
-                      f"Loss: {loss.item():.6f} | "
-                      f"Time: {batch_time*1000:.1f}ms", end='\r')
-        
-        print()  # New line after epoch
-        
-        # Generate samples from random latent vectors
-        model.eval()
-        with torch.no_grad():
-            # Generate 8 random samples
-            num_samples = 8
-            if model_type == "vae":
-                # Sample from standard normal distribution
-                z = torch.randn(num_samples, latent_dim, 4, 4, device=device)
-            else:  # vqvae
-                z = torch.randn(num_samples, 64, 4, 4, device=device)
-            
-            generated = model.decode(z)
-            
-            # Convert to images and save
-            images = []
-            for i in range(num_samples):
-                img_tensor = generated[i]
-                # Denormalize from [-1, 1] to [0, 1]
-                img_tensor = denormalize(img_tensor)
-                img_tensor = torch.clamp(img_tensor, 0, 1)
-                # Convert to PIL
-                img_array = (img_tensor.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
-                img = Image.fromarray(img_array)
-                
-                # Save to bytes
-                buffer = BytesIO()
-                img.save(buffer, format='PNG')
-                img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-                images.append(img_base64)
-            
-            # Also save reconstruction comparison
-            sample_batch = next(iter(dataloader))[:8].to(device)
-            if model_type == "vae":
-                recon, _, _ = model(sample_batch)
-            else:
-                recon, _ = model(sample_batch)
-            
-            recon_images = []
-            for i in range(len(sample_batch)):
-                # Original
-                orig = sample_batch[i]
-                orig = denormalize(orig)
-                orig = torch.clamp(orig, 0, 1)
-                orig_array = (orig.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
-                orig_img = Image.fromarray(orig_array)
-                
-                # Reconstruction
-                r = recon[i]
-                r = denormalize(r)
-                r = torch.clamp(r, 0, 1)
-                r_array = (r.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
-                r_img = Image.fromarray(r_array)
-                
-                # Combine side by side
-                combined = Image.new('RGB', (96, 48))
-                combined.paste(orig_img, (0, 0))
-                combined.paste(r_img, (48, 0))
-                
-                buffer = BytesIO()
-                combined.save(buffer, format='PNG')
-                img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-                recon_images.append(img_base64)
-        
-        model.train()
-        
-        # End epoch
-        avg_loss = sum(epoch_losses) / len(epoch_losses)
-        tracker.end_epoch(
-            avg_loss,
-            min_loss=min(epoch_losses),
-            max_loss=max(epoch_losses),
-            std_loss=np.std(epoch_losses),
-            avg_batch_time_ms=sum(batch_times) / len(batch_times) * 1000,
-            generated_images=images,  # Store generated images
-            recon_images=recon_images,  # Store reconstruction comparisons
-        )
-    
-    tracker.end_training()
-    
-    # Save model
-    model_path = tracker.log_dir / "final_model.pth"
-    torch.save(model.state_dict(), model_path)
-    print(f"Model saved to {model_path}")
-    
-    # Save metrics
-    metrics_path = tracker.save("metrics.json")
-    
-    # Generate visualization
-    html_path = generate_html_report(tracker.metrics, tracker.log_dir / "report.html")
-    
-    return {
-        'model_path': str(model_path),
-        'metrics_path': str(metrics_path),
-        'html_path': str(html_path),
-        'metrics': tracker.metrics,
-    }
+    """Use the same trainer, holdout split and checkpoint format as the API."""
+    started = datetime.now().isoformat()
+    result = train_vae_model(
+        model_type=model_type, epochs=epochs, batch_size=batch_size, data_limit=data_limit,
+        lr=lr, use_bfloat16=use_bfloat16, latent_dim=latent_dim, device=device,
+        precision=precision, seed=seed, kld_beta=kld_beta, output_dir=output_dir,
+        **training_options,
+    )
+    summary = json.loads(Path(result['metrics_path']).read_text())
+    metrics = dict(train_start_time=started, train_end_time=datetime.now().isoformat(),
+                   total_time_sec=summary['total_seconds'], system_info=get_torch_info(),
+                   config=summary['config'], validation_images=summary['validation_images'],
+                   epochs=[], batches=[])
+    for record, image_path in zip(summary['epochs'], result['artifacts']['images']):
+        metrics['epochs'].append(dict(
+            **{k: v for k, v in record.items() if k != 'epoch'},
+            epoch=record['epoch'] - 1, avg_loss=record['loss'],
+            epoch_time_sec=record['train_seconds'],
+            recon_images=[base64.b64encode(Path(image_path).read_bytes()).decode('ascii')],
+            generated_images=[],
+        ))
+    metrics['total_batches'] = sum(e['optimizer_updates'] + e['skipped_updates'] for e in metrics['epochs'])
+    root = Path(result['metrics_path']).parent
+    (root / 'report_metrics.json').write_text(json.dumps(metrics, indent=2))
+    result.update(html_path=str(generate_html_report(metrics, root / 'report.html')), metrics=metrics)
+    return result
 
 
 def generate_epoch_images_html(epochs_data: list, image_key: str, is_recon: bool = False) -> str:
@@ -352,7 +180,7 @@ def generate_epoch_images_html(epochs_data: list, image_key: str, is_recon: bool
 
 
 def generate_html_report(metrics: dict, output_path: str) -> str:
-    """Generate standalone HTML report from metrics."""
+    """Generate an HTML report; charts require the Chart.js CDN."""
     
     # Prepare data for charts
     epochs_data = metrics.get('epochs', [])
@@ -609,14 +437,14 @@ def generate_html_report(metrics: dict, output_path: str) -> str:
         """ if gpu_allocated and any(gpu_allocated) else ""}
         
         <div class="chart-container">
-            <h2>Generated Images (Random Latent Sampling)</h2>
-            <p>Images generated from random latent vectors at each epoch, showing how the model learns to generate realistic faces.</p>
-            {generate_epoch_images_html(epochs_data, 'generated_images')}
+            <h2>Evaluation</h2>
+            <p>Validation images: {metrics.get('validation_images', 0)}. Reconstruction quality is measured separately from generation quality.
+            VQ-VAE requires a learned latent prior (for example, DiT); Gaussian vectors fed directly to its decoder are not a valid generation benchmark.</p>
         </div>
         
         <div class="chart-container">
-            <h2>Reconstruction Comparison (Original | Reconstructed)</h2>
-            <p>Side-by-side comparison of original images (left) and their reconstructions (right) at each epoch.</p>
+            <h2>Reconstruction Comparison</h2>
+            <p>Fixed images: originals first, followed by reconstructions in row order. Held-out images are used when validation is enabled; otherwise these are training previews.</p>
             {generate_epoch_images_html(epochs_data, 'recon_images', is_recon=True)}
         </div>
         
@@ -632,9 +460,9 @@ def generate_html_report(metrics: dict, output_path: str) -> str:
                     <tr>
                         <th>Epoch</th>
                         <th>Avg Loss</th>
-                        <th>Min Loss</th>
-                        <th>Max Loss</th>
-                        <th>Std Loss</th>
+                        <th>Validation MSE [0,1]</th>
+                        <th>Validation PSNR (dB)</th>
+                        <th>Validation codebook perplexity</th>
                         <th>Time (s)</th>
                     </tr>
                 </thead>
@@ -643,9 +471,9 @@ def generate_html_report(metrics: dict, output_path: str) -> str:
                     <tr>
                         <td>{e['epoch'] + 1}</td>
                         <td>{e['avg_loss']:.6f}</td>
-                        <td>{e.get('min_loss', 0):.6f}</td>
-                        <td>{e.get('max_loss', 0):.6f}</td>
-                        <td>{e.get('std_loss', 0):.6f}</td>
+                        <td>{e.get('val_recon_mse', 'N/A')}</td>
+                        <td>{e.get('val_psnr_db', 'N/A')}</td>
+                        <td>{e.get('val_codebook_perplexity', 'N/A')}</td>
                         <td>{e['epoch_time_sec']:.2f}</td>
                     </tr>
                     """ for e in epochs_data)}
@@ -817,6 +645,20 @@ def main():
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--kld-beta', type=float, default=1.0)
     parser.add_argument('--output-dir', default=None)
+    parser.add_argument('--image-size', type=int, default=48)
+    parser.add_argument('--latent-spatial-size', type=int, default=4)
+    parser.add_argument('--data-path', default=None, help='Native uint8 N,H,W,3 .npy data')
+    parser.add_argument('--validation-fraction', type=float, default=0.1)
+    parser.add_argument('--split-mode', choices=['random', 'validation_first'], default='random')
+    parser.add_argument('--val-count', type=int, default=None)
+    parser.add_argument('--vq-beta', type=float, default=1.0)
+    parser.add_argument('--vq-recon-reduction', choices=['mean', 'sum'], default='mean')
+    parser.add_argument('--embedding-dim', type=int, default=64)
+    parser.add_argument('--num-embeddings', type=int, default=512)
+    parser.add_argument('--commitment-cost', type=float, default=0.25)
+    parser.add_argument('--distance-chunk-size', type=int, default=4096)
+    parser.add_argument('--kl-warmup-epochs', type=int, default=0)
+    parser.add_argument('--init-checkpoint', default=None, help='Strict weight transfer into a new run; not optimizer resume')
     
     args = parser.parse_args()
     
@@ -831,6 +673,13 @@ def main():
             latent_dim=args.latent_dim,
             device=args.device,
             precision=args.precision, seed=args.seed, kld_beta=args.kld_beta, output_dir=args.output_dir,
+            image_size=args.image_size, latent_spatial_size=args.latent_spatial_size,
+            data_path=args.data_path, split_mode=args.split_mode, val_count=args.val_count,
+            validation_fraction=args.validation_fraction, vq_beta=args.vq_beta,
+            vq_recon_reduction=args.vq_recon_reduction, embedding_dim=args.embedding_dim,
+            num_embeddings=args.num_embeddings, commitment_cost=args.commitment_cost,
+            distance_chunk_size=args.distance_chunk_size, kl_warmup_epochs=args.kl_warmup_epochs,
+            init_checkpoint=args.init_checkpoint,
         )
         
         print(f"\n{'='*60}")

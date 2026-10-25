@@ -26,6 +26,7 @@ diffusion-demo = "diffusion_demo.server:main"
 [project.optional-dependencies]
 report = ["matplotlib>=3.7"]
 evaluation = ["clean-fid==0.1.35", "scipy>=1.11"]
+perceptual = ["lpips==0.1.4"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -80,13 +80,20 @@ def load_cached_images() -> np.ndarray:
 class CelebASpritesDataset(Dataset):
     """CelebA 48x48 sprites dataset."""
     
-    def __init__(self, data_limit: Optional[int] = None, transform=None):
+    def __init__(self, data_limit: Optional[int] = None, transform=None, cache_path=None, image_size=IMAGE_SIZE):
         """
         Args:
             data_limit: Limit number of images (for quick testing)
             transform: Optional transform to apply
         """
-        self.images = load_cached_images()
+        if data_limit is not None and data_limit <= 0:
+            raise ValueError("data_limit must be positive")
+        if cache_path is None and image_size != IMAGE_SIZE:
+            raise ValueError("Native non-48px training requires an explicit data_path; sprites are not upscaled")
+        self.cache_file = str(cache_path or CACHE_FILE)
+        self.images = np.load(cache_path, mmap_mode="r") if cache_path else load_cached_images()
+        if self.images.dtype != np.uint8 or self.images.ndim != 4 or self.images.shape[1:] != (image_size, image_size, 3):
+            raise ValueError(f"Expected uint8 cached images with shape N,{image_size},{image_size},3")
         if data_limit is not None:
             self.images = self.images[:min(data_limit, len(self.images))]
         if len(self.images) == 0:
@@ -152,20 +159,21 @@ def denormalize(tensor: torch.Tensor) -> torch.Tensor:
     return (tensor + 1) / 2
 
 
-def tensor_to_pil(tensor: torch.Tensor) -> Image.Image:
+def tensor_to_pil(tensor: torch.Tensor, normalized: bool = True) -> Image.Image:
     """Convert tensor to PIL Image.
     
     Args:
-        tensor: Tensor in [-1, 1] or [0, 1], shape (C, H, W) or (B, C, H, W)
+        tensor: Tensor with shape (C, H, W) or (B, C, H, W).
+        normalized: True for [-1,1] model/data tensors; False for [0,1].
     """
+    tensor = tensor.detach().float()
+    if normalized:
+        tensor = denormalize(tensor)
     if tensor.dim() == 4:
         # Batch: make grid
         tensor = tensor[:16]  # Limit to 16 for display
         grid = make_grid(tensor, nrow=4)
         tensor = grid
-    
-    if tensor.min() < 0:
-        tensor = denormalize(tensor)
     
     tensor = torch.clamp(tensor, 0, 1)
     array = (tensor.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)

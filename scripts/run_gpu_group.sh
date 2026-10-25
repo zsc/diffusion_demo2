@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# A SOFY task must reserve one full 16-PPU node for this launcher.
+# A CLUSTER task must reserve one full 16-GPU node for this launcher.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 train_config=$1
@@ -14,6 +14,10 @@ if [[ "${ALLOW_RESUME_LR_CHANGE:-0}" == 1 ]]; then
   [[ $# -ge 5 ]] || { echo 'LR change requires a resume checkpoint' >&2; exit 1; }
   resume_args+=(--allow-resume-lr-change)
 fi
+if [[ "${ALLOW_RESUME_TIME_CHANGE:-0}" == 1 ]]; then
+  [[ $# -ge 5 ]] || { echo 'Time distribution change requires a resume checkpoint' >&2; exit 1; }
+  resume_args+=(--allow-resume-time-change)
+fi
 if [[ -n "${INIT_CHECKPOINT:-}" ]]; then
   [[ ${#resume_args[@]} == 0 ]] || { echo 'Choose resume or initialization, not both' >&2; exit 1; }
   resume_args=(--init-from "$INIT_CHECKPOINT")
@@ -23,7 +27,7 @@ export PYTHONPATH="$PWD/src:$eval_assets/packages"
 export OMP_NUM_THREADS=4
 export OPENBLAS_NUM_THREADS=4
 export PYTHONUNBUFFERED=1
-"$train_python" -c 'import torch; print("visible PPUs",torch.cuda.device_count()); assert torch.cuda.device_count()==16'
+"$train_python" -c 'import torch; print("visible GPUs",torch.cuda.device_count()); assert torch.cuda.device_count()==16'
 mkdir -p "$output_dir"
 env -u WORLD_SIZE -u RANK -u LOCAL_RANK "$train_python" -m torch.distributed.run \
   --nnodes=1 --nproc_per_node=16 --master_addr=127.0.0.1 --master_port=29573 \

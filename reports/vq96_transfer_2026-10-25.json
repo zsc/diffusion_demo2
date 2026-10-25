@@ -1,0 +1,218 @@
+{
+  "task": {
+    "task_id": 59197,
+    "name": "vq96-pca8-transfer-from32m",
+    "state": "SUCCEEDED",
+    "error_message": null,
+    "placement": {
+      "task_id": 59197,
+      "nodes": [
+        {
+          "node_id": "cluster-job",
+          "gpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "cpus": 0
+        }
+      ],
+      "master": {
+        "node_id": "cluster-job",
+        "addr": "172.16.71.245",
+        "port": 29501
+      }
+    }
+  },
+  "samples": [
+    "latent/samples_6291456.png",
+    "latent/samples_524288.png",
+    "latent/samples_4194304.png",
+    "latent/samples_2097152.png",
+    "latent/samples_8388608.png"
+  ],
+  "data_and_transfer.json": {
+    "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+    "data_sha256": "a757498175604b5421d6c7690f2a2740ea9b0fca76bb75a0c204a9e421389036",
+    "shape": [
+      31000,
+      96,
+      96,
+      3
+    ],
+    "train_count": 30000,
+    "val_count": 1000,
+    "crop": [
+      0,
+      20,
+      178,
+      198
+    ],
+    "upsampled": false,
+    "source_zip": "/path/to/datasets/celeba/archive (1).zip",
+    "pretraining_overlap": "Unknown: 48px sprites do not contain original image IDs",
+    "initial_vae": "/path/to/runs/vq96_transfer_20261025/initial96.pth",
+    "encoder_codebook_exact": true
+  },
+  "decoder/initial.json": {
+    "psnr": 27.701588843949324,
+    "mse": 0.0016976224724203348,
+    "lpips": 0.08997093141078949,
+    "codes_used": 512,
+    "perplexity": 325.7570495605469
+  },
+  "decoder/progress.json": {
+    "step": 4000,
+    "steps": 4096,
+    "images": 2048000,
+    "seconds": 72.45279038999979,
+    "mse": 0.006540960632264614,
+    "lpips": 0.0,
+    "d_loss": 0.0,
+    "g_loss": 0.0
+  },
+  "decoder/best.json": {
+    "psnr": 28.081184544981156,
+    "mse": 0.0015555412974208593,
+    "lpips": 0.08562768995761871,
+    "codes_used": 512,
+    "perplexity": 325.7570495605469,
+    "step": 4096,
+    "images": 2097152,
+    "seconds": 74.0289518669997
+  },
+  "decoder/result.json": {
+    "initial": {
+      "psnr": 27.701588843949324,
+      "mse": 0.0016976224724203348,
+      "lpips": 0.08997093141078949,
+      "codes_used": 512,
+      "perplexity": 325.7570495605469
+    },
+    "history": [
+      {
+        "psnr": 27.96183675234819,
+        "mse": 0.0015988816739991307,
+        "lpips": 0.08757895231246948,
+        "codes_used": 512,
+        "perplexity": 325.7570495605469,
+        "step": 1024,
+        "images": 524288,
+        "seconds": 32.1989946409999
+      },
+      {
+        "psnr": 28.020011735279844,
+        "mse": 0.001577607006765902,
+        "lpips": 0.08630312979221344,
+        "codes_used": 512,
+        "perplexity": 325.7570495605469,
+        "step": 2048,
+        "images": 1048576,
+        "seconds": 46.32551678799973
+      },
+      {
+        "psnr": 28.056397722435158,
+        "mse": 0.0015644447412341833,
+        "lpips": 0.08584116399288177,
+        "codes_used": 512,
+        "perplexity": 325.7570495605469,
+        "step": 3072,
+        "images": 1572864,
+        "seconds": 60.24956716099996
+      },
+      {
+        "psnr": 28.081184544981156,
+        "mse": 0.0015555412974208593,
+        "lpips": 0.08562768995761871,
+        "codes_used": 512,
+        "perplexity": 325.7570495605469,
+        "step": 4096,
+        "images": 2097152,
+        "seconds": 74.0289518669997
+      }
+    ],
+    "world_size": 16,
+    "seconds": 74.08728023200001,
+    "frozen_latent_mapping_verified": true
+  },
+  "smoke/result.json": {
+    "images_seen": 4096,
+    "world_size": 16,
+    "parameters": 21758216,
+    "seconds": 4.756473202000052
+  },
+  "latent/transfer.json": {
+    "checkpoint": "/path/to/runs/vq_perceptual_20261025/followup/train/ema_33554432.pt",
+    "source_sha256": "03a8012097d53276515bfa61ebafd4c1fdbd69124faa5b0f8784281c3e8d733c",
+    "source_model_config": {
+      "img_size": 12,
+      "in_channels": 8,
+      "patch_size": 1,
+      "hidden_size": 384,
+      "depth": 8,
+      "num_heads": 6
+    },
+    "target_latent_grid": 24,
+    "inherited_latent_coordinates": true,
+    "optimizer_reset": true,
+    "new_resolution_image_counter": 0
+  },
+  "latent/progress.json": {
+    "step": 4096,
+    "images_seen": 8388608,
+    "loss": 0.7383695840835571,
+    "seconds": 690.460786864,
+    "images_per_second": 12149.289507777563
+  },
+  "latent/result.json": {
+    "images_seen": 8388608,
+    "world_size": 16,
+    "parameters": 21758216,
+    "seconds": 694.1986774890006
+  },
+  "evaluations": {
+    "guided_seed7777": {
+      "clean_fid": 82.54178372962355,
+      "kid_mean": 0.05100246598800509,
+      "kid_subset_std": 0.004354077154921433,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "raw_seed3333": {
+      "clean_fid": 98.4247120054369,
+      "kid_mean": 0.06731814461016414,
+      "kid_subset_std": 0.005410015801983783,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    },
+    "guided_seed3333": {
+      "clean_fid": 82.78026790376435,
+      "kid_mean": 0.05143513890861742,
+      "kid_subset_std": 0.0044481663273162,
+      "kid_subsets": 100,
+      "kid_subset_size": 100,
+      "real_count": 1000,
+      "fake_count": 1024,
+      "fid_solver": "float64 symmetric PSD eigendecomposition"
+    }
+  }
+}

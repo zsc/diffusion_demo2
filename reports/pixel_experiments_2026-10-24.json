@@ -1,8 +1,8 @@
 {
   "training": [
     {
-      "label": "single PPU / b256 / 10k",
-      "directory": "runs/ppu_pixel_jit",
+      "label": "single GPU / b256 / 10k",
+      "directory": "runs/gpu_pixel_jit",
       "config": {
         "model": {
           "image_size": 48,
@@ -1722,7 +1722,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -1737,7 +1737,7 @@
         },
         "visible_devices": "0",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/source/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/source/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         }
       },
@@ -1746,7 +1746,7 @@
     },
     {
       "label": "round1/b1024_lr2e4",
-      "directory": "runs/ppu_all/round1/b1024_lr2e4",
+      "directory": "runs/gpu_all/round1/b1024_lr2e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -3569,7 +3569,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 19.036631617000012,
@@ -3583,7 +3583,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -3598,7 +3598,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -3607,11 +3607,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 204.256096942,
-      "preview": "runs/ppu_all/round1/b1024_lr2e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round1/b1024_lr2e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round1/b4096_lr2e4",
-      "directory": "runs/ppu_all/round1/b4096_lr2e4",
+      "directory": "runs/gpu_all/round1/b4096_lr2e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -4114,7 +4114,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b4096_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round1/b4096_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 69.67991738399905,
@@ -4128,7 +4128,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -4143,7 +4143,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -4152,11 +4152,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 196.6368271020001,
-      "preview": "runs/ppu_all/round1/b4096_lr2e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round1/b4096_lr2e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round1/b4096_lr8e4",
-      "directory": "runs/ppu_all/round1/b4096_lr8e4",
+      "directory": "runs/gpu_all/round1/b4096_lr8e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -4659,7 +4659,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b4096_lr8e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round1/b4096_lr8e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 33.9067111249999,
@@ -4673,7 +4673,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -4688,7 +4688,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -4697,11 +4697,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 198.06417461799992,
-      "preview": "runs/ppu_all/round1/b4096_lr8e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round1/b4096_lr8e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round1/b8192_lr8e4",
-      "directory": "runs/ppu_all/round1/b8192_lr8e4",
+      "directory": "runs/gpu_all/round1/b8192_lr8e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -4984,7 +4984,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b8192_lr8e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round1/b8192_lr8e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 34.12810733299989,
@@ -4998,7 +4998,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -5013,7 +5013,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v4/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -5022,11 +5022,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 167.09340198099994,
-      "preview": "runs/ppu_all/round1/b8192_lr8e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round1/b8192_lr8e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round2/b1024_lr4e4",
-      "directory": "runs/ppu_all/round2/b1024_lr4e4",
+      "directory": "runs/gpu_all/round2/b1024_lr4e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -8609,7 +8609,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 18.86752942299995,
@@ -8623,7 +8623,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -8638,7 +8638,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -8647,11 +8647,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 381.67062046,
-      "preview": "runs/ppu_all/round2/b1024_lr4e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round2/b1024_lr4e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round2/b256_lr2e4",
-      "directory": "runs/ppu_all/round2/b256_lr2e4",
+      "directory": "runs/gpu_all/round2/b256_lr2e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -12541,7 +12541,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b256_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b256_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 33.91360249600007,
@@ -12555,7 +12555,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -12570,7 +12570,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -12579,11 +12579,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 406.410500146,
-      "preview": "runs/ppu_all/round2/b256_lr2e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round2/b256_lr2e4/quality/independent_seed_grid.png"
     },
     {
       "label": "round2/b4096_lr8e4_extend",
-      "directory": "runs/ppu_all/round2/b4096_lr8e4_extend",
+      "directory": "runs/gpu_all/round2/b4096_lr8e4_extend",
       "config": {
         "model": {
           "image_size": 48,
@@ -13978,7 +13978,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b4096_lr8e4_extend/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b4096_lr8e4_extend/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 19.29375481099987,
@@ -13992,7 +13992,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -14007,7 +14007,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -14016,11 +14016,11 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 473.558084667,
-      "preview": "runs/ppu_all/round2/b4096_lr8e4_extend/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round2/b4096_lr8e4_extend/quality/independent_seed_grid.png"
     },
     {
       "label": "round2/medium_b1024_lr4e4",
-      "directory": "runs/ppu_all/round2/medium_b1024_lr4e4",
+      "directory": "runs/gpu_all/round2/medium_b1024_lr4e4",
       "config": {
         "model": {
           "image_size": 48,
@@ -17603,7 +17603,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "elapsed_seconds": 20.667210668999815,
@@ -17617,7 +17617,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 58713555,
         "model": {
@@ -17632,7 +17632,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+          "/path/to/diffusion-demo-data/ddp_source_v6/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
           "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
         },
         "world_size": 16,
@@ -17641,7 +17641,7 @@
         "ddp_source_sha256": "eaae6e1ac5e680a30753112eacc7b073c9ffefbfd90777ad9064522ad54b6cce"
       },
       "train_seconds": 765.7239242590001,
-      "preview": "runs/ppu_all/round2/medium_b1024_lr4e4/quality/independent_seed_grid.png"
+      "preview": "runs/gpu_all/round2/medium_b1024_lr4e4/quality/independent_seed_grid.png"
     }
   ],
   "guidance": [
@@ -17654,17 +17654,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.3,
       "elapsed_seconds": 22.157950443000118,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_small/g1.3",
-      "preview": "runs/ppu_all/guidance_small/g1.3/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_small/g1.3/independent_seed_grid.png"
     },
     {
       "clean_fid": 41.66492245564959,
@@ -17675,17 +17675,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "elapsed_seconds": 23.491885523000064,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_small/g1.6",
-      "preview": "runs/ppu_all/guidance_small/g1.6/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_small/g1.6/independent_seed_grid.png"
     },
     {
       "clean_fid": 53.40692018859596,
@@ -17696,17 +17696,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 2.0,
       "elapsed_seconds": 22.874139499999956,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_small/g2.0",
-      "preview": "runs/ppu_all/guidance_small/g2.0/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_small/g2.0/independent_seed_grid.png"
     },
     {
       "clean_fid": 49.91696771278484,
@@ -17717,10 +17717,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.1,
@@ -17731,7 +17731,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_small/g1.6_t.1-.65",
-      "preview": "runs/ppu_all/guidance_interval_small/g1.6_t.1-.65/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_small/g1.6_t.1-.65/independent_seed_grid.png"
     },
     {
       "clean_fid": 47.33038283613163,
@@ -17742,10 +17742,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.1,
@@ -17756,7 +17756,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_small/g1.6_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_small/g1.6_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_small/g1.6_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 43.979044958150695,
@@ -17767,10 +17767,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -17781,7 +17781,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_small/g2.0_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_small/g2.0_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_small/g2.0_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 43.48770855384427,
@@ -17792,10 +17792,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.0,
@@ -17806,7 +17806,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_same_run/g1.6_t0-1",
-      "preview": "runs/ppu_all/guidance_same_run/g1.6_t0-1/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_same_run/g1.6_t0-1/independent_seed_grid.png"
     },
     {
       "clean_fid": 46.84395344779227,
@@ -17817,10 +17817,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -17831,7 +17831,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_same_run/g2.0_t.1-.8",
-      "preview": "runs/ppu_all/guidance_same_run/g2.0_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_same_run/g2.0_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 40.30886809108097,
@@ -17842,10 +17842,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.0,
@@ -17856,7 +17856,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_same_run/g2.0_t0-1",
-      "preview": "runs/ppu_all/guidance_same_run/g2.0_t0-1/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_same_run/g2.0_t0-1/independent_seed_grid.png"
     },
     {
       "clean_fid": 59.054235474235014,
@@ -17867,17 +17867,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.0,
       "elapsed_seconds": 27.153378756999928,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_medium4m/g1.0",
-      "preview": "runs/ppu_all/guidance_medium4m/g1.0/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_medium4m/g1.0/independent_seed_grid.png"
     },
     {
       "clean_fid": 53.03209631102129,
@@ -17888,17 +17888,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.3,
       "elapsed_seconds": 24.478433946000223,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_medium4m/g1.3",
-      "preview": "runs/ppu_all/guidance_medium4m/g1.3/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_medium4m/g1.3/independent_seed_grid.png"
     },
     {
       "clean_fid": 49.47680665864013,
@@ -17909,17 +17909,17 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "elapsed_seconds": 24.11433354199994,
       "world_size": 16,
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_medium4m/g1.6",
-      "preview": "runs/ppu_all/guidance_medium4m/g1.6/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_medium4m/g1.6/independent_seed_grid.png"
     },
     {
       "clean_fid": 53.42145405927906,
@@ -17930,10 +17930,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.1,
@@ -17944,7 +17944,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium4m/g1.6_t.1-.65",
-      "preview": "runs/ppu_all/guidance_interval_medium4m/g1.6_t.1-.65/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium4m/g1.6_t.1-.65/independent_seed_grid.png"
     },
     {
       "clean_fid": 51.88506637221721,
@@ -17955,10 +17955,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.1,
@@ -17969,7 +17969,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium4m/g1.6_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_medium4m/g1.6_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium4m/g1.6_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 48.92011305820097,
@@ -17980,10 +17980,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -17994,7 +17994,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium4m/g2.0_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_medium4m/g2.0_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium4m/g2.0_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 49.32019217369975,
@@ -18005,10 +18005,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.3,
       "guidance_interval": [
         0.0,
@@ -18019,7 +18019,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium8m/g1.3_t0-1",
-      "preview": "runs/ppu_all/guidance_interval_medium8m/g1.3_t0-1/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium8m/g1.3_t0-1/independent_seed_grid.png"
     },
     {
       "clean_fid": 49.5289146305756,
@@ -18030,10 +18030,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 1.6,
       "guidance_interval": [
         0.1,
@@ -18044,7 +18044,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium8m/g1.6_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_medium8m/g1.6_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium8m/g1.6_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 49.480640124488474,
@@ -18055,10 +18055,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/medium_b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/medium_b1024_lr4e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -18069,7 +18069,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_interval_medium8m/g2.0_t.1-.8",
-      "preview": "runs/ppu_all/guidance_interval_medium8m/g2.0_t.1-.8/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_interval_medium8m/g2.0_t.1-.8/independent_seed_grid.png"
     },
     {
       "clean_fid": 44.26706503956123,
@@ -18080,10 +18080,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 7777,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round1/b1024_lr2e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round1/b1024_lr2e4/ema_002048000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -18094,7 +18094,7 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_verify/cross_interval",
-      "preview": "runs/ppu_all/guidance_verify/cross_interval/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_verify/cross_interval/independent_seed_grid.png"
     },
     {
       "clean_fid": 57.52063437063043,
@@ -18105,10 +18105,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
       "seed": 7777,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_002048000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_002048000.pt",
       "guidance": 1.0,
       "guidance_interval": [
         0.0,
@@ -18119,19 +18119,19 @@
       "inception_sha256": "f58cb9b6ec323ed63459aa4fb441fe750cfe39fafad6da5cb504a16f19e958f4",
       "note": "Small-sample paired comparison, not FID50k. KID subset SD is not a confidence interval.",
       "label": "guidance_verify/unguided",
-      "preview": "runs/ppu_all/guidance_verify/unguided/independent_seed_grid.png"
+      "preview": "runs/gpu_all/guidance_verify/unguided/independent_seed_grid.png"
     }
   ],
   "recipe": {
-    "summary": "21.89M Pixel JiT\uff0cglobal batch=1024\uff0c\u4e3b\u6a21\u578b lr=4e-4\u30018000 \u6b65 / 819.2 \u4e07\u5f20\u6b21\uff1b\u4e3b\u6a21\u578b\u8bad\u7ec3\u5faa\u73af 6.36 \u5206\u949f\uff0c\u5f31\u6a21\u578b\u53e6\u9700\u7ea6 1.75 \u5206\u949f\uff0c\u6bcf\u7ec4\u4f7f\u7528 1\u00d716 PPU\u3002EMA + 50 \u6b65 Heun\uff0cautoguidance=2\uff0c\u4ec5\u5728 t\u2208[0.1,0.8] \u542f\u7528\u3002",
+    "summary": "21.89M Pixel JiT\uff0cglobal batch=1024\uff0c\u4e3b\u6a21\u578b lr=4e-4\u30018000 \u6b65 / 819.2 \u4e07\u5f20\u6b21\uff1b\u4e3b\u6a21\u578b\u8bad\u7ec3\u5faa\u73af 6.36 \u5206\u949f\uff0c\u5f31\u6a21\u578b\u53e6\u9700\u7ea6 1.75 \u5206\u949f\uff0c\u6bcf\u7ec4\u4f7f\u7528 1\u00d716 GPU\u3002EMA + 50 \u6b65 Heun\uff0cautoguidance=2\uff0c\u4ec5\u5728 t\u2208[0.1,0.8] \u542f\u7528\u3002",
     "model": "runs/pixel_best/model_ema.pt",
     "guide": "runs/pixel_best/guide_ema.pt",
     "resume": "runs/pixel_best/last.pt",
     "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
     "guide_sha256": "77566b84c2337a5f01db01a5d37d6abee3789a7d6c5ceefba66ce44041f4e3a3",
     "resume_sha256": "49d9a67a1fa5b4dda92308b854342296f04a4c572f62445018aa167a0677ce3c",
-    "preview": "runs/pixel_best/sample_desk_seed2027/preview16.png",
-    "all_64_preview": "runs/pixel_best/sample_desk_seed2027/grid.png",
+    "preview": "runs/pixel_best/sample_local_seed2027/preview16.png",
+    "all_64_preview": "runs/pixel_best/sample_local_seed2027/grid.png",
     "native_resolution": [
       48,
       48
@@ -18171,8 +18171,8 @@
       "1024 \u5f20\u751f\u6210\u56fe / 1000 \u5f20\u7559\u51fa\u56fe\u7684\u5c0f\u6837\u672c FID\uff0c\u4e0d\u662f FID50k\u3002",
       "\u6570\u636e\u6309\u56fe\u7247\u5212\u5206\uff0c\u672a\u6309\u4eba\u7269\u8eab\u4efd\u5212\u5206\u3002"
     ],
-    "remote_root": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024",
-    "sofy_cluster": "bifrost-2026101312015311-zhousc6",
+    "remote_root": "/path/to/diffusion-demo-data",
+    "cluster_cluster": "cluster-job",
     "tasks": {
       "main": 59093,
       "guide": 59088,
@@ -18180,7 +18180,7 @@
       "refreshed_benchmark": 59108
     },
     "recovery_notes": [
-      "\u4e09\u4e2a 16-rank \u8bc4\u4f30\u8fdb\u7a0b\u51fa\u73b0 PPU SIGSEGV\uff1b\u8bad\u7ec3\u6743\u91cd\u672a\u635f\u574f\uff0c\u6309\u4fdd\u5b58\u7684 EMA \u5355\u72ec\u91cd\u8bc4\u3002",
+      "\u4e09\u4e2a 16-rank \u8bc4\u4f30\u8fdb\u7a0b\u51fa\u73b0 GPU SIGSEGV\uff1b\u8bad\u7ec3\u6743\u91cd\u672a\u635f\u574f\uff0c\u6309\u4fdd\u5b58\u7684 EMA \u5355\u72ec\u91cd\u8bc4\u3002",
       "\u6700\u7ec8\u9a8c\u8bc1\u4efb\u52a1 59104 \u5df2\u5b8c\u6210\u672a\u5f15\u5bfc\u5bf9\u7167\uff1b\u5019\u9009 same_run_full \u8bc4\u4f30\u5d29\u6e83\uff0c\u6240\u9009 cross_interval \u7531 59109 \u5355\u72ec\u9a8c\u8bc1\u3002"
     ]
   },
@@ -18189,42 +18189,42 @@
     "comparisons": [
       {
         "label": "\u8bad\u7ec3\uff1a21.89M\u3001batch 32\u3001FP16",
-        "ppu": 903.9920644806,
-        "desk": 347.6258111403948,
+        "gpu": 903.9920644806,
+        "local": 347.6258111403948,
         "unit": "images/s",
         "speedup": 2.6004745203327464
       },
       {
         "label": "\u672a\u5f15\u5bfc\u91c7\u6837\uff1a16 \u5f20\u300150 \u6b65 Heun\u3001FP16",
-        "ppu": 1.0118534200000795,
-        "desk": 1.4693927729967982,
+        "gpu": 1.0118534200000795,
+        "local": 1.4693927729967982,
         "unit": "s",
         "speedup": 1.4521794797083185
       },
       {
         "label": "\u6700\u7ec8\u533a\u95f4\u5f15\u5bfc\u65b9\u6848\uff1a16 \u5f20\u300150 \u6b65 Heun\u3001FP16",
-        "ppu": 1.6407336539996322,
-        "desk": 2.6282030140282586,
+        "gpu": 1.6407336539996322,
+        "local": 2.6282030140282586,
         "unit": "s",
         "speedup": 1.6018462275223422
       }
     ],
-    "note": "\u4e24\u7aef\u540c\u6a21\u578b\u548c FP16\uff1b\u8bad\u7ec3\u9884\u70ed 10 \u6b65\uff0c\u53d6 3\u00d740 \u6b65\u4e2d\u4f4d\u6570\uff1b\u91c7\u6837\u9884\u70ed 1 \u6b21\uff0c\u53d6 3 \u6b21\u4e2d\u4f4d\u6570\u3002\u6700\u7ec8\u65b9\u6848\u4e24\u7aef checkpoint SHA256 \u4e00\u81f4\u30022080 SUPER \u4ecd\u6709\u6e38\u620f/\u684c\u9762\u8fdb\u7a0b\uff0cPyTorch/\u9a71\u52a8\u4e5f\u4e0d\u540c\uff0c\u5c5e\u4e8e\u672c\u6b21\u5de5\u4f5c\u8d1f\u8f7d\u5b9e\u6d4b\u3002\u65e9\u5148 5.37\u00d7 \u8bad\u7ec3 / 3.39\u00d7 \u672a\u5f15\u5bfc\u91c7\u6837\u662f\u5728 desk \u53e6\u6709\u8ba1\u7b97\u4efb\u52a1\u65f6\u6d4b\u5f97\uff0c\u4e0d\u80fd\u5f53\u4f5c\u4e00\u822c\u786c\u4ef6\u500d\u7387\uff1b\u672c\u8868\u66ff\u6362\u8be5\u521d\u6b65\u6570\u5b57\u3002",
+    "note": "\u4e24\u7aef\u540c\u6a21\u578b\u548c FP16\uff1b\u8bad\u7ec3\u9884\u70ed 10 \u6b65\uff0c\u53d6 3\u00d740 \u6b65\u4e2d\u4f4d\u6570\uff1b\u91c7\u6837\u9884\u70ed 1 \u6b21\uff0c\u53d6 3 \u6b21\u4e2d\u4f4d\u6570\u3002\u6700\u7ec8\u65b9\u6848\u4e24\u7aef checkpoint SHA256 \u4e00\u81f4\u30022080 SUPER \u4ecd\u6709\u6e38\u620f/\u684c\u9762\u8fdb\u7a0b\uff0cPyTorch/\u9a71\u52a8\u4e5f\u4e0d\u540c\uff0c\u5c5e\u4e8e\u672c\u6b21\u5de5\u4f5c\u8d1f\u8f7d\u5b9e\u6d4b\u3002\u65e9\u5148 5.37\u00d7 \u8bad\u7ec3 / 3.39\u00d7 \u672a\u5f15\u5bfc\u91c7\u6837\u662f\u5728 local \u53e6\u6709\u8ba1\u7b97\u4efb\u52a1\u65f6\u6d4b\u5f97\uff0c\u4e0d\u80fd\u5f53\u4f5c\u4e00\u822c\u786c\u4ef6\u500d\u7387\uff1b\u672c\u8868\u66ff\u6362\u8be5\u521d\u6b65\u6570\u5b57\u3002",
     "sources": {
-      "train_ppu": "runs/pixel_bench_final_ppu_fp16_b32/benchmark.json",
-      "train_desk": "runs/pixel_bench_final_fp16_b32/benchmark.json",
-      "raw_ppu": "runs/pixel_bench_final_ppu_fp16_b32/sample_warm.json",
-      "raw_desk": "runs/pixel_bench_final_fp16_b32/sample_warm.json",
-      "recipe_ppu": "runs/pixel_best/final_inference_fp16_ppu.json",
-      "recipe_desk": "runs/pixel_best/inference_fp16_desk.json"
+      "train_gpu": "runs/pixel_bench_final_gpu_fp16_b32/benchmark.json",
+      "train_local": "runs/pixel_bench_final_fp16_b32/benchmark.json",
+      "raw_gpu": "runs/pixel_bench_final_gpu_fp16_b32/sample_warm.json",
+      "raw_local": "runs/pixel_bench_final_fp16_b32/sample_warm.json",
+      "recipe_gpu": "runs/pixel_best/final_inference_fp16_gpu.json",
+      "recipe_local": "runs/pixel_best/inference_fp16_local.json"
     },
     "measurements": {
-      "train_ppu": {
+      "train_gpu": {
         "environment": {
           "torch": "2.9.0",
           "python": "3.12.3",
           "precision": "fp16",
-          "device": "PPU-ZW810E",
+          "device": "GPU-GPU",
           "cuda": "12.9",
           "parameters": 21891251,
           "model": {
@@ -18239,7 +18239,7 @@
           },
           "visible_devices": "12",
           "source_sha256": {
-            "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+            "/path/to/diffusion-demo-data/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
             "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
           }
         },
@@ -18271,7 +18271,7 @@
         "samples_finite": true,
         "max_memory_mb": 1715.80126953125
       },
-      "train_desk": {
+      "train_local": {
         "environment": {
           "torch": "2.10.0+cu128",
           "python": "3.12.12",
@@ -18323,12 +18323,12 @@
         "samples_finite": true,
         "max_memory_mb": 1687.8681640625
       },
-      "raw_ppu": {
+      "raw_gpu": {
         "environment": {
           "torch": "2.9.0",
           "python": "3.12.3",
           "precision": "fp16",
-          "device": "PPU-ZW810E",
+          "device": "GPU-GPU",
           "cuda": "12.9",
           "parameters": 21891251,
           "model": {
@@ -18343,7 +18343,7 @@
           },
           "visible_devices": "12",
           "source_sha256": {
-            "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+            "/path/to/diffusion-demo-data/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
             "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
           }
         },
@@ -18358,7 +18358,7 @@
         "median_seconds": 1.0118534200000795,
         "finite": true
       },
-      "raw_desk": {
+      "raw_local": {
         "environment": {
           "torch": "2.10.0+cu128",
           "python": "3.12.12",
@@ -18393,12 +18393,12 @@
         "median_seconds": 1.4693927729967982,
         "finite": true
       },
-      "recipe_ppu": {
+      "recipe_gpu": {
         "environment": {
           "torch": "2.9.0",
           "python": "3.12.3",
           "precision": "fp16",
-          "device": "PPU-ZW810E",
+          "device": "GPU-GPU",
           "cuda": "12.9",
           "parameters": 21891251,
           "model": {
@@ -18413,7 +18413,7 @@
           },
           "visible_devices": "12",
           "source_sha256": {
-            "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
+            "/path/to/diffusion-demo-data/ddp_source_v9/pixel_experiment.py": "504f89feb3cc5ad744a9fde0667c7c8294e41e42803f79d7bc6d33056ec5dcd5",
             "src/diffusion_demo/core/models/pixel_jit.py": "ae285aad4fe2374efe976bfe3acfb6ba329781efe24f25162cd91e367461cf73"
           }
         },
@@ -18435,7 +18435,7 @@
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "guide_sha256": "77566b84c2337a5f01db01a5d37d6abee3789a7d6c5ceefba66ce44041f4e3a3"
       },
-      "recipe_desk": {
+      "recipe_local": {
         "environment": {
           "torch": "2.10.0+cu128",
           "python": "3.12.12",

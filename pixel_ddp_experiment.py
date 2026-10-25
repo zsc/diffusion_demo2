@@ -20,13 +20,46 @@ from pixel_transfer import inherit_pixel_weights
 from pixel_data import split_indices
 
 
-def validate_resume_config(previous, cfg, allow_lr_change=False):
+def training_time_parameters(cfg):
+    location = float(cfg.get("time_logit_mean", -.8))
+    scale = float(cfg.get("time_logit_std", .8))
+    if not math.isfinite(location) or not math.isfinite(scale) or scale <= 0:
+        raise ValueError("Invalid training time distribution")
+    return location, scale
+
+
+def training_time_sampling(cfg):
+    mode = cfg.get("time_sampling", "iid")
+    if mode not in ("iid", "stratified"):
+        raise ValueError("Invalid training time sampling")
+    return mode
+
+
+def sample_training_times(batch, device, location, scale, mode="iid"):
+    if mode == "iid":
+        normal = torch.randn(batch, device=device)
+    elif mode == "stratified":
+        # One independent jitter per equal-probability normal-CDF stratum.
+        # The batch-average objective is unchanged; examples/noise are IID.
+        uniform = (torch.arange(batch, device=device) + torch.rand(batch, device=device)) / batch
+        eps = torch.finfo(uniform.dtype).eps
+        normal = math.sqrt(2) * torch.erfinv(2 * uniform.clamp(eps, 1 - eps) - 1)
+    else:
+        raise ValueError("Invalid training time sampling")
+    return (normal * scale + location).sigmoid()
+
+
+def validate_resume_config(previous, cfg, allow_lr_change=False, allow_time_change=False):
     for key in ["model", "global_batch", "seed", "lr", "warmup_images", "ema_reference_batch",
                 "ema_reference_decay", "split_mode", "val_count", "precision"]:
         if previous.get(key) != cfg.get(key):
             if key == "lr" and allow_lr_change and math.isfinite(cfg["lr"]) and cfg["lr"] > 0:
                 continue
             raise ValueError(f"Resume changed {key}")
+    time_changed = (training_time_parameters(previous) != training_time_parameters(cfg) or
+                    training_time_sampling(previous) != training_time_sampling(cfg))
+    if time_changed and not allow_time_change:
+        raise ValueError("Resume changed training time distribution")
 
 
 def main():
@@ -39,15 +72,21 @@ def main():
     start.add_argument("--init-from", help="Initialize all learned weights from a lower-resolution EMA")
     ap.add_argument("--allow-resume-lr-change", action="store_true",
                     help="Explicitly change LR while retaining optimizer, EMA, counters and RNG")
+    ap.add_argument("--allow-resume-time-change", action="store_true",
+                    help="Explicitly change training time distribution; validation distribution stays fixed")
     args = ap.parse_args()
     if args.allow_resume_lr_change and not args.resume:
         ap.error("--allow-resume-lr-change requires --resume")
+    if args.allow_resume_time_change and not args.resume:
+        ap.error("--allow-resume-time-change requires --resume")
     cfg = json.loads(Path(args.config).read_text())
+    time_mean, time_std = training_time_parameters(cfg)
+    time_sampling = training_time_sampling(cfg)
     rank, local_rank, world = [int(os.environ.get(k, d)) for k, d in
                                [("RANK", 0), ("LOCAL_RANK", 0), ("WORLD_SIZE", 1)]]
     compiler_cache = None
     if cfg.get("execution_backend", "eager").startswith("compile"):
-        # Shared CPFS caches produced stale handles when 16 ranks compiled at once.
+        # Shared-filesystem caches produced stale handles when 16 ranks compiled at once.
         # Keep each rank's generated code on the node-local filesystem.
         run_key = hashlib.sha256(str(Path(args.output).resolve()).encode()).hexdigest()[:16]
         compiler_cache = Path(tempfile.gettempdir()) / "pixel_jit_compile" / run_key / f"rank{rank}"
@@ -86,7 +125,7 @@ def main():
     continuation = None
     if args.resume:
         restored = torch.load(args.resume, map_location="cpu", weights_only=False)
-        validate_resume_config(restored["config"], cfg, args.allow_resume_lr_change)
+        validate_resume_config(restored["config"], cfg, args.allow_resume_lr_change, args.allow_resume_time_change)
         if restored["world_size"] != world:
             raise ValueError("Exact resume requires the same world size")
         model.load_state_dict(restored["model"])
@@ -98,17 +137,20 @@ def main():
         continuation = dict(checkpoint=str(Path(args.resume).resolve()), step=step,
                             images_seen=images_seen, previous_lr=restored["config"]["lr"],
                             lr=cfg["lr"], explicit_lr_change=args.allow_resume_lr_change,
+                            previous_time_distribution=training_time_parameters(restored["config"]),
+                            time_distribution=(time_mean, time_std), explicit_time_change=args.allow_resume_time_change,
+                            previous_time_sampling=training_time_sampling(restored["config"]),
+                            time_sampling=time_sampling,
                             previous_continuation=restored.get("continuation"))
         if rank == 0:
             write_json(output / "continuation.json", continuation)
     execution_backend = cfg.get("execution_backend", "eager")
-    if execution_backend != "eager":
-        from pixel_accelerate import configure_execution
-        configure_execution(model, execution_backend)
+    from pixel_accelerate import prepare_training_model
+    training_model = prepare_training_model(model, execution_backend)
     if rank == 0 and initialization:
         write_json(output / "initialization.json", initialization)
-    wrapped = DDP(model, device_ids=[local_rank] if device.type == "cuda" else None,
-                  broadcast_buffers=False, gradient_as_bucket_view=True, static_graph=True) if world > 1 else model
+    wrapped = DDP(training_model, device_ids=[local_rank] if device.type == "cuda" else None,
+                  broadcast_buffers=False, gradient_as_bucket_view=True, static_graph=True) if world > 1 else training_model
     array = np.load(args.data)
     if array.dtype != np.uint8 or array.shape[1:] != (size, size, 3):
         raise ValueError(f"Expected uint8 N,{size},{size},3")
@@ -125,6 +167,7 @@ def main():
                    ddp_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
         env["compiler_cache"] = str(compiler_cache) if compiler_cache else None
         env["execution_backend"] = execution_backend
+        env["ddp_graph_partitioning"] = execution_backend != "compile_full"
         env["previous_execution_backend"] = restored["config"].get("execution_backend", "eager") if restored else None
         if execution_backend != "eager":
             env["acceleration_source_sha256"] = hashlib.sha256(Path("pixel_accelerate.py").read_bytes()).hexdigest()
@@ -152,7 +195,7 @@ def main():
         idx = torch.randint(len(train_data), (batch,), device=device)
         clean = train_data[idx].float() / 127.5 - 1
         clean = torch.where(torch.rand(batch, 1, 1, 1, device=device) < .5, clean.flip(-1), clean)
-        t = (torch.randn(batch, device=device) * .8 - .8).sigmoid()
+        t = sample_training_times(batch, device, time_mean, time_std, time_sampling)
         noise = torch.randn_like(clean)
         lr = cfg["lr"] * min(1, (images_seen + cfg["global_batch"]) / cfg.get("warmup_images", 128000))
         for group in optimizer.param_groups:

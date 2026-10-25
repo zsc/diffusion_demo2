@@ -193,7 +193,9 @@ def create_vae_job():
         'vq_hidden_dims_dec': vq_hidden_dims_dec,
     }
     
-    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'kl_warmup_epochs', 'precision', 'num_workers') if k in data}
+    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'kl_warmup_epochs', 'precision', 'num_workers',
+                                 'image_size', 'latent_spatial_size', 'data_path', 'split_mode', 'val_count',
+                                 'vq_recon_reduction', 'distance_chunk_size', 'hidden_dims', 'gan_loss_weight', 'init_checkpoint') if k in data}
     config.update(extra)
     job = job_manager.create_job('vae', config)
     
@@ -285,7 +287,7 @@ def create_dit_job():
         'vae_model_type': vae_model_type,
     }
     
-    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'precision', 'num_workers', 'cache_latents', 'normalize_latents', 'ema_decay', 'sampling_steps', 'sample_every') if k in data}
+    extra = {k: data[k] for k in ('seed', 'validation_fraction', 'precision', 'num_workers', 'cache_latents', 'normalize_latents', 'ema_decay', 'sampling_steps', 'sample_every', 'data_path', 'split_mode', 'val_count') if k in data}
     config.update(extra)
     job = job_manager.create_job('dit', config)
     
@@ -431,7 +433,7 @@ def list_checkpoints():
                 })
     
     # Include experiments launched outside the web job manager, including copied
-    # desk results. Inspect directory names without loading large model weights.
+    # local results. Inspect directory names without loading large model weights.
     seen = {str(Path(c['path']).resolve()) for c in checkpoints}
     for directory in (Path('checkpoints'), Path('runs')):
         if not directory.exists():

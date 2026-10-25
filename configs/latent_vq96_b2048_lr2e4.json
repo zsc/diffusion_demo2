@@ -1,0 +1,19 @@
+{
+  "autoencoder": "/path/to/runs/vq96_transfer_20261025/decoder/best.pth",
+  "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+  "images": 4194304,
+  "save_every_images": 2097152,
+  "snapshot_images": [
+    524288
+  ],
+  "batch_size": 2048,
+  "lr": 0.0002,
+  "warmup_images": 65536,
+  "ema_halflife_images": 131072,
+  "width": 384,
+  "depth": 8,
+  "heads": 6,
+  "patch_size": 1,
+  "pca_components": 8,
+  "seed": 0
+}

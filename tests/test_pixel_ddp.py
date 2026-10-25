@@ -10,10 +10,42 @@ import unittest
 
 import numpy as np
 import torch
-from pixel_ddp_experiment import validate_resume_config
+from pixel_ddp_experiment import (validate_resume_config, training_time_parameters,
+                                  training_time_sampling, sample_training_times)
 
 
 class PixelDDPTests(unittest.TestCase):
+    def test_stratified_time_sampling_preserves_cdf_coverage_and_rng(self):
+        torch.manual_seed(19)
+        state = torch.get_rng_state()
+        times = sample_training_times(64, "cpu", -.2, .8, "stratified")
+        z = (torch.logit(times) + .2) / .8
+        quantiles = .5 * (1 + torch.erf(z / (2 ** .5)))
+        torch.testing.assert_close(torch.floor(quantiles * 64), torch.arange(64).float())
+        self.assertTrue(times.isfinite().all())
+        self.assertFalse(torch.equal(times, sample_training_times(64, "cpu", -.2, .8, "stratified")))
+        torch.set_rng_state(state)
+        torch.testing.assert_close(times, sample_training_times(64, "cpu", -.2, .8, "stratified"), rtol=0, atol=0)
+        torch.set_rng_state(state)
+        expected = (torch.randn(64) * .8 - .2).sigmoid()
+        torch.set_rng_state(state)
+        torch.testing.assert_close(expected, sample_training_times(64, "cpu", -.2, .8), rtol=0, atol=0)
+        with self.assertRaisesRegex(ValueError, "time distribution"):
+            validate_resume_config({}, {"time_sampling": "stratified"})
+        validate_resume_config({}, {"time_sampling": "stratified"}, allow_time_change=True)
+        with self.assertRaises(ValueError):
+            training_time_sampling({"time_sampling": "invalid"})
+
+    def test_time_change_is_explicit_and_validated(self):
+        self.assertEqual(training_time_parameters({}), (-.8, .8))
+        validate_resume_config({}, {"time_logit_mean": -.8, "time_logit_std": .8})
+        with self.assertRaisesRegex(ValueError, "time distribution"):
+            validate_resume_config({}, {"time_logit_mean": -.4})
+        validate_resume_config({}, {"time_logit_mean": -.4}, allow_time_change=True)
+        for key, value in [("time_logit_mean", float("nan")), ("time_logit_std", 0), ("time_logit_std", float("inf"))]:
+            with self.assertRaises(ValueError):
+                validate_resume_config({}, {key: value}, allow_time_change=True)
+
     def test_lr_change_is_explicit_and_does_not_relax_other_checks(self):
         previous = {"lr": 2e-4, "global_batch": 1024}
         with self.assertRaisesRegex(ValueError, "changed lr"):
@@ -76,6 +108,17 @@ class PixelDDPTests(unittest.TestCase):
             d = torch.load(root / "full" / "last.pt", weights_only=False)
             for rank in range(2):
                 torch.testing.assert_close(c["rng"][rank]["cpu"], d["rng"][rank]["cpu"], rtol=0, atol=0)
+            cfg["time_sampling"] = "stratified"
+            run("strat_full", 16)
+            run("strat_split", 8)
+            run("strat_split", 16, True)
+            a = torch.load(root / "strat_full" / "last.pt", weights_only=False)
+            b = torch.load(root / "strat_split" / "last.pt", weights_only=False)
+            for group in ["model", "ema"]:
+                for key in a[group]:
+                    torch.testing.assert_close(a[group][key], b[group][key], rtol=0, atol=0)
+            for rank in range(2):
+                torch.testing.assert_close(a["rng"][rank]["cpu"], b["rng"][rank]["cpu"], rtol=0, atol=0)
 
 
 if __name__ == "__main__":

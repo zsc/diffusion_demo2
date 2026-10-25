@@ -55,7 +55,7 @@ def main():
     ap.add_argument("--benchmark", default="runs/pixel_best/speed_comparison.json")
     ap.add_argument("--output", required=True)
     args = ap.parse_args()
-    runs = [collect(Path(args.baseline), "single PPU / b256 / 10k", Path(args.baseline_quality))]
+    runs = [collect(Path(args.baseline), "single GPU / b256 / 10k", Path(args.baseline_quality))]
     for folder in args.rounds:
         p = Path(folder)
         runs += [collect(d, p.name + "/" + d.name) for d in sorted(p.iterdir()) if d.is_dir()]
@@ -138,18 +138,18 @@ def main():
         recommendation += '</section>'
     speed_section = '<h2>速度基准</h2>'
     if benchmark:
-        speed_section += '<table><tr><th>相同工作负载</th><th>单 PPU</th><th>2080 SUPER</th><th>PPU 倍率</th></tr>'
+        speed_section += '<table><tr><th>相同工作负载</th><th>单 GPU</th><th>2080 SUPER</th><th>GPU 倍率</th></tr>'
         for row in benchmark["comparisons"]:
             speed_section += ('<tr><td>' + html.escape(row["label"]) + '</td>'
-                              f'<td>{row["ppu"]:.3f} {html.escape(row["unit"])}</td>'
-                              f'<td>{row["desk"]:.3f} {html.escape(row["unit"])}</td>'
+                              f'<td>{row["gpu"]:.3f} {html.escape(row["unit"])}</td>'
+                              f'<td>{row["local"]:.3f} {html.escape(row["unit"])}</td>'
                               f'<td>{row["speedup"]:.2f}×</td></tr>')
         speed_section += '</table><p>' + html.escape(benchmark["note"]) + '</p>'
     document = '''<!doctype html><html lang="zh"><meta charset="utf-8"><title>Pixel JiT 人脸实验</title>
 <style>body{max-width:1400px;margin:40px auto;padding:0 24px;font:16px/1.6 system-ui;color:#182b34;background:#fafafa}h1{font-size:30px}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:9px;border-bottom:1px solid #d5dfe2;text-align:right}td:first-child,th:first-child{text-align:left}img{max-width:100%;height:auto}.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:24px}section{background:white;padding:18px;border:1px solid #e1e6e8;border-radius:10px}h2{font-size:17px}p{max-width:1100px}.scroll{overflow:auto}</style>
-<h1>Pixel JiT：人脸生成与 16 PPU 实验</h1>
+<h1>Pixel JiT：人脸生成与 16 GPU 实验</h1>
 ''' + recommendation + '''<p>48×48 RGB，从零训练；不使用预训练生成权重、VAE、超分或人脸修复。数据为修复后的 30,000 张 CelebA sprite 图片，固定随机划分 29,000 张训练 / 1,000 张验证；并非按人物身份划分。</p>
-<p>每个分布式实验分配一台 16 PPU 节点。warmup、EMA 与检查点按看图量对齐。相同架构的首轮用于 batch / 学习率比较，后续按结果调整训练长度、学习率与容量。最终样本来自 EMA、50 步 Heun。</p>
+<p>每个分布式实验分配一台 16 GPU 节点。warmup、EMA 与检查点按看图量对齐。相同架构的首轮用于 batch / 学习率比较，后续按结果调整训练长度、学习率与容量。最终样本来自 EMA、50 步 Heun。</p>
 <p>FID / KID 使用 clean Inception 特征，1,024 张独立噪声生成图与 1,000 张留出图。FID 采用等价的 float64 对称 PSD 求解。这些是小样本配对比较，不是 FID50k；不同训练预算的结果不能当作严格等算力排名。</p>
 <div class="scroll"><table><thead><tr>''' + "".join(f"<th>{s}</th>" for s in ["实验", "参数 M", "batch", "lr", "看图量 M", "本阶段分钟", "稳态图/秒", "验证 MSE", "FID ↓", "KID ↓"]) + "</tr></thead><tbody>" + "".join(rows) + '''</tbody></table></div>
 <p>分钟数为训练循环时间，包含循环内采样/保存，不包含进程启动和独立评估。续跑的看图量是累计值，分钟数只包含本阶段。吞吐是日志区间中位数，已排除首个区间。</p>

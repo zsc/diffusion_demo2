@@ -1,6 +1,6 @@
 {
   "data": {
-    "source_zip": "/dataset-cpfs5/vtm-foundation-pretrain/dataset_ori/celeba/archive (1).zip",
+    "source_zip": "/path/to/datasets/celeba/archive (1).zip",
     "original_size": [
       178,
       218
@@ -24,7 +24,7 @@
   "training": [
     {
       "label": "round96/native_lr1e4",
-      "directory": "runs/ppu96/round96/native_lr1e4",
+      "directory": "runs/gpu96/round96/native_lr1e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -529,7 +529,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/native_lr1e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96/native_lr1e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -549,7 +549,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -565,7 +565,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -574,9 +574,9 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 187.37099983000007,
-      "preview": "runs/ppu96/round96/native_lr1e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96/native_lr1e4/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -610,7 +610,7 @@
     },
     {
       "label": "round96/scaled_lr1e4",
-      "directory": "runs/ppu96/round96/scaled_lr1e4",
+      "directory": "runs/gpu96/round96/scaled_lr1e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -1115,7 +1115,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr1e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr1e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -1135,7 +1135,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -1151,7 +1151,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -1160,9 +1160,9 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 182.7362198410001,
-      "preview": "runs/ppu96/round96/scaled_lr1e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96/scaled_lr1e4/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -1196,7 +1196,7 @@
     },
     {
       "label": "round96/scaled_lr2e4",
-      "directory": "runs/ppu96/round96/scaled_lr2e4",
+      "directory": "runs/gpu96/round96/scaled_lr2e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -1701,7 +1701,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -1721,7 +1721,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -1737,7 +1737,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -1746,9 +1746,9 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 181.9469286879994,
-      "preview": "runs/ppu96/round96/scaled_lr2e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96/scaled_lr2e4/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -1782,7 +1782,7 @@
     },
     {
       "label": "round96/scratch_scaled_lr2e4",
-      "directory": "runs/ppu96/round96/scratch_scaled_lr2e4",
+      "directory": "runs/gpu96/round96/scratch_scaled_lr2e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -2287,7 +2287,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scratch_scaled_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96/scratch_scaled_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -2307,7 +2307,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -2323,7 +2323,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v11/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -2332,12 +2332,12 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 181.84496564399979,
-      "preview": "runs/ppu96/round96/scratch_scaled_lr2e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96/scratch_scaled_lr2e4/quality/independent_seed_grid.png",
       "initialization": null
     },
     {
       "label": "round96_8m/scaled_lr2e4",
-      "directory": "runs/ppu96/round96_8m/scaled_lr2e4",
+      "directory": "runs/gpu96/round96_8m/scaled_lr2e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -4150,7 +4150,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -4170,7 +4170,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -4186,7 +4186,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v12/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v12/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -4195,9 +4195,9 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 632.3200666520006,
-      "preview": "runs/ppu96/round96_8m/scaled_lr2e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96_8m/scaled_lr2e4/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -4231,7 +4231,7 @@
     },
     {
       "label": "round96_fusion_compare/compile_pointwise",
-      "directory": "runs/ppu96/round96_fusion_compare/compile_pointwise",
+      "directory": "runs/gpu96/round96_fusion_compare/compile_pointwise",
       "config": {
         "model": {
           "image_size": 96,
@@ -4719,7 +4719,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_fusion_compare/compile_pointwise/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_fusion_compare/compile_pointwise/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -4739,7 +4739,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -4755,7 +4755,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v18/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v18/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "e07a2f96482fa148130239e3c9393f4e2c5ae2534d999a26e6e5945f92ff16d0"
         },
         "world_size": 16,
@@ -4768,9 +4768,9 @@
         "acceleration_source_sha256": "40669664abd5db1cbce2136c6e60b4e82a08448c04bf4950750c6dcee2ea1b70"
       },
       "train_seconds": 130.7139595990002,
-      "preview": "runs/ppu96/round96_fusion_compare/compile_pointwise/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96_fusion_compare/compile_pointwise/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -4804,7 +4804,7 @@
     },
     {
       "label": "round96_fusion_compare/eager",
-      "directory": "runs/ppu96/round96_fusion_compare/eager",
+      "directory": "runs/gpu96/round96_fusion_compare/eager",
       "config": {
         "model": {
           "image_size": 96,
@@ -5292,7 +5292,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_fusion_compare/eager/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_fusion_compare/eager/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -5312,7 +5312,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -5328,7 +5328,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v17/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v17/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "e07a2f96482fa148130239e3c9393f4e2c5ae2534d999a26e6e5945f92ff16d0"
         },
         "world_size": 16,
@@ -5339,9 +5339,9 @@
         "previous_execution_backend": "eager"
       },
       "train_seconds": 163.28243232800014,
-      "preview": "runs/ppu96/round96_fusion_compare/eager/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96_fusion_compare/eager/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -5375,7 +5375,7 @@
     },
     {
       "label": "round96_long/scaled_lr2e4",
-      "directory": "runs/ppu96/round96_long/scaled_lr2e4",
+      "directory": "runs/gpu96/round96_long/scaled_lr2e4",
       "config": {
         "model": {
           "image_size": 96,
@@ -6754,7 +6754,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_long/scaled_lr2e4/last.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_long/scaled_lr2e4/last.pt",
         "seed": 3333,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -6774,7 +6774,7 @@
         "torch": "2.9.0",
         "python": "3.12.3",
         "precision": "bf16",
-        "device": "PPU-ZW810E",
+        "device": "GPU-GPU",
         "cuda": "12.9",
         "parameters": 21891251,
         "model": {
@@ -6790,7 +6790,7 @@
         },
         "visible_devices": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
         "source_sha256": {
-          "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/pixel96_source_v12/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
+          "/path/to/diffusion-demo-data/pixel96_source_v12/pixel_experiment.py": "8de04ba84f45991cb236b6fe9ccd2b4322417c7928813af784bc1c6c6d22a191",
           "src/diffusion_demo/core/models/pixel_jit.py": "06d99878e417ad1e3a0f7bb2395fb60fe560ae28db770523cce63aaa27510350"
         },
         "world_size": 16,
@@ -6799,9 +6799,9 @@
         "ddp_source_sha256": "63691388bf398301ad77971e59cf5584e29d9028ceff1c087d8ab3c57247d6cd"
       },
       "train_seconds": 487.9580917510002,
-      "preview": "runs/ppu96/round96_long/scaled_lr2e4/quality/independent_seed_grid.png",
+      "preview": "runs/gpu96/round96_long/scaled_lr2e4/quality/independent_seed_grid.png",
       "initialization": {
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round2/b1024_lr4e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round2/b1024_lr4e4/ema_008192000.pt",
         "checkpoint_sha256": "6cf1e5dfda4026801f74bfd811a9b785e350b76118b5c05e1c90b0a837948553",
         "weights": "ema",
         "source_model": {
@@ -6844,10 +6844,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_long/scaled_lr2e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_long/scaled_lr2e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 1.5,
       "guidance_interval": [
         0.1,
@@ -6868,10 +6868,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_long/scaled_lr2e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_long/scaled_lr2e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -6892,10 +6892,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_long/scaled_lr2e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_long/scaled_lr2e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_001024000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_001024000.pt",
       "guidance": 1.5,
       "guidance_interval": [
         0.1,
@@ -6916,10 +6916,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_long/scaled_lr2e4/ema_004096000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_long/scaled_lr2e4/ema_004096000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_001024000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_001024000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -6940,10 +6940,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 2.0,
       "guidance_interval": [
         0.1,
@@ -6964,10 +6964,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 3.0,
       "guidance_interval": [
         0.1,
@@ -6988,10 +6988,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
       "seed": 3333,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 4.0,
       "guidance_interval": [
         0.1,
@@ -7012,7 +7012,7 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
       "seed": 7777,
       "heun_steps": 50,
       "guide_checkpoint": null,
@@ -7036,10 +7036,10 @@
       "real_count": 1000,
       "fake_count": 1024,
       "fid_solver": "float64 symmetric PSD eigendecomposition",
-      "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+      "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
       "seed": 7777,
       "heun_steps": 50,
-      "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+      "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
       "guidance": 3.0,
       "guidance_interval": [
         0.1,
@@ -7054,10 +7054,10 @@
   ],
   "recipe": {
     "summary": "48px EMA 全参数继承后，在原始 CelebA 裁切的真实96px数据上完成819.2万张次微调；采用256k早期96px EMA作弱模型，guidance=3、区间[0.1,0.8]、Heun50。独立seed7777的FID由69.303降到59.407。",
-    "preview": "/Users/zsc/Downloads/diffusion_demo2/runs/pixel96_best/sample_ppu_seed2027/preview16.png",
-    "model": "/Users/zsc/Downloads/diffusion_demo2/runs/pixel96_best/model_ema.pt",
-    "guide": "/Users/zsc/Downloads/diffusion_demo2/runs/pixel96_best/guide_ema.pt",
-    "resumable": "/Users/zsc/Downloads/diffusion_demo2/runs/pixel96_best/last.pt",
+    "preview": "/path/to/diffusion_demo2/runs/pixel96_best/sample_gpu_seed2027/preview16.png",
+    "model": "/path/to/diffusion_demo2/runs/pixel96_best/model_ema.pt",
+    "guide": "/path/to/diffusion_demo2/runs/pixel96_best/guide_ema.pt",
+    "resumable": "/path/to/diffusion_demo2/runs/pixel96_best/last.pt",
     "sha256": {
       "model_ema.pt": "7fcc23c666a4cacebf81905cb6a921d838bada0a1262ce3d6f2035bd66fbf57d",
       "guide_ema.pt": "a7b4e75e7e27a1d3817b2a680b7dc1575f75e474e22ac0dc52a5c661be432572",
@@ -7106,7 +7106,7 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
         "seed": 7777,
         "heun_steps": 50,
         "guide_checkpoint": null,
@@ -7129,10 +7129,10 @@
         "real_count": 1000,
         "fake_count": 1024,
         "fid_solver": "float64 symmetric PSD eigendecomposition",
-        "checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96_8m/scaled_lr2e4/ema_008192000.pt",
+        "checkpoint": "/path/to/diffusion-demo-data/round96_8m/scaled_lr2e4/ema_008192000.pt",
         "seed": 7777,
         "heun_steps": 50,
-        "guide_checkpoint": "/dataset-cpfs5/vtm-foundation-pretrain/temp/zhousc6/diffusion_demo2_20261024/round96/scaled_lr2e4/ema_000256000.pt",
+        "guide_checkpoint": "/path/to/diffusion-demo-data/round96/scaled_lr2e4/ema_000256000.pt",
         "guidance": 3.0,
         "guidance_interval": [
           0.1,

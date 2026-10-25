@@ -77,7 +77,7 @@ h1{{font-size:32px;margin-bottom:6px}}h2{{margin-top:32px}}.muted,figcaption{{co
 figure{{margin:8px 0;flex:1;min-width:260px;text-align:center}}figure img{{width:288px;max-width:100%;image-rendering:auto}}.plot{{width:100%}}
 table{{border-collapse:collapse;width:100%}}td,th{{border-bottom:1px solid #dfe5eb;text-align:left;padding:9px}}pre{{overflow:auto;background:#f5f7f9;padding:16px;font-size:12px}}a{{color:#0f766e}}code{{font-size:.9em}}
 </style><main><p class="muted">实测记录 · 2026-10-24 · RTX 2080 SUPER / 8GB</p><h1>先修训练链路，再比较质量与速度</h1>
-<p>使用 desk 实际训练；所有数值来自保存的 metrics / benchmark JSON。生成质量仍有限，重建指标改善不等于生成质量已解决。</p>
+<p>使用本机 GPU 实际训练；所有数值来自保存的 metrics / benchmark JSON。生成质量仍有限，重建指标改善不等于生成质量已解决。</p>
 <section class="stats"><div class="stat">验证重建 PSNR<strong>{br['val_psnr_db']:.2f} → {cr['val_psnr_db']:.2f} dB</strong></div>
 <div class="stat">验证 MSE 降幅<strong>{improvement:.1f}%</strong></div><div class="stat">50 步 DDIM 采样加速<strong>{ratio:.1f}×</strong></div></section>
 <section><h2>对照条件</h2><p>同一前 2,048 张图，同一 seed=42，训练 1,792 张、验证 256 张；VAE 均为 16×4×4 latent，batch=16、Adam lr=2e-4、8 轮、FP16。基线 β=1；候选 β=0.1，前三轮从 β/3 线性升到 β。这个对照同时改变 β 和 warmup，不能区分两者的独立贡献。</p>

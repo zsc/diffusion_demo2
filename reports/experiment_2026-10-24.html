@@ -6,7 +6,7 @@ h1{font-size:32px;margin-bottom:6px}h2{margin-top:32px}.muted,figcaption{color:#
 figure{margin:8px 0;flex:1;min-width:260px;text-align:center}figure img{width:288px;max-width:100%;image-rendering:auto}.plot{width:100%}
 table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dfe5eb;text-align:left;padding:9px}pre{overflow:auto;background:#f5f7f9;padding:16px;font-size:12px}a{color:#0f766e}code{font-size:.9em}
 </style><main><p class="muted">实测记录 · 2026-10-24 · RTX 2080 SUPER / 8GB</p><h1>先修训练链路，再比较质量与速度</h1>
-<p>使用 desk 实际训练；所有数值来自保存的 metrics / benchmark JSON。生成质量仍有限，重建指标改善不等于生成质量已解决。</p>
+<p>使用 local 实际训练；所有数值来自保存的 metrics / benchmark JSON。生成质量仍有限，重建指标改善不等于生成质量已解决。</p>
 <section class="stats"><div class="stat">验证重建 PSNR<strong>18.36 → 19.08 dB</strong></div>
 <div class="stat">验证 MSE 降幅<strong>15.3%</strong></div><div class="stat">50 步 DDIM 采样加速<strong>21.4×</strong></div></section>
 <section><h2>对照条件</h2><p>同一前 2,048 张图，同一 seed=42，训练 1,792 张、验证 256 张；VAE 均为 16×4×4 latent，batch=16、Adam lr=2e-4、8 轮、FP16。基线 β=1；候选 β=0.1，前三轮从 β/3 线性升到 β。这个对照同时改变 β 和 warmup，不能区分两者的独立贡献。</p>
@@ -46,7 +46,7 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dfe5eb;
     &quot;num_workers&quot;: 0,
     &quot;precision&quot;: &quot;auto&quot;,
     &quot;device&quot;: &quot;cuda&quot;,
-    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181237_desk_baseline/vae&quot;
+    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181237_local_baseline/vae&quot;
   },
   &quot;candidate&quot;: {
     &quot;model_type&quot;: &quot;vae&quot;,
@@ -70,10 +70,10 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dfe5eb;
     &quot;num_workers&quot;: 0,
     &quot;precision&quot;: &quot;auto&quot;,
     &quot;device&quot;: &quot;cuda&quot;,
-    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/vae&quot;
+    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/vae&quot;
   },
   &quot;dit&quot;: {
-    &quot;vae_model_path&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/vae/checkpoints/best.pth&quot;,
+    &quot;vae_model_path&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/vae/checkpoints/best.pth&quot;,
     &quot;discriminator_model_path&quot;: null,
     &quot;use_gan&quot;: false,
     &quot;gan_loss_weight&quot;: 0.01,
@@ -100,7 +100,7 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dfe5eb;
     &quot;num_workers&quot;: 0,
     &quot;precision&quot;: &quot;fp32&quot;,
     &quot;device&quot;: &quot;cuda&quot;,
-    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/dit&quot;,
+    &quot;output_dir&quot;: &quot;/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/dit&quot;,
     &quot;cache_latents&quot;: true,
     &quot;normalize_latents&quot;: true,
     &quot;ema_decay&quot;: 0.999,
@@ -116,7 +116,7 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dfe5eb;
     &quot;device_name&quot;: &quot;NVIDIA GeForce RTX 2080 SUPER&quot;,
     &quot;device_count&quot;: 1,
     &quot;python&quot;: &quot;3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:16:04) [GCC 11.2.0]&quot;,
-    &quot;executable&quot;: &quot;/home/zsc/miniconda3/envs/py312/bin/python&quot;,
+    &quot;executable&quot;: &quot;/path/to/miniconda3/envs/py312/bin/python&quot;,
     &quot;source_sha256&quot;: {
       &quot;src/diffusion_demo/__init__.py&quot;: &quot;2299e5925e1613c7d634c594daffef14dee3b42fe6ccdb2b065c00ca50b1cc11&quot;,
       &quot;src/diffusion_demo/__main__.py&quot;: &quot;2064a42005ac67f587f762c1d535fce58eef5a56fd2c376c89c25621fe663c67&quot;,

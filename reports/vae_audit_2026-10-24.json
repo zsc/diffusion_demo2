@@ -1,0 +1,330 @@
+{
+  "purpose": "Short diagnostic only; one seed, no generative FID or hardware speed comparison",
+  "runs": {
+    "grid4_sum": {
+      "best": {
+        "epoch": 15,
+        "loss": 7189.962977818081,
+        "recon_loss": 1074.7453046526227,
+        "vq_loss": 6115.217668805803,
+        "kld_beta": 1.0,
+        "train_seconds": 2.201601624954492,
+        "images_per_second": 406.9764438053232,
+        "images_seen": 13440,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 9,
+        "train_codebook_perplexity": 5.314268589019775,
+        "val_recon_mse": 0.03946114579836527,
+        "val_psnr_db": 14.038303086762516,
+        "val_codes_used": 6,
+        "val_codebook_perplexity": 5.229179859161377
+      },
+      "final": {
+        "epoch": 16,
+        "loss": 8712.984654017857,
+        "recon_loss": 1073.9265659877233,
+        "vq_loss": 7639.058035714285,
+        "kld_beta": 1.0,
+        "train_seconds": 2.2097294160630554,
+        "images_per_second": 405.47950961179237,
+        "images_seen": 14336,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 8,
+        "train_codebook_perplexity": 5.307775020599365,
+        "val_recon_mse": 0.039539190354170625,
+        "val_psnr_db": 14.029722279994859,
+        "val_codes_used": 6,
+        "val_codebook_perplexity": 5.1822662353515625
+      },
+      "artifacts": {
+        "model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/checkpoints/last.pth",
+        "best_model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/checkpoints/best.pth",
+        "discriminator_path": null,
+        "checkpoint_dir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/checkpoints",
+        "run_name": "vqvae_20261024_234859_290214",
+        "artifacts": {
+          "checkpoints": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/checkpoints/best.pth",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/checkpoints/last.pth"
+          ],
+          "images": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_001.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_002.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_003.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_004.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_005.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_006.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_007.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_008.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_009.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_010.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_011.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_012.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_013.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_014.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_015.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/reconstruction_016.png"
+          ],
+          "tensorboard_logdir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/tensorboard"
+        },
+        "metrics_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_sum/metrics.json"
+      }
+    },
+    "grid4_mean": {
+      "best": {
+        "epoch": 16,
+        "loss": 2.452078176396234,
+        "recon_loss": 0.11763609732900347,
+        "vq_loss": 2.3344420790672302,
+        "kld_beta": 1.0,
+        "train_seconds": 2.2320368748623878,
+        "images_per_second": 401.4270597815465,
+        "images_seen": 14336,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 20,
+        "train_codebook_perplexity": 7.731284141540527,
+        "val_recon_mse": 0.030216972585077637,
+        "val_psnr_db": 15.197490494429527,
+        "val_codes_used": 13,
+        "val_codebook_perplexity": 7.6856818199157715
+      },
+      "final": {
+        "epoch": 16,
+        "loss": 2.452078176396234,
+        "recon_loss": 0.11763609732900347,
+        "vq_loss": 2.3344420790672302,
+        "kld_beta": 1.0,
+        "train_seconds": 2.2320368748623878,
+        "images_per_second": 401.4270597815465,
+        "images_seen": 14336,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 20,
+        "train_codebook_perplexity": 7.731284141540527,
+        "val_recon_mse": 0.030216972585077637,
+        "val_psnr_db": 15.197490494429527,
+        "val_codes_used": 13,
+        "val_codebook_perplexity": 7.6856818199157715
+      },
+      "artifacts": {
+        "model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/checkpoints/last.pth",
+        "best_model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/checkpoints/best.pth",
+        "discriminator_path": null,
+        "checkpoint_dir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/checkpoints",
+        "run_name": "vqvae_20261024_234936_316283",
+        "artifacts": {
+          "checkpoints": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/checkpoints/best.pth",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/checkpoints/last.pth"
+          ],
+          "images": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_001.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_002.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_003.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_004.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_005.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_006.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_007.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_008.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_009.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_010.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_011.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_012.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_013.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_014.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_015.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/reconstruction_016.png"
+          ],
+          "tensorboard_logdir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/tensorboard"
+        },
+        "metrics_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid4_mean/metrics.json"
+      }
+    },
+    "grid12_sum": {
+      "best": {
+        "epoch": 4,
+        "loss": 1047.0451158796038,
+        "recon_loss": 961.4617309570312,
+        "vq_loss": 85.58337129865374,
+        "kld_beta": 1.0,
+        "train_seconds": 2.8981272079981863,
+        "images_per_second": 309.165173125334,
+        "images_seen": 3584,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 25,
+        "train_codebook_perplexity": 2.9810094833374023,
+        "val_recon_mse": 0.03533680461071156,
+        "val_psnr_db": 14.517727248540979,
+        "val_codes_used": 12,
+        "val_codebook_perplexity": 2.9062082767486572
+      },
+      "final": {
+        "epoch": 16,
+        "loss": 37737.344029017855,
+        "recon_loss": 1088.5332598005023,
+        "vq_loss": 36648.81068638393,
+        "kld_beta": 1.0,
+        "train_seconds": 2.8671408330556005,
+        "images_per_second": 312.5064488182484,
+        "images_seen": 14336,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 21,
+        "train_codebook_perplexity": 2.3069331645965576,
+        "val_recon_mse": 0.03992179919172217,
+        "val_psnr_db": 13.987898942025774,
+        "val_codes_used": 11,
+        "val_codebook_perplexity": 2.282639741897583
+      },
+      "artifacts": {
+        "model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/checkpoints/last.pth",
+        "best_model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/checkpoints/best.pth",
+        "discriminator_path": null,
+        "checkpoint_dir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/checkpoints",
+        "run_name": "vqvae_20261024_235014_277792",
+        "artifacts": {
+          "checkpoints": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/checkpoints/best.pth",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/checkpoints/last.pth"
+          ],
+          "images": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_001.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_002.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_003.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_004.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_005.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_006.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_007.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_008.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_009.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_010.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_011.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_012.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_013.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_014.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_015.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/reconstruction_016.png"
+          ],
+          "tensorboard_logdir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/tensorboard"
+        },
+        "metrics_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_sum/metrics.json"
+      }
+    },
+    "grid12_mean": {
+      "best": {
+        "epoch": 14,
+        "loss": 1.3712921440601349,
+        "recon_loss": 0.06379204363163028,
+        "vq_loss": 1.307500102690288,
+        "kld_beta": 1.0,
+        "train_seconds": 2.7859125828836113,
+        "images_per_second": 321.6181317048284,
+        "images_seen": 12544,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 25,
+        "train_codebook_perplexity": 9.184826850891113,
+        "val_recon_mse": 0.016006393841019383,
+        "val_psnr_db": 17.957065013945048,
+        "val_codes_used": 17,
+        "val_codebook_perplexity": 9.203679084777832
+      },
+      "final": {
+        "epoch": 16,
+        "loss": 1.0134072261197227,
+        "recon_loss": 0.059323448687791824,
+        "vq_loss": 0.9540837790284838,
+        "kld_beta": 1.0,
+        "train_seconds": 2.9749791249632835,
+        "images_per_second": 301.1785839038646,
+        "images_seen": 14336,
+        "optimizer_updates": 28,
+        "skipped_updates": 0,
+        "train_codes_used": 25,
+        "train_codebook_perplexity": 9.230667114257812,
+        "val_recon_mse": 0.016019929062437127,
+        "val_psnr_db": 17.953394113391923,
+        "val_codes_used": 17,
+        "val_codebook_perplexity": 9.477367401123047
+      },
+      "artifacts": {
+        "model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/checkpoints/last.pth",
+        "best_model_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/checkpoints/best.pth",
+        "discriminator_path": null,
+        "checkpoint_dir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/checkpoints",
+        "run_name": "vqvae_20261024_235102_034216",
+        "artifacts": {
+          "checkpoints": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/checkpoints/best.pth",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/checkpoints/last.pth"
+          ],
+          "images": [
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_001.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_002.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_003.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_004.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_005.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_006.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_007.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_008.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_009.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_010.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_011.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_012.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_013.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_014.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_015.png",
+            "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/reconstruction_016.png"
+          ],
+          "tensorboard_logdir": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/tensorboard"
+        },
+        "metrics_path": "/path/to/diffusion_demo2/runs/vae_audit_20261024/grid12_mean/metrics.json"
+      }
+    }
+  },
+  "protocol": {
+    "device": "local CPU",
+    "image_size": 48,
+    "data_limit": 1024,
+    "train_images": 896,
+    "validation_images": 128,
+    "epochs": 16,
+    "images_seen_per_arm": 14336,
+    "steps_per_arm": 448,
+    "seed": 0,
+    "batch": 32,
+    "lr": 0.0002,
+    "embedding_dim": 16,
+    "num_embeddings": 128,
+    "hidden_dims_enc": [
+      32,
+      64
+    ],
+    "hidden_dims_dec": [
+      64,
+      32
+    ],
+    "selection": "minimum validation MSE over 16 epochs; no independent confirmation seed",
+    "note": "The selected best epoch differs between arms. Gaussian random latent samples are not evaluated."
+  },
+  "verification": {
+    "unittest_passed": 31,
+    "unittest_seconds": 16.29,
+    "ddp_cpu_world_size": 2,
+    "ddp_cpu_epochs": 2,
+    "models": [
+      "vae",
+      "vqvae"
+    ],
+    "new_gpu_cluster_tested": false
+  },
+  "staged_release": {
+    "host": "gateway",
+    "path": "/path/to/try_cluster/diffusion_vae_audit_20261025.tar.gz",
+    "sha256": "7a2dae6cf4def0459f673c4e6694188385d623abe034c9c5e0df789b2425d370"
+  }
+}

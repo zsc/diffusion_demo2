@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="./">
     <title>Diffusion Demo - Pixel JiT 与 DiT 人脸生成</title>
-    <meta name="description" content="Pixel JiT 96×96 人脸生成实验，以及 VAE/VQVAE、潜空间 DiT 的训练、评估与采样流程。">
-    <meta name="theme-color" content="#2c3e50">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Diffusion Demo - Pixel JiT 与 DiT 人脸生成">
-    <meta property="og:description" content="Pixel JiT 96×96 人脸生成实验，以及完整训练、评估与采样流程。">
-    <meta property="og:image" content="https://zsc.github.io/diffusion_demo2/assets/images/pixel96-cover.png">
-    <meta property="og:image:alt" content="Pixel JiT 96×96 人脸生成样例">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/highlight.css">
     <script src="assets/script.js" defer></script>
@@ -90,13 +81,13 @@
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <h3>目录</h3>
-            </div>
+</div>
             <div class="sidebar-search">
                 <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
                 <span id="sidebar-search-clear" class="search-clear" role="button" tabindex="0" aria-label="清除搜索" title="清除">×</span>
             </div>
             <div id="tree-container">
-                <ul class="nav-list page-toc" aria-label="页面目录"><li class="active"><a href="#diffusion-demo-dit">Diffusion Demo</a></li><li class="toc-level-2"><a href="#pixel-jit-sofy-batch">Pixel JiT 与 SOFY 大 batch 实验</a></li><li class="toc-level-2"><a href="#4848-9696">从 48×48 继承权重训练 96×96</a></li><li class="toc-level-2"><a href="#desk-gpu">实验优化与 desk GPU 运行</a></li><li class="toc-level-2"><a href="#_3">📋 目录</a></li><li class="toc-level-2"><a href="#_4">✨ 特性</a></li><li class="toc-level-2"><a href="#_5">🧠 模型架构</a></li><li class="toc-level-2"><a href="#_15">📐 数学符号速查</a></li><li class="toc-level-2"><a href="#_16">🚀 安装</a></li><li class="toc-level-2"><a href="#_20">🎯 使用方法</a></li><li class="toc-level-2"><a href="#_23">📁 项目结构</a></li><li class="toc-level-2"><a href="#api">🔌 API 文档</a></li><li class="toc-level-2"><a href="#_29">🎓 参考文献</a></li><li class="toc-level-2"><a href="#license">📄 License</a></li></ul>
+                <ul class="nav-list page-toc" aria-label="页面目录"><li class="active"><a href="#diffusion-demo-pixel-jit-dit">概览</a></li><li class="toc-level-2"><a href="#pixel-jit-batch">Pixel JiT 大 batch 实验</a></li><li class="toc-level-2"><a href="#4848-9696">从 48×48 继承权重训练 96×96</a></li><li class="toc-level-2"><a href="#local-gpu">实验优化与本机 GPU 运行</a></li><li class="toc-level-2"><a href="#vae-vq-vae-jit">VAE / VQ-VAE 审计与 JiT 经验迁移</a></li><li class="toc-level-2"><a href="#_3">📋 目录</a></li><li class="toc-level-2"><a href="#_4">✨ 特性</a></li><li class="toc-level-2"><a href="#_5">🧠 模型架构</a></li><li class="toc-level-2"><a href="#_15">📐 数学符号速查</a></li><li class="toc-level-2"><a href="#_16">🚀 安装</a></li><li class="toc-level-2"><a href="#_20">🎯 使用方法</a></li><li class="toc-level-2"><a href="#_23">📁 项目结构</a></li><li class="toc-level-2"><a href="#api">🔌 API 文档</a></li><li class="toc-level-2"><a href="#_29">🎓 参考文献</a></li><li class="toc-level-2"><a href="#license">📄 License</a></li></ul>
             </div>
         </nav>
 
@@ -108,13 +99,14 @@
 
         <main class="content">
             <article>
-                <h1 id="diffusion-demo-dit">Diffusion Demo - Pixel JiT 与 DiT 人脸生成</h1>
+                <h1 id="diffusion-demo-pixel-jit-dit">Diffusion Demo - Pixel JiT 与 DiT 人脸生成</h1>
 <p align="center">
-  <img class="cover-image" src="assets/images/pixel96-cover.png" width="720" alt="Pixel JiT 96×96 人脸生成样例" loading="eager" decoding="async">
+  <img class="cover-image" src="assets/images/pixel96-cover.png" width="720" alt="Pixel JiT 96×96 人脸生成样例">
 </p>
-<p class="cover-caption" align="center">
+<p align="center">
   <sub>Pixel JiT · 当前 96×96 主模型 · 20.480M EMA · Heun50 · seed 2027 · 连续生成前 16 张（未筛选）</sub>
 </p>
+
 <p align="center">
   <img src="https://img.shields.io/badge/Pixel%20JiT-96%C3%9796-8e44ad.svg" alt="Pixel JiT 96×96">
   <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python 3.9+">
@@ -124,12 +116,12 @@
 </p>
 
 <p>一个面向人脸图像生成的可复现实验项目。当前主线使用 <strong>Pixel JiT</strong> 直接在 48×48 / 96×96 RGB 像素上训练和采样，不经过 VAE/VQVAE；仓库同时保留 VAE/VQVAE + 潜空间 DiT 的完整训练、Web 交互与评估流程。</p>
-<h2 id="pixel-jit-sofy-batch">Pixel JiT 与 SOFY 大 batch 实验</h2>
+<h2 id="pixel-jit-batch">Pixel JiT 大 batch 实验</h2>
 <p>新增 <code>pixel_experiment.py</code> / <code>pixel_ddp_experiment.py</code>，直接在 RGB 像素上训练，不依赖 VAE、VQVAE 或预训练生成权重。主线从 48×48 起步，再继承全部学习参数扩展到 96×96。结构参考本地 <code>cstft_jit</code>、<code>cstft_jit_arc2face</code> 的实验经验：patch=4、clean-image prediction、velocity loss、logit-normal 时间采样、EMA、50 步 Heun。当前小模型为 21.89M 参数，384 宽、8 层，输出端带残差卷积头。</p>
 <h3 id="_1">本轮选用的方案</h3>
 <p>已完成两轮、8 组主实验及采样消融，结果见 <a href="reports/pixel_experiments_2026-10-24.html">实验报告</a>。选用 <code>configs/pixel_ddp_b1024_lr4e4.json</code>：global batch=1024、lr=4e-4、8,000 步 / 819.2 万张次；主模型在 1×16 GPU 上训练循环耗时 <strong>6.36 分钟</strong>。同结构的弱模型使用 lr=2e-4、2,000 步 / 204.8 万张次，额外约 <strong>1.75 分钟</strong>。这些时间包含训练循环内采样和保存，不含启动、传输、独立评估。</p>
 <p>采样使用 EMA、50 步 Heun、autoguidance=2，只在 <code>t∈[0.1,0.8]</code> 启用弱模型。调参种子上的 FID 从未引导的 <strong>57.19 降至 43.98</strong>；锁定方案后，独立种子 7777 复核为 <strong>57.52 → 44.27</strong>（KID <strong>0.04832 → 0.03211</strong>）。全程强引导有些配置 FID 更低，但完整网格出现条纹，因此不采用。58.7M 大模型需要约两倍训练时间，引导后的质量也没有超过选中的小模型。</p>
-<p>本地已保存主模型、弱模型及可续训完整 checkpoint：<code>runs/pixel_best/{model_ema.pt,guide_ema.pt,last.pt}</code>；配置、SHA256、评估与运行记录见 <code>runs/pixel_best/recipe.json</code>。RTX 2080 SUPER 实际生成的 64 张样本位于 <code>runs/pixel_best/sample_desk_seed2027/</code>，其中 <code>preview16.png</code> 展示连续生成的前 16 张，未筛选。原生分辨率是 <strong>48×48</strong>，仍有部分畸形或过平滑样本。</p>
+<p>本地已保存主模型、弱模型及可续训完整 checkpoint：<code>runs/pixel_best/{model_ema.pt,guide_ema.pt,last.pt}</code>；配置、SHA256、评估与运行记录见 <code>runs/pixel_best/recipe.json</code>。RTX 2080 SUPER 实际生成的 64 张样本位于 <code>runs/pixel_best/sample_local_seed2027/</code>，其中 <code>preview16.png</code> 展示连续生成的前 16 张，未筛选。原生分辨率是 <strong>48×48</strong>，仍有部分畸形或过平滑样本。</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># 使用本次已训练好的模型；2080 SUPER 用 FP16，其他加速卡可用 BF16。</span>
 <span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>python<span class="w"> </span>sample_pixel.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--checkpoint<span class="w"> </span>runs/pixel_best/model_ema.pt<span class="w"> </span><span class="se">\</span>
@@ -155,7 +147,7 @@ bash<span class="w"> </span>scripts/train_pixel_recipe.sh<span class="w"> </span
 </code></pre></div>
 
 <p>数据使用修复后的 30,000 张缓存，固定划分 29,000 张训练 / 1,000 张验证。<code>sample_pixel.py</code> 保存原生 48×48 PNG、原始数组和随机种子；展示图仅放大，不做修复或超分。2080 SUPER 使用 <code>--precision fp16</code>。完整 checkpoint 支持续跑，EMA-only checkpoint 用于独立采样。</p>
-<p>SOFY 每个任务申请 <code>--nodes 1 --gpus-per-node 16 --cpus-per-node 64</code>，执行：</p>
+<p>GPU 集群每个任务申请 <code>--nodes 1 --gpus-per-node 16 --cpus-per-node 64</code>，执行：</p>
 <div class="codehilite"><pre><span></span><code>bash<span class="w"> </span>scripts/run_*_group.sh<span class="w"> </span>configs/pixel_ddp_b4096_lr8e4.json<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/path/to/output<span class="w"> </span>/path/to/celeba_48x48_sprites_v2.npy<span class="w"> </span>/path/to/eval_assets
 </code></pre></div>
@@ -193,7 +185,7 @@ bash<span class="w"> </span>scripts/train_pixel_recipe.sh<span class="w"> </span
 </tr>
 </tbody>
 </table></div>
-<p>均先预热，再取 3 次中位数；训练每次 40 步。早先 5.37× 的训练倍率受到 desk 上另一计算任务占用的影响，现以上表替换。2080 SUPER 仍有游戏/桌面进程，且两端 PyTorch/驱动不同，因此仍是本次实际运行环境的比较。加速卡可用更大 batch；先前单卡 batch=256、BF16 达到 1,764.4 images/s，但不能与上表 FP16 batch=32 当作严格同条件比较。</p>
+<p>均先预热，再取 3 次中位数；训练每次 40 步。早先 5.37× 的训练倍率受到本机另一计算任务占用的影响，现以上表替换。2080 SUPER 仍有游戏/桌面进程，且两端 PyTorch/驱动不同，因此仍是本次实际运行环境的比较。加速卡可用更大 batch；先前单卡 batch=256、BF16 达到 1,764.4 images/s，但不能与上表 FP16 batch=32 当作严格同条件比较。</p>
 <h2 id="4848-9696">从 48×48 继承权重训练 96×96</h2>
 <p>保持 patch=4、width=384、depth=8、heads=6，可以 <strong>严格继承全部 21,891,251 个学习参数</strong>：patch 输入卷积、Transformer、时间条件、输出线性层和卷积细化头的形状均不变。96px 的 token 网格从 12×12 增至 24×24；解析 sin/cos 位置编码和 RoPE 不是学习参数，也不在 state-dict 中，按新网格重新生成。</p>
 <p><code>model.position_scale=1</code> 使用新网格的原生坐标；<code>0.5</code> 将坐标步长缩半，用于比较保留低分辨率空间尺度是否有益。使用源模型 <strong>EMA</strong> 初始化新模型和新 EMA；重置 AdamW、warmup、步数和 EMA 年龄。<code>--init-from</code> 与恢复同一训练的 <code>--resume</code> 互斥，禁止通过 <code>strict=False</code> 静默丢弃不匹配的权重。初始化来源和 SHA256 保存在 <code>initialization.json</code> 及 checkpoint 中。</p>
@@ -254,13 +246,13 @@ python<span class="w"> </span>scripts/prepare_celeba96.py<span class="w"> </span
 </table></div>
 <p>这是相同新增 96px 训练预算，继承组还使用了旧 48px 预训练，不是相同总算力比较。位置坐标的较小差异尚无多 seed 证据。原始记录和图见 <code>runs/</code> 中对应的首轮实验目录；自包含报告为 <code>reports/pixel96_transfer_2026-10-24.html</code>。</p>
 <h3 id="96px">96px 加速卡性能分析</h3>
-<p>参考 air4 的本地加速卡性能项目，已对真实 batch=64、576 tokens、width=384 的完整单卡更新采集 ASight Systems 与独立 PyTorch trace；未更换厂商库。三轮交错、无 profiler 计时：默认 AdamW <strong>152.202 ms/step</strong>，fused AdamW <strong>151.741 ms/step</strong>，耗时只下降 <strong>0.30%</strong>。未把这个小收益外推为 DDP 加速。</p>
-<p>ASight 基线捕获 2321 个 kernel。按原始名字分组：逐元素/归约/布局 69.513 ms（46.7%），复制/转换 23.026 ms（15.5%），GEMM 30.059 ms（20.2%），attention 20.530 ms（13.8%）；总 kernel 时间 148.881 ms。RMSNorm 被分解到前两类，不能看独立 norm kernel 的占比。时间线覆盖率不等于硬件利用率。</p>
-<p>入口 <code>scripts/profile_pixel_suite.py</code>；原始 <code>.asysrep</code>、SQLite、压缩 PyTorch trace 与计时见 <code>runs/profile96_v1/</code>。融合复测为 <code>scripts/profile_pixel_confirm_suite.py</code>、<code>runs/profile96_fusion_v2/</code>；报告为 <code>reports/pixel96_profile_2026-10-24.html</code>。</p>
-<p><strong>融合实测完成</strong>：保留厂商 GEMM / Flash Attention，用当前加速卡环境中的 Torch Inductor + Triton 融合 RMSNorm、RoPE、SwiGLU 激活、调制与残差。三个独立进程配对：<strong>152.170 → 88.476 ms/step，吞吐 1.72×</strong>。ASight kernel 数 2321 → 1199。开启 <code>emulate_precision_casts=True</code>，参数、梯度和优化器状态保持 FP32。</p>
+<p>参考本机加速卡性能分析，已对真实 batch=64、576 tokens、width=384 的完整单卡更新采集系统级性能数据与独立 PyTorch trace；未更换厂商库。三轮交错、无 profiler 计时：默认 AdamW <strong>152.202 ms/step</strong>，fused AdamW <strong>151.741 ms/step</strong>，耗时只下降 <strong>0.30%</strong>。未把这个小收益外推为 DDP 加速。</p>
+<p>系统级 profiler 基线捕获 2321 个 kernel。按原始名字分组：逐元素/归约/布局 69.513 ms（46.7%），复制/转换 23.026 ms（15.5%），GEMM 30.059 ms（20.2%），attention 20.530 ms（13.8%）；总 kernel 时间 148.881 ms。RMSNorm 被分解到前两类，不能看独立 norm kernel 的占比。时间线覆盖率不等于硬件利用率。</p>
+<p>入口 <code>scripts/profile_pixel_suite.py</code>；原始 <code>.profilerrep</code>、SQLite、压缩 PyTorch trace 与计时见 <code>runs/profile96_v1/</code>。融合复测为 <code>scripts/profile_pixel_confirm_suite.py</code>、<code>runs/profile96_fusion_v2/</code>；报告为 <code>reports/pixel96_profile_2026-10-24.html</code>。</p>
+<p><strong>融合实测完成</strong>：保留厂商 GEMM / Flash Attention，用当前加速卡环境中的 Torch Inductor + Triton 融合 RMSNorm、RoPE、SwiGLU 激活、调制与残差。三个独立进程配对：<strong>152.170 → 88.476 ms/step，吞吐 1.72×</strong>。profiler kernel 数 2321 → 1199。开启 <code>emulate_precision_casts=True</code>，参数、梯度和优化器状态保持 FP32。</p>
 <p>在同一个 4.096M checkpoint 上恢复模型/优化器/RNG，每组 16 GPU 再训练 1000 步：稳态中位数 <strong>6656 → 11326 张/秒（1.70×）</strong>；包含首次编译、保存和预览的循环时间 <strong>163.28 → 130.71 秒</strong>。FID <strong>70.572 → 70.530</strong>，没有跳过更新。短程质量标准已通过，尚无长程多 seed 等价证明。</p>
 <p>初始严格数值门槛的失败记录保留：确定性模式下，融合版本仍有约 1% 的梯度差异、5 步后约 0.024% 的参数差异。独立 FP64 autograd 对照中，6 类算子的前后向均通过预先登记的 BF16 容差（输出相对 L2 &lt;0.6%、梯度 &lt;2%，实际最大约0.37%）。因此该路径需显式启用：<code>configs/pixel96_scaled_lr2e4_fused.json</code> 中的 <code>execution_backend=compile_pointwise</code>；默认仍为 eager。切换执行后端保留 checkpoint 权重、优化器与 RNG，但运算舍入可能改变。</p>
-<p>16 rank 共用 CPFS 编译缓存曾报 <code>Stale file handle</code>，已将缓存放到节点本地 <code>/tmp/pixel_jit_compile/&lt;run-hash&gt;/rankN/</code>。首次编译成本计入上面的 DDP 循环时间，稳态吞吐另列。</p>
+<p>16 rank 共用共享文件系统的编译缓存曾报 <code>Stale file handle</code>，已将缓存放到节点本地 <code>/tmp/pixel_jit_compile/&lt;run-hash&gt;/rankN/</code>。首次编译成本计入上面的 DDP 循环时间，稳态吞吐另列。</p>
 <h3 id="8192m-96px">8.192M 阶段的 96px 模型和采样</h3>
 <p>优胜配置在继承 48px EMA 后累计完成 <strong>8.192M 张次 96px 训练</strong>，原生 96px FID 从首轮 77.13 降至 68.69。使用同一训练过程的 256k 早期 EMA 作弱模型，guidance=3、时间区间 [0.1,0.8]、Heun50：筛选 seed3333 的 FID <strong>60.064</strong>；独立 seed7777 从无引导 <strong>69.303 → 59.407</strong>。这些是 1024 张生成图 / 1000 张验证图的小样本比较。</p>
 <p>最终主模型、弱模型、可续训完整 checkpoint 和原生 96px PNG 保存在 <code>runs/pixel96_best/</code>。<code>sample_*_seed2027/preview16.png</code> 为连续生成的前16张，完整64张和原始数组同时保存，无筛选、超分或人脸修复。最终交付模型来自完整 eager 主训练；融合版本的 16 GPU 对照单独保存在对应实验目录和集群同名目录。</p>
@@ -292,23 +284,23 @@ python<span class="w"> </span>scripts/prepare_celeba96.py<span class="w"> </span
 <span class="w">  </span>--output<span class="w"> </span>runs/faces96_further_reproduced
 </code></pre></div>
 
-<h2 id="desk-gpu">实验优化与 desk GPU 运行</h2>
+<h2 id="local-gpu">实验优化与本机 GPU 运行</h2>
 <p>推荐从可复现的命令行实验入口开始，Web 端也使用同一套 <code>src/diffusion_demo/core</code> 训练代码。</p>
 <p>2026-10-24 的 RTX 2080 SUPER 实测见 <a href="reports/experiment_2026-10-24.html">完整报告</a>（含原始指标与图片）。同一数据/种子下，8 轮 VAE 验证 PSNR 18.36 → 19.08 dB，MSE 降低 15.3%；16 张图的 1000 步 DDPM / 50 步 DDIM 分别为 4.14s / 0.193s。不同采样器不保证相同质量，当前生成脸部细节仍模糊。</p>
 <div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/desk_smoke.json<span class="w"> </span>--output<span class="w"> </span>runs/my_smoke
-python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/desk_baseline.json<span class="w"> </span>--output<span class="w"> </span>runs/my_baseline
-python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/desk_recommended.json<span class="w"> </span>--output<span class="w"> </span>runs/my_experiment
+python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/local_smoke.json<span class="w"> </span>--output<span class="w"> </span>runs/my_smoke
+python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/local_baseline.json<span class="w"> </span>--output<span class="w"> </span>runs/my_baseline
+python<span class="w"> </span>experiment.py<span class="w"> </span>--config<span class="w"> </span>configs/local_recommended.json<span class="w"> </span>--output<span class="w"> </span>runs/my_experiment
 </code></pre></div>
 
-<p><code>desk_smoke.json</code> 跑通 VAE → DiT → 采样；<code>desk_baseline.json</code> 与推荐配置的 VAE 使用相同数据、划分和种子，只比较 KL 权重/预热方案。推荐配置适用于实测的 RTX 2080 SUPER 8GB：VAE batch=16、自动选择 FP16，DiT hidden=128/depth=4/patch=1、batch=64、FP32。小模型上混合精度不一定更快，请运行下面的 benchmark 验证。</p>
+<p><code>local_smoke.json</code> 跑通 VAE → DiT → 采样；<code>local_baseline.json</code> 与推荐配置的 VAE 使用相同数据、划分和种子，只比较 KL 权重/预热方案。推荐配置适用于实测的 RTX 2080 SUPER 8GB：VAE batch=16、自动选择 FP16，DiT hidden=128/depth=4/patch=1、batch=64、FP32。小模型上混合精度不一定更快，请运行下面的 benchmark 验证。</p>
 <p>本机直接 SSH 不通而 tmux 能连时：</p>
 <div class="codehilite"><pre><span></span><code>tmux<span class="w"> </span>new-session<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span>diffusion-experiment<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;cd /Users/zsc/Downloads/diffusion_demo2 &amp;&amp; scripts/run_desk.sh configs/desk_recommended.json&#39;</span>
+<span class="w">  </span><span class="s1">&#39;cd /path/to/diffusion_demo2 &amp;&amp; scripts/run_remote_gpu.sh configs/local_recommended.json&#39;</span>
 tmux<span class="w"> </span>attach<span class="w"> </span>-t<span class="w"> </span>diffusion-experiment
 </code></pre></div>
 
-<p>脚本将代码同步到 <code>desk:/home/zsc/Downloads/diffusion_demo2_codex</code>，使用已有 <code>py312</code> 环境，完成后把本次结果复制回本地 <code>runs/</code>。地址和解释器路径可在 <code>scripts/run_desk.sh</code> 修改；不会安装或升级远端共享环境。每次运行新建输出目录，实验入口拒绝覆盖已有目录。</p>
+<p>脚本通过 <code>REMOTE_HOST</code>、<code>REMOTE_DIR</code> 和 <code>REMOTE_PYTHON</code> 环境变量配置远端主机、代码目录与解释器，完成后把本次结果复制回本地 <code>runs/</code>。不会安装或升级远端共享环境；每次运行新建输出目录，实验入口拒绝覆盖已有目录。</p>
 <p>每个实验保存 <code>environment.json</code>（含源文件 SHA256）、<code>config.json</code> 和 <code>result.json</code>；VAE/DiT 各自保存：</p>
 <ul>
 <li><code>split.json</code>：选中图像的数据 SHA256、训练/验证索引。</li>
@@ -334,6 +326,29 @@ python<span class="w"> </span>scripts/report_experiment.py<span class="w"> </spa
 <p>DiT 默认缓存 <strong>posterior 的均值/方差</strong>，每个 batch 重新采样；标准化统计量只从训练集计算。预览用 50 步 DDIM，不改变训练的 1000 步噪声调度。<code>sampling_steps=null</code> 可用完整 DDPM。旧的 DiT GAN 分支没有有效的梯度链路，现显式报错，避免把它误当成有效实验；VAE/VQVAE 的 GAN 分支仍支持。</p>
 <p>验证重建 MSE/PSNR 使用 [0,1] 像素范围、VAE posterior mean；DiT 验证噪声固定。降低 KL 的对照关注重建质量，不能单凭训练总 loss 或噪声 MSE 断言生成质量更好。当前是按图片随机划分，并非按人物身份划分。</p>
 <p>实现参考：<a href="https://docs.pytorch.org/docs/stable/amp.html">PyTorch AMP</a>、<a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html">SDPA</a>、<a href="https://arxiv.org/abs/2010.02502">DDIM</a>。</p>
+<h2 id="vae-vq-vae-jit">VAE / VQ-VAE 审计与 JiT 经验迁移</h2>
+<p>审计报告：<a href="reports/vae_gpu_2026-10-25.html">16 GPU 正式对照、权重继承与重建网格</a>；<a href="reports/vae_audit_2026-10-24.html">CPU 短程诊断</a>。修复作用于 <code>src/diffusion_demo</code>（Web API、<code>experiment.py</code>、<code>cmdline_train.py</code>）；根目录 <code>app.py</code> / <code>models</code> / <code>training</code> 是另一套历史实现，未替换其架构。</p>
+<p>VQ 默认重建损失改成像素均值，与 codebook/commitment 的均值尺度匹配；<code>vq_recon_reduction="sum"</code> 保留旧对照。VAE 的逐图求和 ELBO 不变。真实 48px 人脸小预算对照（896 train / 128 val、同 seed、各 448 次更新）中，旧 grid=4/sum、grid=4/mean、grid=12/sum、grid=12/mean 的最佳验证 PSNR 分别为 <strong>14.04 / 15.20 / 14.52 / 17.96 dB</strong>。这是单 seed、按验证集选择轮次的重建诊断，不代表最终生成质量；原始 split、metrics 和权重位于 <code>runs/vae_audit_20261024/</code>。</p>
+<p>16 卡复核已完成：四组相同 29,000 train / 1,000 val、global batch=512、lr=2e-4、BF16、32 轮（各 917,504 张看图量）。第 32 轮 PSNR 为 <strong>14.35 / 17.17 / 14.03 / 21.52 dB</strong>，最佳设置相对旧设置的验证 MSE 降低 <strong>80.8%</strong>，各组无跳过更新。仍是单 seed 重建对照，不能替代生成 FID。最佳权重通过对象存储取回并校验，保存在 <code>runs/vae_gpu_20261025/best_model.pth</code>；本机 FP32 重算同一验证集为 <strong>21.53 dB</strong>。</p>
+<p>原生 96px 对照也已完成：<code>configs/vq96_{scratch,transfer}_gpu.json</code> 均使用 24×24 latent、global batch=512、32 轮新增训练（各 950,272 张看图量），第 32 轮 PSNR 为 <strong>从零 23.06 / 继承 48px 权重 25.11 dB</strong>。继承组多用了 48px 预训练，不是相同总预算；旧 sprites 无原图 ID，无法排除新验证图参与旧预训练。最佳 96px 权重位于 <code>runs/vae_gpu_20261025/best96_model.pth</code>，已通过 SHA256 和本机严格加载检查；两组均无跳过更新。</p>
+<p>主要修复：移除从未参与 forward 的 VAE 参数并兼容旧权重；配置输出分辨率和 latent 网格；VQ 距离查询分块且不建梯度图；记录码本使用率/困惑度；GAN 使用稳定的 logits loss；CLI 使用核心训练器和留出集，停止展示无学习先验的 VQ Gaussian 解码结果。原生 96px 需要真实 uint8 <code>N,96,96,3</code> 数据；不会自动放大旧 sprites。</p>
+<p>默认两层 hidden 下，VAE 自然网格为 48px→6、96px→12，VQ 为 48px→12、96px→24。只改变网格和输出尺寸时，卷积权重可严格继承；<code>init_checkpoint</code> <strong>只初始化模型权重</strong>，新优化器/训练状态从头开始，不是精确续训。源权重的通道数、hidden_dims、codebook size 必须与目标一致。旧 raw state-dict 没有空间尺寸元数据，独立加载仍按历史 48px/4×4；新 checkpoint 保存完整空间配置。</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 小预算、单进程的 2×2 对照</span>
+python<span class="w"> </span>scripts/ablate_autoencoder.py<span class="w"> </span>--output<span class="w"> </span>runs/my_vae_audit
+
+<span class="c1"># 48→96 权重初始化；若已有 96px cache 首 1000 张为验证集，保持这个边界。</span>
+python<span class="w"> </span>cmdline_train.py<span class="w"> </span>--model<span class="w"> </span>vqvae<span class="w"> </span>--epochs<span class="w"> </span><span class="m">32</span><span class="w"> </span>--data-limit<span class="w"> </span><span class="m">31000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-path<span class="w"> </span>/path/to/celeba96.npy<span class="w"> </span>--image-size<span class="w"> </span><span class="m">96</span><span class="w"> </span>--latent-spatial-size<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--split-mode<span class="w"> </span>validation_first<span class="w"> </span>--val-count<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--init-checkpoint<span class="w"> </span>/path/to/vq48/checkpoints/best.pth<span class="w"> </span>--output-dir<span class="w"> </span>runs/my_vq96
+
+<span class="c1"># 只在集群已分配的 1×16 GPU 任务内执行；batch_size 是全局 batch。</span>
+bash<span class="w"> </span>scripts/run_vae_gpu_group.sh<span class="w"> </span>configs/vq48_g12_mean_gpu.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/path/to/output<span class="w"> </span>/path/to/celeba_48x48_sprites_v2.npy
+</code></pre></div>
+
+<p><code>configs/vq48_g{4,12}_{sum,mean}_gpu.json</code> 是已在 GPU 运行的四组配置：相同 global batch=512、seed、数据划分、32 轮；29,000 张训练图丢弃不完整全局 batch，每组实际看图量为 917,504 张。DDP 已通过本地双进程测试、16 卡的 VQ48 / VAE96 smoke 和四组正式对照。DDP 每 rank 使用本地 BatchNorm、保存 rank-0 running buffers；分布式 GAN 尚未实现。<code>images_seen</code>、<code>optimizer_updates</code>、<code>skipped_updates</code> 与验证指标写入日志，避免只比较 epoch 或总 loss。</p>
+<p>后续优先比较码本初始化/失活码重置、KL 预热与弱 KL、按看图量定义的 EMA。大 batch 要同时对齐预算并调整学习率；BatchNorm、EMA 和码本更新需单独验证。最终仍需训练 latent prior，比较完整网格及 FID/KID；JiT 的融合加速倍率不能直接套用到卷积自编码器。</p>
 <h2 id="_3">📋 目录</h2>
 <ul>
 <li><a href="#_4">特性</a></li>
@@ -394,7 +409,7 @@ python<span class="w"> </span>scripts/report_experiment.py<span class="w"> </spa
 $$</p>
 <p><strong>重建损失</strong> (MSE):</p>
 <p>$$
-\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} |x_i - \hat{x}_i|^2
+\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \lVert x_i - \hat{x}_i \rVert^2
 $$</p>
 <p><strong>KL 散度</strong> (正则化项):</p>
 <p>$$
@@ -437,11 +452,11 @@ $$</p>
 $$</p>
 <p><strong>VQ 损失</strong>:</p>
 <p>$$
-\mathcal{L}_{\text{VQ}} = |z_e - \text{sg}[z_q]|^2
+\mathcal{L}_{\text{VQ}} = \lVert z_e - \text{sg}[z_q] \rVert^2
 $$</p>
 <p><strong>承诺损失</strong>:</p>
 <p>$$
-\mathcal{L}_{\text{commit}} = \beta \cdot |\text{sg}[z_e] - z_q|^2
+\mathcal{L}_{\text{commit}} = \beta \cdot \lVert \text{sg}[z_e] - z_q \rVert^2
 $$</p>
 <p>其中：</p>
 <ul>
@@ -508,7 +523,7 @@ $$</p>
 <h4 id="_13">训练目标</h4>
 <p>简化后的训练目标是预测添加到 $x_0$ 的噪声：</p>
 <p>$$
-\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, t, \epsilon \sim \mathcal{N}(0,I)} \left[ |\epsilon - \epsilon_\theta(x_t, t)|^2 \right]
+\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, t, \epsilon \sim \mathcal{N}(0,I)} \left[ \lVert \epsilon - \epsilon_\theta(x_t, t) \rVert^2 \right]
 $$</p>
 <h4 id="_14">采样算法</h4>
 <div class="codehilite"><pre><span></span><code>从标准正态分布采样 x_T ~ N(0, I)
@@ -764,6 +779,228 @@ einops&gt;=0.6.0
 <p align="center">
   用 ❤️ 和 PyTorch 构建
 </p>
+
+<h3 id="vq-ema-latent-dit2026-10-25">VQ 码本 EMA 与 latent DiT（2026-10-25）</h3>
+<p><code>train_vae_model</code> 现在支持 <code>codebook_decay</code>、<code>codebook_data_init</code>、
+<code>dead_code_threshold</code> 和 <code>model_ema_halflife_images</code>。默认值保留梯度更新码本；
+开启码本 EMA 后，计数与向量和在所有训练 rank 上求和，只在成功的 optimizer
+step 后更新。死码阈值按均匀使用量的比例定义，评估和采样不修改码本。
+模型权重 EMA 平滑 encoder/decoder，复制码本和 BN buffers；每轮分别验证 raw/EMA，
+按固定验证集重建 MSE 选择 <code>best.pth</code>。从旧码本 checkpoint 切换到 EMA
+是显式初始化，<code>init_checkpoint</code> 不恢复 optimizer。</p>
+<p><code>latent_ddp_experiment.py</code> 冻结选定 VQ-VAE，缓存离散码，使用训练集统计量归一化，
+训练 clean-latent prediction / velocity loss 的 DiT。支持同一 world size 下
+<code>--resume .../last.pt</code>，恢复 optimizer、模型 EMA 和各 rank RNG。
+完整状态保存在 <code>last.pt</code>，采样权重为 <code>ema_&lt;images&gt;.pt</code>，旁边的
+<code>autoencoder.pth</code> 必须一起保留。每组实验在集群预留 1 节点 × 16 GPU 后运行：</p>
+<div class="codehilite"><pre><span></span><code>bash<span class="w"> </span>scripts/run_latent_gpu_group.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--config<span class="w"> </span>configs/latent_vq48_old.json<span class="w"> </span>--output<span class="w"> </span>/path/to/new-run
+<span class="c1"># 首次运行前设置 autoencoder/data；续训时保持它们一致，只延长 images 预算：</span>
+bash<span class="w"> </span>scripts/run_latent_gpu_group.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--config<span class="w"> </span>/path/to/config.json<span class="w"> </span>--output<span class="w"> </span>/path/to/run<span class="w"> </span>--resume<span class="w"> </span>/path/to/run/last.pt
+</code></pre></div>
+
+<p>生成评估使用 <code>--mode eval --checkpoint .../ema_&lt;images&gt;.pt --weights-dir ...</code>；
+<code>--requantize</code> 比较末端重新量化，<code>--guide</code> / <code>--guidance</code> 比较弱模型引导。
+生成的 <code>real_features.npy</code> / <code>fake_features.npy</code> 可由
+<code>scripts/score_pixel_features.py</code> 计算同口径 FID/KID。
+实际结果及连续样本见 <code>reports/vq_latent_2026-10-25.html</code>；
+运行 <code>python scripts/report_vq_latent.py</code> 可从已下载的实验记录重建报告。</p>
+<p>无需 Inception 即可独立采样：</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src:.<span class="w"> </span>python<span class="w"> </span>sample_latent.py<span class="w"> </span>--checkpoint<span class="w"> </span>/path/to/ema_8388608.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>/path/to/samples<span class="w"> </span>--seed<span class="w"> </span><span class="m">2027</span><span class="w"> </span>--count<span class="w"> </span><span class="m">64</span><span class="w"> </span>--steps<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
+
+<p>该命令同时保存原生 48px 单图、连续网格和包含模型 SHA256 的元数据。</p>
+<h3 id="vq-gan">VQ 感知损失与 GAN 对照</h3>
+<p>安装 <code>.[perceptual]</code> 后，用官方 ImageNet SqueezeNet 与 LPIPS v0.1 权重建立离线资产：</p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>scripts/prepare_perceptual_weights.py<span class="w"> </span>--output<span class="w"> </span>/path/to/lpips_squeeze_v01.pth
+</code></pre></div>
+
+<p><code>vq_perceptual_experiment.py</code> 专门测试 <strong>冻结 encoder / quantizer、微调 decoder</strong>：
+使用已有的离散码缓存，并严格核验数据与 latent 映射；支持 MSE、LPIPS、延迟启用的
+hinge PatchGAN、decoder EMA。判别器使用 GroupNorm，生成器阶段不更新判别器参数。
+每组在集群分配一个完整的 16 GPU 组后运行：</p>
+<div class="codehilite"><pre><span></span><code>bash<span class="w"> </span>scripts/run_vq_perceptual_gpu.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--config<span class="w"> </span>configs/vq48_decoder_lpips.json<span class="w"> </span>--output<span class="w"> </span>/path/to/new-decoder-run
+</code></pre></div>
+
+<p>配置中的 <code>autoencoder</code>、<code>data</code>、<code>codes</code>、<code>perceptual_weights</code> 需要指向实际资产。
+<code>steps × batch_size</code> 是追加训练图像数。MSE 按验证 MSE、感知组按验证 LPIPS 保存
+<code>best.pth</code>；是否改善生成仍须用固定采样协议的 FID/KID 与图像核验。</p>
+<p>完整 VQ-VAE 联合训练也支持 <code>perceptual_weights</code>、<code>perceptual_loss_weight</code> 和
+<code>selection_metric</code>，见 <code>configs/vq48_joint_lpips.json</code>。联合训练改变了 latent 映射，
+需要重新缓存、训练对应的 DiT。该路径仍使用全局同步码本 EMA 和独立模型 EMA。</p>
+<p>生成评估/采样可显式传 <code>--autoencoder /path/to/decoder/best.pth</code>，仅允许 encoder
+与量化器全部张量和原 prior 一致的 decoder 替换。续训额外核验 latent 归一化
+center/scale；更换 latent 映射会报错，避免将不兼容的 prior 与 VQ-VAE 拼在一起。
+报告生成器为 <code>scripts/report_vq_perceptual.py</code>，产物在
+<code>runs/vq_perceptual_20261025/</code> 与 <code>reports/vq_perceptual_2026-10-25.html</code>。</p>
+<p><code>latent_ddp_experiment.py</code> 另支持可选的 <code>pca_components</code>：仅用训练集离散码的
+频率估计 FP64 加权协方差，投影后按主成分标准差归一化；采样时恢复到原始
+64 维再解码。模型保存完整 basis、offset 和 scale，续训核验投影一致。
+该操作保留原 VQ-VAE，实际保留方差写入 <code>projection.json</code>；是否改善生成质量
+仍须实验判断。<code>configs/latent_vq48_pca8_patch1.json</code> 为 8 维、patch 1 对照。</p>
+<h3 id="vision-model-best-of-n">视觉模型 best-of-N</h3>
+<p>Pixel JiT 的随机性来自起始高斯噪声；当前 Heun 积分中不额外加噪。固定模型、seed
+及采样设置可基本复现，换 seed 生成不同候选。当前是无条件模型，候选不保证是同一个人。</p>
+<p>下面生成 64×8 张候选，用兼容视觉 API 的模型逐张评分，每组取一张。
+API 凭据只在本机从 <code>.env</code> 的 <code>LLM_API_KEY</code> 读取，不打印、不上传至集群：</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src:.<span class="w"> </span>.venv/bin/python<span class="w"> </span>sample_pixel_best_of_n.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--checkpoint<span class="w"> </span>runs/pixel96_further/model_ema.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--guide-checkpoint<span class="w"> </span>runs/pixel96_further/guide_ema.pt<span class="w"> </span>--guidance<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--count<span class="w"> </span><span class="m">64</span><span class="w"> </span>--best-of-n<span class="w"> </span><span class="m">8</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">2027</span><span class="w"> </span>--steps<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>runs/faces96_bestof8
+</code></pre></div>
+
+<p>2080 SUPER 加 <code>--precision fp16</code>。采样已完成时可单独运行评分器；也可用于
+<code>sample_latent.py</code> 输出的原生 PNG。失败后用相同参数续跑，会按图片和评分提示词的
+哈希复用已完成响应；输出目录拒绝混入另一组候选或评分规则。</p>
+<div class="codehilite"><pre><span></span><code>.venv/bin/python<span class="w"> </span>scripts/rank_face_candidates.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input<span class="w"> </span>runs/faces96_bestof8/candidates/images<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>runs/faces96_bestof8/ranking<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--group-size<span class="w"> </span><span class="m">8</span><span class="w"> </span>--ns<span class="w"> </span><span class="m">1</span>,2,4,8<span class="w"> </span>--concurrency<span class="w"> </span><span class="m">4</span>
+</code></pre></div>
+
+<p>评分侧重五官结构、自然程度、细节与伪影，不评价颜值、身份或人口属性。
+所有候选、原始响应、token 用量、分项分数、SHA256 和入选 ID 均保存；同分取较早候选。
+<code>selection.json</code> 记录每组 N=1/2/4/8 的结果。<strong>同一评分器筛选后的均分上涨并非独立
+质量证明，筛选后的分布和多样性也可能变化，不能沿用未筛选 FID。</strong></p>
+<p>2026-10-25 已完成 64 张原生 96px 候选的真实视觉模型评分试跑，8 组 N=1/2/4/8
+平均分为 48.25 / 50.75 / 51.50 / 53.75。示例与完整记录在
+<code>runs/pixel96_bestofn_20261025/pilot64/</code>；报告入口 <code>scripts/report_best_of_n.py</code>。</p>
+<p><code>scripts/sample_pixel_pool.py</code> 在已分配的单节点上用 torchrun 分摊候选，每张采用
+<code>base_seed + candidate_id</code>，保存准确种子和 PNG 哈希。四组集群对照分别为
+50步/g3、50步/g2、100步/g3、50步/g3但引导区间改为[0.2,0.8]；每组512候选、
+完整16 GPU，噪声种子对齐。后处理只等待已提交任务，通过对象存储取回 PNG，再评分并更新
+<code>reports/pixel96_bestofn_2026-10-25.html</code>；不提交新任务、不修改其他实验，也不传输密钥。</p>
+<h3 id="96px-ema-batch-learning-rate2026-10-25">96px EMA 再优化：batch × learning rate（2026-10-25）</h3>
+<p>新 4×16 GPU 集群上启动四组训练（59170–59173），每组独占一个 16 GPU 节点：global batch 1024/2048 × learning rate 5e-5/1e-4。全部从已选定的 20.480M EMA 初始化，重新建立 AdamW；这不是从同一步优化器状态恢复。每组新增 8.192M 张次，每 1.024M 保存验证指标、样图与 EMA，继续使用已验证的 compile_pointwise。四组采用相同图像预算、warmup 和按图像数缩放的 EMA，便于比较大 batch 与学习率的影响。配置为 <code>configs/pixel96_refine_*.json</code>，运行记录在 <code>runs/pixel96_refine_20261025/</code>。结果尚未完成，当前最佳权重仍保留原版本。</p>
+<p>上一轮四组 best-of-N 候选采样（56217–56220）已在旧 1×16 集群完成，保留其产物并由本机视觉模型评分流水线继续处理；未在新集群重复提交。</p>
+<p>新增的 4×16 集群实验仍按每组 <code>num_nodes=1,gpus_per_node=16</code> 提交，
+配置为 <code>configs/latent_{pca8_16m,joint16m,base32m,pca8_b2048_16m}.json</code>。
+续训保持 global batch 512，以保存的 optimizer、EMA、per-rank RNG 接续；
+batch 2048 方案从零训练，避免把 checkpoint 的 step 错当成不同 batch 下的已训练图像数。
+资源队列与完成后评估由 <code>runs/vq_perceptual_20261025/parallel_monitor.py</code> 记录。</p>
+<p><code>latent_eval_suite.py --manifest FILE</code> 应用普通 Python 在已预留的 16 GPU 任务中运行，
+先清除集群继承的 <code>WORLD_SIZE/RANK/LOCAL_RANK</code>。每个条目启动独立 torchrun，
+使用 <code>--standalone</code> 自动分配 rendezvous 端口；不在同一个 GPU worker 中反复重建通信组。</p>
+<p>已完成轮次的独立采样确认（seed7777，1024 fake / 1000 real）：
+MSE decoder + latent DiT 16,777,216 images + interval guidance2 的 FID 为 <strong>57.937</strong>，
+此前 latent 为 64.986，pixel JiT 为 44.267；因此已有改善，但尚未超过 pixel JiT。
+权重在 <code>runs/vq_perceptual_20261025/release/</code>，本机重新生成的 64 张原生图像在
+<code>runs/vq_perceptual_20261025/sample_cpu_seed2027/images/</code>。</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src:.<span class="w"> </span>python<span class="w"> </span>sample_latent.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--checkpoint<span class="w"> </span>runs/vq_perceptual_20261025/release/model_ema.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--guide<span class="w"> </span>runs/vq_perceptual_20261025/release/guide_ema.pt<span class="w"> </span>--guidance<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--device<span class="w"> </span>cpu<span class="w"> </span>--precision<span class="w"> </span>fp32<span class="w"> </span>--seed<span class="w"> </span><span class="m">2027</span><span class="w"> </span>--count<span class="w"> </span><span class="m">64</span><span class="w"> </span>--output<span class="w"> </span>samples/vq16m
+</code></pre></div>
+
+<h3 id="96px_2">96px 再优化的首轮结果与噪声分布实验</h3>
+<p>四组均已完成新增 8.192M 训练；<code>b2048_lr1e4</code> 最初在训练后的 Inception 评估中出现 GPU driver invalid argument，训练完整保存，独立评估重跑已完成。统一 seed3333、Heun50、guide 区间 [0.1,0.8] 的未筛选 FID：</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">guidance2</th>
+<th style="text-align: right;">guidance3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原20.480M EMA</td>
+<td style="text-align: right;">57.719</td>
+<td style="text-align: right;">57.133</td>
+</tr>
+<tr>
+<td>b1024 lr5e-5</td>
+<td style="text-align: right;">56.879</td>
+<td style="text-align: right;">56.132</td>
+</tr>
+<tr>
+<td>b1024 lr1e-4</td>
+<td style="text-align: right;">57.267</td>
+<td style="text-align: right;">56.306</td>
+</tr>
+<tr>
+<td>b2048 lr5e-5</td>
+<td style="text-align: right;">57.474</td>
+<td style="text-align: right;">56.840</td>
+</tr>
+<tr>
+<td>b2048 lr1e-4</td>
+<td style="text-align: right;">57.617</td>
+<td style="text-align: right;">57.044</td>
+</tr>
+</tbody>
+</table></div>
+<p>这是 1024 fake /1000 real、同一验证集的小样本选择结果；未引导 FID 没有改善，原最佳权重继续保留。固定种子样图、全量候选和评分见 <code>reports/pixel96_refinement_review_20261025.html</code>。原模型采样变体的视觉模型 best-of-8 均分为 g2/Heun50 56.84、g3/Heun50 53.88、g3/Heun100 53.81、g3/较短引导区间54.41；筛选后评分上涨不能当作独立质量证明。</p>
+<p>以 b1024/lr5e-5 的完整 8.192M checkpoint 为共同起点，任务59185–59188继续到16.384M：原学习率对照、lr2e-5、logit-time均值-0.4（偏低噪声）、-1.2（偏高噪声）。标准差均0.8，验证时间分布保持原来的(-0.8,0.8)。分布变更必须显式设置 <code>ALLOW_RESUME_TIME_CHANGE=1</code> / <code>--allow-resume-time-change</code>，续训记录包含旧/新分布。改变训练分布后的 train loss 不可直接与对照比较。新配置在 <code>configs/pixel96_noise_*.json</code>，四组继续各占16 GPU。</p>
+<p>本轮四组新模型各512张候选的视觉模型评分已全部完成、无错误。g2/Heun50 的 best-of-8 均分：b1024lr5e-5 <strong>57.06</strong>，b1024lr1e-4 <strong>57.63</strong>，b2048lr5e-5 <strong>58.25</strong>，b2048lr1e-4 <strong>56.69</strong>；旧模型 <strong>56.84</strong>。各模型全512候选均分仍约49.3–49.5，不能据此宣称整体质量大幅提升。除 FID 最佳分支外，best-of-N 最佳的 b2048lr5e-5 也已提交完整状态续训任务 <strong>59190</strong>，配置 <code>configs/pixel96_noise_continue_b2048_lr5e5.json</code>，等待空闲16 GPU节点。原始96px图、配对对比、全部评分与训练继承信息见 <code>reports/pixel96_refinement_review_20261025.html</code>；简要样图是 <code>reports/pixel96_best_pick_comparison_20261025.png</code>。</p>
+<p>四组并行实验的专门对比页由 <code>python scripts/report_vq_parallel.py</code> 生成：
+<code>reports/vq_parallel_comparison_2026-10-25.html</code>，同时导出连续前 16 张的对比 PNG。
+评估统一使用 GPU/BF16、seed3333、Heun50、guidance2；CPU 补充采样有明确标注，
+因随机数后端不同，不把 CPU 和 GPU 的同编号图像当作逐张对应。</p>
+<p>PCA8/batch2048 候选的本机采样复现：</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src:.<span class="w"> </span>python<span class="w"> </span>sample_latent.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--checkpoint<span class="w"> </span>runs/vq_perceptual_20261025/comparison_models/pca8_b2048_16m/model_ema.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--autoencoder<span class="w"> </span>runs/vq_perceptual_20261025/release/autoencoder.pth<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--guide<span class="w"> </span>runs/vq_perceptual_20261025/comparison_models/pca8_b2048_16m/guide_ema.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--guidance<span class="w"> </span><span class="m">2</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">3333</span><span class="w"> </span>--device<span class="w"> </span>cpu<span class="w"> </span>--precision<span class="w"> </span>fp32<span class="w"> </span>--count<span class="w"> </span><span class="m">64</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>samples/pca8_b2048
+</code></pre></div>
+
+<p>已准备的单组续训记录在 <code>runs/vq_perceptual_20261025/followup_selection.json</code> 和
+<code>followup_status.json</code>（评估齐全、提交成功后生成）。选择四组同口径 FID 最优者，
+保持 batch，从完整 checkpoint 恢复 optimizer/EMA/RNG，学习率减半，追加
+16,777,216 张训练图像。此阶段不加 GAN；结束后自动评估 seed3333、seed7777。</p>
+<p><strong>当前实验方向（2026-10-25）：已暂停 best-of-N 和视觉模型评分。</strong> 已完成图片、分数和报告保留；仅因 best-of-N 排名追加的续训任务59190已取消。资源继续用于未筛选采样/FID、学习率续训与噪声时间分布变体，不再主动启动候选筛选或评分。状态见 <code>runs/best_of_n_paused_20261025.json</code>。</p>
+<p>96×96 latent DiT 迁移入口为 <code>configs/latent_vq96_pca8_transfer.json</code>：
+从已验证的 PCA8/batch2048 48px EMA 权重开始，VQVAE 原生网格 12→24、输出 48→96；
+编码器和码本权重保持逐张量相同，先按 <code>configs/vq96_decoder_transfer.json</code> 微调 MSE 解码器。
+DiT 的 patch1 网格从 144 tokens 扩至 576 tokens，仅对 learned position embedding 做
+bicubic 插值；保留预训练的 PCA basis、offset、center 和 scale，不用新码频率重新拟合轴。
+<code>--init-checkpoint</code> 使用 EMA 权重 warm start，重置 optimizer 和 96px 图像计数；
+<code>--resume</code> 仍用于同一模型、同一坐标系、同一 world size 的完整状态续训，两者互斥。
+新增 <code>snapshot_images</code> 可保存早期弱引导检查点，同时维持较稀疏的后续保存频率。</p>
+<p>原生 96px 使用已有 31,000 张缓存，前 1,000 张验证、其余 30,000 张训练。
+新分区原图 ID 不相交；旧 48px sprites 无原图 ID，无法排除验证图参与旧预训练。
+48px 和 96px 的 FID 不直接比较。96px 首轮新增训练预算 8,388,608 张，global batch2048、
+lr1e-4、1×16 GPU，不启用 GAN。训练前验证 16 GPU 的实际 forward/backward；完成后
+分别评估无引导与早期 96px 检查点引导，并保留 seed7777 的独立采样结果。
+任务及样本记录：<code>runs/vq96_transfer_20261025/</code>。</p>
+<p>96px 并行变体（每组仍为 1×16 GPU）：
+<code>configs/latent_vq96_b2048_lr5e5.json</code>、<code>latent_vq96_b2048_lr2e4.json</code>、
+<code>latent_vq96_b4096_lr2e4.json</code>。三组均从同一份 48px/32M EMA 开始，
+各新增 4,194,304 张；与主线在同图像预算下比较 raw / guided FID，
+大 batch 先完成 16 GPU 两步实测。除了 batch 和学习率，模型、码本、
+PCA 坐标、数据、EMA 半衰期及采样设置保持一致。结果与启动记录在
+<code>runs/vq96_variants_20261025/</code>，连续样本和指标见
+<code>reports/vq96_variants_2026-10-25.html</code>。当前不加 GAN。</p>
+<p>普通 VAE 的 PCA 诊断（2026-10-25）见 <code>reports/vae_pca_2026-10-25.html</code>。
+<code>vae_pca_probe.py</code> 冻结早期 16 通道/4×4 网格、1792 张训练图/8 轮的 KL=0.1 与 KL=1 模型，
+只在原训练 ID 上拟合通道 PCA；用原验证集和另外 1000 张未参与训练的图片评估。
+同时比较 mu 与采样 latent，后者的拟合协方差使用 Cov(mu)+E[diag(exp(logvar))]，
+各截断共享相同每图后验噪声。集群任务 59205（1×16 GPU）成功，指标、图片及投影已取回并校验哈希。
+KL=0.1 模型的均值路径 16→12 通道损失约 0.03 dB，16→8 的 LPIPS 退化更明显。
+这是既有 latent 冗余诊断，不是 PCA 增加模型表达能力的证据；这些早期 VAE 的重建本身仍很模糊。
+若从头训练连续 VAE，应优先比较直接训练窄 latent 的重建与生成效果；尚未据此启动普通 VAE latent DiT。</p>
+<p>直接训练普通 VAE 窄通道对照：<code>configs/vae96_narrow_c8.json</code>、<code>c12</code>、<code>c16</code>。
+同为原生96px、12×12 latent网格、hidden_dims=[64,128]、beta=0.01、8轮KL预热、
+batch512、lr2e-4、EMA半衰期8192张，128轮（3,801,088次看图），各1×16 GPU。
+本实验不使用PCA，所有组从零训练；先实际两步smoke。<code>vae_reconstruction_eval.py</code>
+对最佳/最后权重分别评估后验均值与固定噪声样本的重建PSNR/LPIPS。
+集群任务59211/59212/59213；记录与自动回收文件在<code>runs/vae_narrow96_20261025/</code>，
+可视报告为<code>reports/vae_narrow96_2026-10-25.html</code>。这是重建对照，尚未据此启动普通VAE latent DiT。</p>
+<p>16通道普通VAE接latent DiT：<code>configs/latent_vae96_c16.json</code>，集群任务 59219。
+冻结<code>vae_narrow96_20261025/c16</code>最佳VAE，原生96px、12×12×16 latent，不用PCA；
+<code>continuous_latents.py</code>缓存后验mu/logvar，每步重新抽样。通道归一化只用训练部分，
+方差为Var(mu)+E[exp(logvar)]。<code>latent_ddp_experiment.py</code>保留VQ路径并支持连续VAE；
+完整续训保持posterior_mode、数据、batch及每rank RNG，禁止对连续VAE重新量化。
+DiT从零训练，width384/depth8/heads6/patch1、batch2048、lr4e-4，目标16M张，
+先做16 GPU 两步实测，在8M/16M评估raw/guided及最终独立采样种子。
+10项相关测试通过，包含连续后验采样下的精确续训。记录和自动回收结果在
+<code>runs/vae_latent96_20261025/</code>，报告为<code>reports/vae_latent96_2026-10-25.html</code>。</p>
             </article>
 
             <nav class="page-nav"></nav>

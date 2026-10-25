@@ -1,4 +1,4 @@
-"""Numerics, three independent timing pairs, then an ASight fusion capture."""
+"""Numerics, three independent timing pairs, then an external profiler capture."""
 import argparse
 import json
 import os
@@ -28,9 +28,11 @@ def main():
         for execution in order:
             label=f'bench_{repeat}_{execution}'
             run(label,[sys.executable,'scripts/profile_pixel_train.py',*base,'--execution',execution,'--output',str(out/label)])
-    asys='/usr/local/PPU_SDK/asight/bin/asys';prefix=str(out/'asys_pointwise')
-    code=run('asys_pointwise',[asys,'profile','--trace','hggc,hgtx,acblas','--sample','none','--capture-range','hggcProfilerApi','--capture-range-end','stop','--max-report-size','128','--output',prefix,sys.executable,'scripts/profile_pixel_train.py',*base,'--execution','compile_pointwise','--capture','asys','--output',str(out/'asys_pointwise_workload')])
-    if not code:run('asys_export',[asys,'export','--output',prefix+'.sqlite',prefix+'.asysrep'])
+    profiler=os.environ.get('PROFILER_BIN')
+    if profiler:
+        prefix=str(out/'profiler_pointwise')
+        code=run('profiler_pointwise',[profiler,'profile','--output',prefix,sys.executable,'scripts/profile_pixel_train.py',*base,'--execution','compile_pointwise','--capture','external','--output',str(out/'profiler_pointwise_workload')])
+        if not code:run('profiler_export',[profiler,'export','--output',prefix+'.sqlite',prefix+'.report'])
     (out/'completed.json').write_text(json.dumps(results))
 
 if __name__=='__main__':main()

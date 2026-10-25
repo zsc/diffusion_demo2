@@ -22,7 +22,7 @@
       "num_workers": 0,
       "precision": "auto",
       "device": "cuda",
-      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181237_desk_baseline/vae"
+      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181237_local_baseline/vae"
     },
     "precision": "fp16",
     "train_images": 1792,
@@ -142,7 +142,7 @@
       "num_workers": 0,
       "precision": "auto",
       "device": "cuda",
-      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/vae"
+      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/vae"
     },
     "precision": "fp16",
     "train_images": 1792,
@@ -241,7 +241,7 @@
   },
   "dit": {
     "config": {
-      "vae_model_path": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/vae/checkpoints/best.pth",
+      "vae_model_path": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/vae/checkpoints/best.pth",
       "discriminator_model_path": null,
       "use_gan": false,
       "gan_loss_weight": 0.01,
@@ -268,7 +268,7 @@
       "num_workers": 0,
       "precision": "fp32",
       "device": "cuda",
-      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_desk_recommended/dit",
+      "output_dir": "/mnt/sda2/Downloads/diffusion_demo2_codex/runs/20261024_181538_local_recommended/dit",
       "cache_latents": true,
       "normalize_latents": true,
       "ema_decay": 0.999,
@@ -1627,9 +1627,9 @@
       }
     ],
     "args": {
-      "vae": "runs/20261024_181538_desk_recommended/vae/checkpoints/best.pth",
-      "dit": "runs/20261024_181538_desk_recommended/dit/checkpoints/last.pth",
-      "output": "runs/desk_benchmark_v2",
+      "vae": "runs/20261024_181538_local_recommended/vae/checkpoints/best.pth",
+      "dit": "runs/20261024_181538_local_recommended/dit/checkpoints/last.pth",
+      "output": "runs/local_benchmark_v2",
       "steps": 60,
       "batch_size": 32
     }
@@ -3704,7 +3704,7 @@
     "device_name": "NVIDIA GeForce RTX 2080 SUPER",
     "device_count": 1,
     "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:16:04) [GCC 11.2.0]",
-    "executable": "/home/zsc/miniconda3/envs/py312/bin/python",
+    "executable": "/path/to/miniconda3/envs/py312/bin/python",
     "source_sha256": {
       "src/diffusion_demo/__init__.py": "2299e5925e1613c7d634c594daffef14dee3b42fe6ccdb2b065c00ca50b1cc11",
       "src/diffusion_demo/__main__.py": "2064a42005ac67f587f762c1d535fce58eef5a56fd2c376c89c25621fe663c67",

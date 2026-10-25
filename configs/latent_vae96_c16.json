@@ -1,0 +1,19 @@
+{
+  "autoencoder": "/path/to/runs/vae_narrow96_20261025/c16/train/checkpoints/best.pth",
+  "data": "/path/to/diffusion-demo-data/data96/celeba96.npy",
+  "posterior_mode": "sample",
+  "images": 16777216,
+  "batch_size": 2048,
+  "lr": 0.0004,
+  "warmup_images": 65536,
+  "ema_halflife_images": 131072,
+  "width": 384,
+  "depth": 8,
+  "heads": 6,
+  "patch_size": 1,
+  "seed": 0,
+  "save_every_images": 4194304,
+  "snapshot_images": [
+    524288
+  ]
+}

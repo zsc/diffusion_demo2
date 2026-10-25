@@ -28,7 +28,7 @@ def main():
         raise ValueError("Selection is already packaged; choose a new output directory")
     env = {**os.environ, "PYTHONPATH": f"src:{root}/eval_assets/packages"}
     command = [sys.executable, "sample_pixel.py", "--checkpoint", str(checkpoint),
-               "--output", str(target / "sample_ppu_seed2027"), "--seed", "2027",
+               "--output", str(target / "sample_gpu_seed2027"), "--seed", "2027",
                "--count", "64", "--steps", "50", "--batch", "16"]
     if args.guidance > 1:
         command += ["--guide-checkpoint", str(guide), "--guidance", str(args.guidance),

@@ -29,7 +29,7 @@ def main():
     ap.add_argument("--data", required=True)
     ap.add_argument("--output", required=True)
     ap.add_argument("--optimizer", choices=["default", "foreach", "fused"], default="default")
-    ap.add_argument("--capture", choices=["none", "torch", "asys"], default="none")
+    ap.add_argument("--capture", choices=["none", "torch", "external"], default="none")
     ap.add_argument("--relaxed-fusion", action="store_true", help="Experimental: permit eliminated intermediate precision casts")
     ap.add_argument("--execution", default="eager", choices=["eager", "contiguous", "compile_norm", "compile_pointwise"])
     ap.add_argument("--batch", type=int, default=64)
@@ -82,8 +82,8 @@ def main():
     result = dict(execution=args.execution, emulate_precision_casts=not args.relaxed_fusion, warmup_seconds=warmup_seconds, environment=environment(model, rt), checkpoint_sha256=hashlib.sha256(Path(args.checkpoint).read_bytes()).hexdigest(),
                   batch=args.batch, tokens=(model.image_size // model.patch_size) ** 2,
                   optimizer=args.optimizer, capture=args.capture, warmup=args.warmup,
-                  note="Single PPU; real 1024-image bank; includes augmentation, backward, clipping, AdamW and EMA; excludes DDP, preview and saving.")
-    if args.capture == "asys":
+                  note="Single GPU; real 1024-image bank; includes augmentation, backward, clipping, AdamW and EMA; excludes DDP, preview and saving.")
+    if args.capture == "external":
         torch.cuda.profiler.start()
         loss, norm = step()
         rt.sync()

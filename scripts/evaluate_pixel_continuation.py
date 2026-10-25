@@ -1,4 +1,4 @@
-"""Evaluate a fixed manifest of continuation checkpoints on one 16-PPU node.
+"""Evaluate a fixed manifest of continuation checkpoints on one 16-GPU node.
 
 Manifest rows specify checkpoint, label, seed and guidance. It is deliberately
 separate from training so intermediate EMA files can be compared without

@@ -1,10 +1,25 @@
-"""Optional compiler fusion for pointwise subgraphs; parameters/checkpoints stay intact.
+"""Optional pointwise or full-model compilation; parameters/checkpoints stay intact.
 
-The PPU backend lowers these small PyTorch graphs to its installed Triton. GEMM,
+The GPU backend lowers these small PyTorch graphs to its installed Triton. GEMM,
 convolution and SDPA remain vendor library calls. Enable explicitly after validation.
 """
 import torch
 from torch.nn import functional as F
+
+
+def prepare_training_model(model, backend="eager", emulate_precision_casts=True):
+    """Return the training callable while keeping the original checkpoint namespace.
+
+    Call before DDP construction. Full compilation disables Dynamo's DDP graph
+    partitioning; DDP still synchronizes gradients, with less communication overlap.
+    Keep the original model for optimizer, EMA and checkpoint operations.
+    """
+    if backend != "compile_full":
+        return configure_execution(model, backend, emulate_precision_casts)
+    configure_execution(model, "eager", emulate_precision_casts)
+    torch._dynamo.config.optimize_ddp = False
+    return torch.compile(model, fullgraph=True, dynamic=False,
+                         options={"emulate_precision_casts": emulate_precision_casts})
 
 
 def rms(x, weight):

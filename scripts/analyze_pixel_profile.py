@@ -1,4 +1,4 @@
-"""Read raw ASight kernel names, preserve unknown costs, and summarize timing."""
+"""Read raw profiler kernel names, preserve unknown costs, and summarize timing."""
 import argparse
 from collections import defaultdict
 import json
@@ -11,7 +11,7 @@ def category(name):
     low = name.lower()
     if low.startswith("triton_"):
         return "fused Triton"
-    if "gemm" in low or "acblas" in low:
+    if "gemm" in low or "blas" in low:
         return "GEMM"
     if "flash" in low or "attention" in low:
         return "attention"

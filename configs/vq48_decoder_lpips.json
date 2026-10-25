@@ -1,0 +1,15 @@
+{
+  "autoencoder": "/path/to/runs/vq_latent_20261025/latent/best/autoencoder.pth",
+  "data": "/path/to/diffusion-demo-data/source/cache/celeba_48x48_sprites_v2.npy",
+  "codes": "/path/to/runs/vq_latent_20261025/latent/best/codes.npy",
+  "perceptual_weights": "/path/to/runs/vq_perceptual_20261025/source/assets/lpips_squeeze_v01.pth",
+  "steps": 2048,
+  "evaluate_every": 512,
+  "batch_size": 512,
+  "lr": 0.0001,
+  "ema_halflife_images": 8192,
+  "seed": 0,
+  "perceptual_weight": 0.1,
+  "gan_weight": 0,
+  "gan_start": 256
+}
